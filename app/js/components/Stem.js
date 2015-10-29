@@ -6,15 +6,20 @@ class Stem extends THREE.Object3D {
 
 		// ##
 		// INIT
-		// -- var
+		// - var
 		this.heightSegment = 6;
 		this.radiusSegment = 10;
-		this.currentFloor = this.heightSegment;
+		this.currentFloor = 1;
 		this._a = 0;
-		// -- material
+		// - material
 		this.material = new THREE.MeshLambertMaterial( { color: 0x1B010D, wireframe : true } );		
-		// -- objet/mesh
-		this.stemGeometry = new THREE.CylinderGeometry( 0.03, 0.08, 5, this.radiusSegmen, this.heightSegment );
+		// - geometry
+		this.stemGeometry = new THREE.CylinderGeometry( 0.03, 0.08, 5, this.radiusSegmen, this.heightSegment, true );
+		// -- init stem to 0
+		this.stemGeometry.vertices.map((vertice) => {
+			vertice.y = 0;
+		})
+		// - mesh
 		this.stemMesh = new THREE.Mesh( this.stemGeometry, this.material );		
 
 		// ##
@@ -27,26 +32,32 @@ class Stem extends THREE.Object3D {
 
 		// ##
 		// GROW UP
-		let speed = 0.5;
+		let speed = 0.05;
 
 		this.stemGeometry.verticesNeedUpdate = true;
 
-		let circleVertices = this.radiusSegment -1;
+		let circleVertices = this.radiusSegment - 1;
+
+		let count = 0;
+
+		for (var i = 0; i < (this.stemGeometry.vertices.length - (circleVertices * this.currentFloor)); i++) {
+			this.stemGeometry.vertices[i].y += speed;
+			count++;
+		};
+
+		console.log("ciunt",count)
 
 		if(this.currentFloor >= 0) {
-			for ( let j = 0 ; j < circleVertices ; j++) {
-				let position = j + ( circleVertices * this.currentFloor);
-				console.log(this.currentFloor)
-				this.stemGeometry.vertices[position].x += speed;
+			/*for ( let j = 0 ; j < circleVertices ; j++) {
+				let position = j + ( circleVertices * (this.currentFloor));
+				this.stemGeometry.vertices[position].y += speed;
 
-			};
-				this._a++;
-				console.log(this._a)
-				if(this._a == 10){
-					console.log("kkk")
-					this._a = 0;
-					this.currentFloor--;
-				}
+			};*/
+			this._a++;
+			if(this._a == 10 && this.currentFloor <= this.heightSegment){
+				this._a = 0;
+				this.currentFloor++;
+			}
 		}
 
 		
