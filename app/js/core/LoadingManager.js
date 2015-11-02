@@ -1,17 +1,17 @@
 class LoadingManager {
 	constructor() {
-		this.manager = new THREE.LoadingManager();
-		this.manager.onProgress = this._onLoaded.bind(this);
+		//this.manager = new THREE.LoadingManager();
+		//this.manager.onProgress = this._onLoaded.bind(this);
 
-		this.loader = new THREE.OBJLoader( this.manager );
+		this.loader = new THREE.OBJMTLLoader();
 
 		this._binds = {};
 		this._binds.load = this._load.bind(this);
 	}
 
-	_load(fileName, callback) {
+	_load(OBJFileName, MTLFileName, callback) {
 
-		this.loader.load( fileName, function ( obj ) {
+		this.loader.load( OBJFileName, MTLFileName, function ( obj ) {
 			callback(obj)
 		}, this._onProgress.bind(this), this._onError.bind(this) );
 	}

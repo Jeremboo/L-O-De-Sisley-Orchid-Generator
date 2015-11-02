@@ -22,16 +22,16 @@ class Petal extends THREE.Object3D {
 	init(callback) {
 		// ##
 		// LOAD PETAL
-		LoadingManager._binds.load('3d_model/Petal.obj', (object) => {
+		LoadingManager._binds.load('3d_model/petale_dev.obj', '3d_model/petale_dev.mtl', (object) => {
 			this.petalObject = object;
 			this.petalObject.scale.set(0, 0, 0);
 			this.petalObject.rotation.z = 1;
 			this.petalObject.rotation.y = -1;
 
-			this._traverseChilds( ( child ) => {
+			/*this._traverseChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
 				child.material = this.material;
-			});
+			});*/
 			callback();
 		});
 	}
