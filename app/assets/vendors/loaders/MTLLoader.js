@@ -398,6 +398,8 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 
 	loadTexture: function ( url, mapping, onLoad, onProgress, onError ) {
 
+		console.log("loadTexture");
+
 		var texture;
 		var loader = THREE.Loader.Handlers.get( url );
 		var manager = ( this.manager !== undefined ) ? this.manager : THREE.DefaultLoadingManager;
@@ -405,14 +407,20 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 		if ( loader !== null ) {
 
 			texture = loader.load( url, onLoad );
+					console.log("loader null", url, texture);
 
 		} else {
+
+			console.log("loader pas null", url, manager);
+
 
 			texture = new THREE.Texture();
 
 			loader = new THREE.ImageLoader( manager );
 			loader.setCrossOrigin( this.crossOrigin );
 			loader.load( url, function ( image ) {
+				console.log("image", image);
+
 
 				texture.image = THREE.MTLLoader.ensurePowerOfTwo_( image );
 				texture.needsUpdate = true;
@@ -422,6 +430,7 @@ THREE.MTLLoader.MaterialCreator.prototype = {
 			}, onProgress, onError );
 
 		}
+
 
 		if ( mapping !== undefined ) texture.mapping = mapping;
 

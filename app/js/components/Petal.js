@@ -22,7 +22,7 @@ class Petal extends THREE.Object3D {
 	init(callback) {
 		// ##
 		// LOAD PETAL
-		LoadingManager._binds.load('3d_model/petale_dev.obj', '3d_model/petale_dev.mtl', (object) => {
+		LoadingManager._binds.load('3d_model/20151103_fleur.obj', '3d_model/petale_dev.mtl', (object) => {
 			this.petalObject = object;
 			this.petalObject.scale.set(0, 0, 0);
 			this.petalObject.rotation.z = 1;
@@ -37,7 +37,7 @@ class Petal extends THREE.Object3D {
 	}
 
 	_onUpdate() {
-		let petalSize = ( 1 - this.petalObject.scale.x ) * 0.03;
+		let petalSize = ( 8 - this.petalObject.scale.x ) * 0.03;
 
 		if( petalSize < 0.9 ) {
 			this.petalObject.scale.x += petalSize;
