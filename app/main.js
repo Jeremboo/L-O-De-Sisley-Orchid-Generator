@@ -2,8 +2,6 @@ import webgl from 'js/core/Webgl';
 import loop from 'js/core/Loop';
 import props from 'js/core/props';
 import Flower from 'js/components/Flower';
-import Pollen from 'js/components/Pollen';
-import Stem from 'js/components/Stem';
 
 
 // ##
@@ -15,8 +13,8 @@ loop.add(webgl._binds.onUpdate);
 
 // ##
 // GUI
-let gui = new dat.GUI();
-gui.close();
+/*let gui = new dat.GUI();
+gui.close();*/
 
 // ##
 // LIGHT
@@ -31,11 +29,6 @@ flower.init(() => {
 	webgl.add(flower.flowerObject);
 	loop.add(flower._binds.onUpdate);
 });
-
-// - pollen
-// let pollen = new Pollen();
-// webgl.add(pollen.pollenMesh);
-// loop.add(pollen._binds.onUpdate);
 
 // ##
 // RENDERER

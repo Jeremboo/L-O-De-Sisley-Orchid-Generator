@@ -1,16 +1,26 @@
 import props from 'js/core/props';
 
-class Stem extends THREE.Object3D {
+class Pollen extends THREE.Object3D {
 	constructor(){
 		super();
 
 		// ##
 		// INIT
+		this.SCALE = {
+			x : 0.03,
+			y : 0.03,
+			z : 0.03
+		};
+		this.POZ = {
+			x : -0.09,
+			y : -0.15,
+			z : 0.275
+		};
 		// - var
 		this.segments = 32;
 		this.radiusSegment = 32;
 		this.size = 0.1;
-		this.length = this.getRandomFloat(1, 8);
+		this.length = this.getRandomFloat(5, 12);
 		this.curve = this.getRandomFloat(1, 3);
 
 		this.curve = this.createCustomCurve(); 
@@ -29,7 +39,12 @@ class Stem extends THREE.Object3D {
 		this.pollenMesh = new THREE.Object3D();
 		this.pollenMesh.add(this.pollenHeadMesh);
 		this.pollenMesh.add(this.pollenStemMesh);
-		this.pollenMesh.rotation.x = -this.getRandomFloat(0.5, 1.3);
+
+		// ##
+		// INIT POSITION & SIZE
+		this.pollenMesh.scale.set(0,0,0);
+		this.pollenMesh.position.set(this.POZ.x,this.POZ.y,this.POZ.z);
+		this.pollenMesh.rotation.x = -this.getRandomFloat(0.5, 1);
 
 
 		// ##
@@ -38,9 +53,16 @@ class Stem extends THREE.Object3D {
 		this._binds.onUpdate = this._onUpdate.bind(this);
 	}
 
-	_onUpdate() {
+	orientation(or) {
+		this.pollenMesh.rotation.y = 0.5-(or/2);
+	}
 
-			
+	_onUpdate() {
+		let scaleDist = this.SCALE.x - this.pollenMesh.scale.x;
+		if(scaleDist > 0.001) {
+			let mouv = this.pollenMesh.scale.x + scaleDist*0.02;
+			this.pollenMesh.scale.set(mouv,mouv,mouv)
+		}			
 	}
 
 	createCustomCurve(){
@@ -65,4 +87,4 @@ class Stem extends THREE.Object3D {
 	}
 }
 
-module.exports = Stem;
+module.exports = Pollen;
