@@ -45,8 +45,6 @@ class Stem extends THREE.Object3D {
 			count++;
 		};
 
-		console.log("ciunt",count)
-
 		if(this.currentFloor >= 0) {
 			/*for ( let j = 0 ; j < circleVertices ; j++) {
 				let position = j + ( circleVertices * (this.currentFloor));

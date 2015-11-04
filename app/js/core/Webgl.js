@@ -8,6 +8,9 @@ class Webgl {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
+		this.camera.position.z = 50;
+		this.controls = new THREE.OrbitControls( this.camera );
+  		//this.controls.addEventListener( 'change', render );
 
 		this.renderer = new THREE.WebGLRenderer({
 			antialias : true
@@ -42,8 +45,6 @@ class Webgl {
 	}
 
 	_onUpdate() {
-		this.camera.position.z = props.zoom;
-
 		if (this.usePostprocessing) {
 			this.composer.reset();
 			this.composer.renderer.clear();
@@ -67,6 +68,10 @@ class Webgl {
 
 		this.renderer.setSize(width, height);
 	}
+}
+
+function render() {
+  renderer.render( scene, camera );
 }
 
 module.exports = new Webgl();
