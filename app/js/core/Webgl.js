@@ -1,4 +1,5 @@
 import props from 'js/core/props';
+import OrbitControls from 'js/vendors/OrbitControls';
 
 class Webgl {
 	constructor( ){
@@ -19,9 +20,8 @@ class Webgl {
 		this.renderer.setClearColor(0xCBE0E7);
 		this.dom = this.renderer.domElement;
 
-		this.usePostprocessing = true;
-		this.composer = new WAGNER.Composer(this.renderer);
-		this.composer.setSize(this.width, this.height);
+		this.usePostprocessing = false;
+		// Create this.composer for have postprocessing
 		this.initPostprocessing();
 
 		this._binds = {};
@@ -46,12 +46,7 @@ class Webgl {
 
 	_onUpdate() {
 		if (this.usePostprocessing) {
-			this.composer.reset();
-			this.composer.renderer.clear();
-			this.composer.render(this.scene, this.camera);
-			this.composer.pass(this.fxaaPass);
-			//this.composer.pass(this.vignettePass);
-			this.composer.toScreen();
+			//reset this.composer
 		} else {
 			this.renderer.autoClear = false;
 			this.renderer.clear();

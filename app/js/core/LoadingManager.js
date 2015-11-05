@@ -1,3 +1,6 @@
+import OBJLoader from 'js/vendors/loaders/OBJLoader';
+
+
 class LoadingManager {
 	constructor() {
 		this._binds = {};

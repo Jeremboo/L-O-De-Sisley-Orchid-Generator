@@ -4,6 +4,12 @@ exports.config =
     javascripts:
       joinTo:
        'app.js': /^app|^bower_components/
+      order:
+        before: [
+          'bower_components/three.js/three.js',
+          'app/js/vendors/loaders/OBJLoader.js',
+          'app/js/vendors/OrbitControls.js'
+        ]
     stylesheets:
       joinTo: 'app.css'
     templates:
