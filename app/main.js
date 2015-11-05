@@ -12,11 +12,6 @@ document.body.appendChild( webgl.dom );
 loop.add(webgl._binds.onUpdate);
 
 // ##
-// GUI
-/*let gui = new dat.GUI();
-gui.close();*/
-
-// ##
 // LIGHT
 let ambient = new THREE.PointLight( 0xffffff, 1, 100 );
 ambient.position.set(1,10,10);
