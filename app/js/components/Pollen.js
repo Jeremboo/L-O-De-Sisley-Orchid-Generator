@@ -1,5 +1,8 @@
 import props from 'js/core/props';
 
+import pollenVert from 'shaders/pollen-vert';
+import pollenFrag from 'shaders/pollen-frag';
+
 class Pollen extends THREE.Object3D {
 	constructor(){
 		super();
@@ -27,11 +30,13 @@ class Pollen extends THREE.Object3D {
 		this.pollenHeadPosition = this.curve.getPoints()[this.curve.getPoints().length-1];
 
 		// - pollenStem geometry/mesh
-		this.materialStem = new THREE.MeshPhongMaterial( { color: 0x72b662, specular: 0x009900, shininess: 30, shading: THREE.FlatShading } );
+		// this.materialStem = new THREE.MeshLambertMaterial( { color: 0x72b662 } );
+		this.materialStem = new THREE.ShaderMaterial( { vertexShader : pollenVert , fragmentShader : pollenFrag } );
+
 		this.pollenStemGeometry = new THREE.TubeGeometry( this.curve, this.segments, this.size, this.radiusSegment/2 );
 		this.pollenStemMesh = new THREE.Mesh( this.pollenStemGeometry, this.materialStem );	
 		// - pollenHead geometry/mesh
-		this.materialHead = new THREE.MeshPhongMaterial( { color: 0x413a31, specular: 0x996842, shininess: 30, shading: THREE.FlatShading } );
+		this.materialHead = new THREE.MeshLambertMaterial( { color: 0x413a31 } );
 		this.pollenHeadGeometry = new THREE.SphereGeometry( this.size*5, this.radiusSegment, this.segment );
 		this.pollenHeadMesh = new THREE.Mesh( this.pollenHeadGeometry, this.materialHead );	
 		this.pollenHeadMesh.position.set(this.pollenHeadPosition.x, this.pollenHeadPosition.y, this.pollenHeadPosition.z)	
