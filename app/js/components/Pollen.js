@@ -4,7 +4,7 @@ import pollenVert from 'shaders/pollen-vert';
 import pollenFrag from 'shaders/pollen-frag';
 
 class Pollen extends THREE.Object3D {
-	constructor(){
+	constructor(orientation){
 		super();
 
 		// ##
@@ -19,6 +19,9 @@ class Pollen extends THREE.Object3D {
 			y : -0.15,
 			z : 0.275
 		};
+		// - bool
+		this.isSeed = false;
+		this.growing = false;
 		// - var
 		this.segments = 32;
 		this.radiusSegment = 32;
@@ -47,10 +50,9 @@ class Pollen extends THREE.Object3D {
 
 		// ##
 		// INIT POSITION & SIZE
-		this.pollenMesh.scale.set(0,0,0);
 		this.pollenMesh.position.set(this.POZ.x,this.POZ.y,this.POZ.z);
 		this.pollenMesh.rotation.x = -this.getRandomFloat(0.5, 1);
-
+		this.pollenMesh.rotation.y = 0.5 - (orientation/2);
 
 		// ##
 		// SAVE BINDING
@@ -58,16 +60,21 @@ class Pollen extends THREE.Object3D {
 		this._binds.onUpdate = this._onUpdate.bind(this);
 	}
 
-	orientation(or) {
-		this.pollenMesh.rotation.y = 0.5-(or/2);
+	toSeed() {
+		this.pollenMesh.scale.set(0,0,0);
+		this.isSeed = true;	
+	}
+
+	grow() {
+		let scaleDist = this.SCALE.x - this.pollenMesh.scale.x;
+		let mouv = this.pollenMesh.scale.x + scaleDist*0.02;
+		this.pollenMesh.scale.set(mouv,mouv,mouv)
 	}
 
 	_onUpdate() {
-		let scaleDist = this.SCALE.x - this.pollenMesh.scale.x;
-		if(scaleDist > 0.001) {
-			let mouv = this.pollenMesh.scale.x + scaleDist*0.02;
-			this.pollenMesh.scale.set(mouv,mouv,mouv)
-		}			
+		if(this.growing){
+			this.grow();
+		}	
 	}
 
 	createCustomCurve(){

@@ -1,5 +1,3 @@
-var props = {
-	zoom : 10
-}
+var props = {}
 
 module.exports = props;
