@@ -1,8 +1,9 @@
 import webgl from 'js/core/Webgl';
 import loop from 'js/core/Loop';
 import props from 'js/core/props';
-import Flower from 'js/components/Flower';
+import swiftEvent from "js/core/SwiftEventDispatcher";
 
+import Flower from 'js/components/Flower';
 
 // ##
 // INIT
