@@ -17,7 +17,7 @@ class Flower extends THREE.Object3D {
 		this.isSeed = false;
 		this.growing = false;
 		// -- material
-		this.material = new THREE.MeshLambertMaterial( { color: 0xFB6AAB, shading: THREE.FlatShading } );		
+		this.material = new THREE.MeshLambertMaterial( { color: 0xFB6AAB, shading: THREE.FlatShading } );
 		// -- objet/mesh
 		this.flowerObject = false;
 
@@ -63,14 +63,14 @@ class Flower extends THREE.Object3D {
 	_growing(flowerData) {
 		if(this.isSeed){
 			this.growing = true;
-			this._traversePollens((pollen) => {			
+			this._traversePollens((pollen) => {
 				pollen.growing = true;
 			});
 			setTimeout(() => {
 				this.growing = false;
 				this.isSeed = false;
 				console.log("Growing ended");
-				this._traversePollens((pollen) => {			
+				this._traversePollens((pollen) => {
 					pollen.growing = false;
 					pollen.isSeed = false;
 				});
@@ -93,10 +93,13 @@ class Flower extends THREE.Object3D {
 	_onUpdate() {
 		if(this.growing){
 			this.grow();
+		} else {
+			this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z)
 		}
+
 		// ##
 		// UPDATE POLLENS
-		this._traversePollens((pollen) => {			
+		this._traversePollens((pollen) => {
 			pollen._binds.onUpdate();
 		});
 	}

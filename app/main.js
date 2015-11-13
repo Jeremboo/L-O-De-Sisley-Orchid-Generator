@@ -2,6 +2,7 @@ import webgl from 'js/core/Webgl';
 import loop from 'js/core/Loop';
 import props from 'js/core/props';
 import swiftEvent from "js/core/SwiftEventDispatcher";
+import rotationControl from "js/core/RotationControl";
 
 import Flower from 'js/components/Flower';
 
@@ -46,13 +47,12 @@ loop.start();
 // ##
 // TEMPS
 document.addEventListener('keydown', (e) => {
-  if(e.keyCode == 32){ 
+  if(e.keyCode == 32){
       swiftEvent.publish("flowerLoad",{});
-  } 
+  }
 });
-
 // TEMPS
-
+// ##
 
 // ##
 // ON RESIZE
