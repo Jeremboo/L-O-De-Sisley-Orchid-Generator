@@ -29,20 +29,19 @@ class Pollen extends THREE.Object3D {
 		this.length = this.getRandomFloat(5, 12);
 		this.curve = this.getRandomFloat(1, 3);
 
-		this.curve = this.createCustomCurve(); 
+		this.curve = this.createCustomCurve();
 		this.pollenHeadPosition = this.curve.getPoints()[this.curve.getPoints().length-1];
 
 		// - pollenStem geometry/mesh
-		// this.materialStem = new THREE.MeshLambertMaterial( { color: 0x72b662 } );
-		this.materialStem = new THREE.ShaderMaterial( { vertexShader : pollenVert , fragmentShader : pollenFrag } );
+		this.materialStem = new THREE.MeshLambertMaterial( { color: 0x72b662 } );
 
 		this.pollenStemGeometry = new THREE.TubeGeometry( this.curve, this.segments, this.size, this.radiusSegment/2 );
-		this.pollenStemMesh = new THREE.Mesh( this.pollenStemGeometry, this.materialStem );	
+		this.pollenStemMesh = new THREE.Mesh( this.pollenStemGeometry, this.materialStem );
 		// - pollenHead geometry/mesh
 		this.materialHead = new THREE.MeshLambertMaterial( { color: 0x413a31 } );
 		this.pollenHeadGeometry = new THREE.SphereGeometry( this.size*5, this.radiusSegment, this.segment );
-		this.pollenHeadMesh = new THREE.Mesh( this.pollenHeadGeometry, this.materialHead );	
-		this.pollenHeadMesh.position.set(this.pollenHeadPosition.x, this.pollenHeadPosition.y, this.pollenHeadPosition.z)	
+		this.pollenHeadMesh = new THREE.Mesh( this.pollenHeadGeometry, this.materialHead );
+		this.pollenHeadMesh.position.set(this.pollenHeadPosition.x, this.pollenHeadPosition.y, this.pollenHeadPosition.z)
 		// -- pollen
 		this.pollenMesh = new THREE.Object3D();
 		this.pollenMesh.add(this.pollenHeadMesh);
@@ -62,7 +61,7 @@ class Pollen extends THREE.Object3D {
 
 	toSeed() {
 		this.pollenMesh.scale.set(0,0,0);
-		this.isSeed = true;	
+		this.isSeed = true;
 	}
 
 	grow() {
@@ -74,7 +73,7 @@ class Pollen extends THREE.Object3D {
 	_onUpdate() {
 		if(this.growing){
 			this.grow();
-		}	
+		}
 	}
 
 	createCustomCurve(){

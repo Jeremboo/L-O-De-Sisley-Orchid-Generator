@@ -1,8 +1,8 @@
 import webgl from 'js/core/Webgl';
 import loop from 'js/core/Loop';
 import props from 'js/core/props';
-import swiftEvent from "js/core/SwiftEventDispatcher";
 import rotationControl from "js/core/RotationControl";
+import swiftEvent from "js/core/SwiftEventDispatcher";
 
 import Flower from 'js/components/Flower';
 

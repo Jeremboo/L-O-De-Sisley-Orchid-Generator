@@ -93,9 +93,11 @@ class Flower extends THREE.Object3D {
 	_onUpdate() {
 		if(this.growing){
 			this.grow();
-		} else {
-			this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z)
 		}
+
+		// ##
+		// GIROSCOPE ROTATION
+		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z)
 
 		// ##
 		// UPDATE POLLENS
