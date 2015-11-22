@@ -9,16 +9,9 @@ class Pollen extends THREE.Object3D {
 
 		// ##
 		// INIT
-		this.SCALE = {
-			x : 0.03,
-			y : 0.03,
-			z : 0.03
-		};
-		this.POZ = {
-			x : -0.09,
-			y : -0.15,
-			z : 0.275
-		};
+		this.SCALE = new THREE.Vector3(0.03, 0.03, 0.03 );
+		this.POZ = new THREE.Vector3(-0.09, -0.15, 0.275 );
+		this.ROTATION = new THREE.Vector3(-this.getRandomFloat(0.5, 1), 0.5 - (orientation/2), 0 );
 		// - bool
 		this.isSeed = false;
 		this.growing = false;
@@ -50,8 +43,7 @@ class Pollen extends THREE.Object3D {
 		// ##
 		// INIT POSITION & SIZE
 		this.pollenMesh.position.set(this.POZ.x,this.POZ.y,this.POZ.z);
-		this.pollenMesh.rotation.x = -this.getRandomFloat(0.5, 1);
-		this.pollenMesh.rotation.y = 0.5 - (orientation/2);
+		this.pollenMesh.rotation.set(this.ROTATION.x, this.ROTATION.y, this.ROTATION.z);
 
 		// ##
 		// SAVE BINDING
@@ -69,7 +61,7 @@ class Pollen extends THREE.Object3D {
 		let mouv = this.pollenMesh.scale.x + scaleDist*0.02;
 		this.pollenMesh.scale.set(mouv,mouv,mouv)
 	}
-
+	
 	_onUpdate() {
 		if(this.growing){
 			this.grow();

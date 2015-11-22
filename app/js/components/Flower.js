@@ -12,6 +12,7 @@ class Flower extends THREE.Object3D {
 		// ##
 		// INIT
 		this.numberOfPollen = 3;
+		this.oldRotation = new THREE.Vector3( 0, 0, 0 );
 		// -- bool
 		this.alreadyOnScene = false;
 		this.isSeed = false;
@@ -94,6 +95,13 @@ class Flower extends THREE.Object3D {
 		if(this.growing){
 			this.grow();
 		}
+
+		// ##
+		// VELOCITY
+		let forceRotation = this.oldRotation.clone().sub(props.rotation);
+
+		// Save old rotation
+		this.oldRotation.set(this.flowerObject.rotation.x, this.flowerObject.rotation.y, this.flowerObject.rotation.z)
 
 		// ##
 		// GIROSCOPE ROTATION

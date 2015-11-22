@@ -15,8 +15,8 @@ loop.add(webgl._binds.onUpdate);
 
 // ##
 // GUI
-/*let gui = new dat.GUI();
-gui.close();*/
+let gui = new dat.GUI();
+//gui.close();
 
 // ##
 // LIGHT
