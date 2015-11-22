@@ -41,7 +41,7 @@ class Flower extends THREE.Object3D {
 	init(callback) {
 		// ##
 		// LOAD flower
-		LoadingManager._binds.load('3d_model/flower.obj', (object) => {
+		LoadingManager._binds.load(props.objURL, (object) => {
 			this.flowerObject = object.children[0];
 
 			this._traverseChilds( ( child ) => {
