@@ -1,7 +1,7 @@
 import props from 'js/core/props';
 
-import pollenVert from 'shaders/pollen-vert';
-import pollenFrag from 'shaders/pollen-frag';
+import flexibilityVert from 'shaders/flexibility-vert';
+import flexibilityFrag from 'shaders/flexibility-frag';
 
 class Pollen extends THREE.Object3D {
 	constructor(orientation){
@@ -27,9 +27,13 @@ class Pollen extends THREE.Object3D {
 
 		// - pollenStem geometry/mesh
 		this.materialStem = new THREE.MeshLambertMaterial( { color: 0x72b662 } );
+		this.materialStemShader = new THREE.ShaderMaterial({
+    	vertexShader: flexibilityVert,
+    	fragmentShader: flexibilityFrag
+    });
 
 		this.pollenStemGeometry = new THREE.TubeGeometry( this.curve, this.segments, this.size, this.radiusSegment/2 );
-		this.pollenStemMesh = new THREE.Mesh( this.pollenStemGeometry, this.materialStem );
+		this.pollenStemMesh = new THREE.Mesh( this.pollenStemGeometry, this.materialStemShader );
 		// - pollenHead geometry/mesh
 		this.materialHead = new THREE.MeshLambertMaterial( { color: 0x413a31 } );
 		this.pollenHeadGeometry = new THREE.SphereGeometry( this.size*5, this.radiusSegment, this.segment );
@@ -61,7 +65,7 @@ class Pollen extends THREE.Object3D {
 		let mouv = this.pollenMesh.scale.x + scaleDist*0.02;
 		this.pollenMesh.scale.set(mouv,mouv,mouv)
 	}
-	
+
 	_onUpdate() {
 		if(this.growing){
 			this.grow();
