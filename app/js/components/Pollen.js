@@ -2,6 +2,8 @@ import props from 'js/core/props';
 
 import flexibilityVert from 'shaders/flexibility-vert';
 import flexibilityFrag from 'shaders/flexibility-frag';
+import flexibilityHeadVert from 'shaders/flexibilityHead-vert';
+import flexibilityHeadFrag from 'shaders/flexibilityHead-frag';
 
 class Pollen extends THREE.Object3D {
 	constructor(orientation){
@@ -25,16 +27,10 @@ class Pollen extends THREE.Object3D {
 		this.curve = this.createCustomCurve();
 		this.pollenHeadPosition = this.curve.getPoints()[this.curve.getPoints().length-1];
 
-		// STEM
-		// - geometry
+		// - STEM
+		// -- geometry
 		this.pollenStemGeometry = new THREE.TubeGeometry( this.curve, this.segments, this.size, this.radiusSegment/2 );
-		// --- TEMPS ### ADD ATTRIBUTES
-		//this.pollenStemBufferGeometry = new THREE.BufferGeometry().fromGeometry(this.pollenStemGeometry);
-		//this.oldRelativePos = this.pollenStemBufferGeometry.attributes.position.clone(); // Matrix3
-		//this.pollenStemBufferGeometry.addAttribute('oldpos',this.oldRelativePos);
-		// --- ###
-		// - material
-		//this.materialStem = new THREE.MeshLambertMaterial( { color: 0x72b662 } );
+		// -- material
 		this.materialStemShader = new THREE.ShaderMaterial({
 			uniforms : {
 				'oldModelMatrix' : { type : 'm4', value : new THREE.Matrix4() }
@@ -42,16 +38,31 @@ class Pollen extends THREE.Object3D {
 			vertexShader: flexibilityVert,
 			fragmentShader: flexibilityFrag
 		});
+		// -- mesh
 		this.pollenStemMesh = new THREE.Mesh( this.pollenStemGeometry, this.materialStemShader );
-		// - update material
+		// -- update material
 		this.setOldMatrixWorldToUniforms(this.pollenStemMesh);
 
-		// - pollenHead geometry/mesh
-		this.materialHead = new THREE.MeshLambertMaterial( { color: 0x413a31 } );
+		// - HEAD
+		// -- pollenHead geometry/mesh
 		this.pollenHeadGeometry = new THREE.SphereGeometry( this.size*5, this.radiusSegment, this.segment );
-		this.pollenHeadMesh = new THREE.Mesh( this.pollenHeadGeometry, this.materialHead );
-		this.pollenHeadMesh.position.set(this.pollenHeadPosition.x, this.pollenHeadPosition.y, this.pollenHeadPosition.z)
-		// -- pollen
+		// -- material
+		this.materialHeadShader = new THREE.ShaderMaterial({
+			uniforms : {
+				'oldModelMatrix' : { type : 'm4', value : new THREE.Matrix4() }
+			},
+			vertexShader: flexibilityHeadVert,
+			fragmentShader: flexibilityHeadFrag
+		});
+		// -- mesh
+		this.pollenHeadMesh = new THREE.Mesh( this.pollenHeadGeometry, this.materialHeadShader );
+		// -- position
+		this.pollenHeadMesh.position.set( this.pollenHeadPosition.x, this.pollenHeadPosition.y, this.pollenHeadPosition.z);
+		// -- update material
+		this.setOldMatrixWorldToUniforms(this.pollenHeadMesh);
+
+
+		// POLLEN (STEM + HEAD )
 		this.pollenMesh = new THREE.Object3D();
 		this.pollenMesh.add(this.pollenHeadMesh);
 		this.pollenMesh.add(this.pollenStemMesh);
@@ -85,6 +96,7 @@ class Pollen extends THREE.Object3D {
 
 		// update shader
 		this.setOldMatrixWorldToUniforms(this.pollenStemMesh);
+		this.setOldMatrixWorldToUniforms(this.pollenHeadMesh);
 	}
 
 	createCustomCurve(){
@@ -94,7 +106,7 @@ class Pollen extends THREE.Object3D {
 		        this.length = (length === undefined) ? 1 : length;
 		    },
 		    function ( t ) { //getPoint: t is between 0-1
-		        var tx = 0,
+		        let tx = 0,
 		            ty = Math.sin( t * this.curve ),
 		            tz = t * this.length;
 
@@ -106,17 +118,6 @@ class Pollen extends THREE.Object3D {
 
 	setOldMatrixWorldToUniforms(mesh) {
 		mesh.material.uniforms.oldModelMatrix.value = mesh.matrixWorld.clone();
-	}
-
-	getGlobalPositionToStem(){
-		let relativePosition = new THREE.Vector3().setFromMatrixPosition( this.pollenMesh.matrixWorld);
-		let relativePositionToVertices = [];
-		for (var i = 0; i < this.pollenStemGeometry.vertices.length; i++) {
-			relativePositionToVertices.push(this.pollenStemGeometry.vertices[i].clone().applyMatrix4(this.pollenMesh.matrixWorld));
-		}
-		this.oldRelativePos = relativePositionToVertices;
-
-		this.pollenStemBufferGeometry.attributes.position.clone(); // Matrix3
 	}
 
 	getRandomFloat(min, max) {

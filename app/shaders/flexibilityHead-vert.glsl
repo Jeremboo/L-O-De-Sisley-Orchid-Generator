@@ -1,13 +1,11 @@
-varying vec2 vUv;
- uniform mat4 oldModelMatrix;
+uniform mat4 oldModelMatrix;
 
 
 
 void main() {
-	vUv = uv;
 
   // Definition of modelMatrix
-  mat4 distModelMatrix = ( modelMatrix - oldModelMatrix )*(1.0 - (uv.x * 3.0));
+  mat4 distModelMatrix = ( modelMatrix - oldModelMatrix ) * (-2.0);
 
   gl_Position =  projectionMatrix *
                  viewMatrix * ( oldModelMatrix + distModelMatrix ) *
