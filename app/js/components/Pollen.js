@@ -25,15 +25,27 @@ class Pollen extends THREE.Object3D {
 		this.curve = this.createCustomCurve();
 		this.pollenHeadPosition = this.curve.getPoints()[this.curve.getPoints().length-1];
 
-		// - pollenStem geometry/mesh
-		this.materialStem = new THREE.MeshLambertMaterial( { color: 0x72b662 } );
-		this.materialStemShader = new THREE.ShaderMaterial({
-    	vertexShader: flexibilityVert,
-    	fragmentShader: flexibilityFrag
-    });
-
+		// STEM
+		// - geometry
 		this.pollenStemGeometry = new THREE.TubeGeometry( this.curve, this.segments, this.size, this.radiusSegment/2 );
+		// --- TEMPS ### ADD ATTRIBUTES
+		//this.pollenStemBufferGeometry = new THREE.BufferGeometry().fromGeometry(this.pollenStemGeometry);
+		//this.oldRelativePos = this.pollenStemBufferGeometry.attributes.position.clone(); // Matrix3
+		//this.pollenStemBufferGeometry.addAttribute('oldpos',this.oldRelativePos);
+		// --- ###
+		// - material
+		//this.materialStem = new THREE.MeshLambertMaterial( { color: 0x72b662 } );
+		this.materialStemShader = new THREE.ShaderMaterial({
+			uniforms : {
+				'oldModelMatrix' : { type : 'm4', value : new THREE.Matrix4() }
+			},
+			vertexShader: flexibilityVert,
+			fragmentShader: flexibilityFrag
+		});
 		this.pollenStemMesh = new THREE.Mesh( this.pollenStemGeometry, this.materialStemShader );
+		// - update material
+		this.setOldMatrixWorldToUniforms(this.pollenStemMesh);
+
 		// - pollenHead geometry/mesh
 		this.materialHead = new THREE.MeshLambertMaterial( { color: 0x413a31 } );
 		this.pollenHeadGeometry = new THREE.SphereGeometry( this.size*5, this.radiusSegment, this.segment );
@@ -70,6 +82,9 @@ class Pollen extends THREE.Object3D {
 		if(this.growing){
 			this.grow();
 		}
+
+		// update shader
+		this.setOldMatrixWorldToUniforms(this.pollenStemMesh);
 	}
 
 	createCustomCurve(){
@@ -87,6 +102,21 @@ class Pollen extends THREE.Object3D {
 		    }
 		);
 		return new CustomSinCurve(this.length, this.curve);
+	}
+
+	setOldMatrixWorldToUniforms(mesh) {
+		mesh.material.uniforms.oldModelMatrix.value = mesh.matrixWorld.clone();
+	}
+
+	getGlobalPositionToStem(){
+		let relativePosition = new THREE.Vector3().setFromMatrixPosition( this.pollenMesh.matrixWorld);
+		let relativePositionToVertices = [];
+		for (var i = 0; i < this.pollenStemGeometry.vertices.length; i++) {
+			relativePositionToVertices.push(this.pollenStemGeometry.vertices[i].clone().applyMatrix4(this.pollenMesh.matrixWorld));
+		}
+		this.oldRelativePos = relativePositionToVertices;
+
+		this.pollenStemBufferGeometry.attributes.position.clone(); // Matrix3
 	}
 
 	getRandomFloat(min, max) {
