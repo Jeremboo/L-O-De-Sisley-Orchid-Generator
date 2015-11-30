@@ -18,7 +18,7 @@ class Flower extends THREE.Object3D {
 		this.isSeed = false;
 		this.growing = false;
 		// -- material
-		this.material = new THREE.MeshLambertMaterial( { color: 0xFB6AAB, shading: THREE.FlatShading } );
+		this.material = new THREE.MeshLambertMaterial( { color: 0xFB6AAB, shading: THREE.FlatShading, side: THREE.DoubleSide } );
 		// -- objet/mesh
 		this.flowerObject = false;
 
@@ -42,11 +42,12 @@ class Flower extends THREE.Object3D {
 		// ##
 		// LOAD flower
 		LoadingManager._binds.load(props.objURL, (object) => {
-			this.flowerObject = object.children[0];
+			this.flowerObject = object;
 
 			this._traverseChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
 				child.material = this.material;
+				//TODO mettre la texture
 			});
 			this._createPollen(this.numberOfPollen);
 			this.toSeed();
