@@ -44,10 +44,13 @@ class Flower extends THREE.Object3D {
 		LoadingManager._binds.load(props.objURL, (object) => {
 			this.flowerObject = object.children[0];
 
+			// ADD MATERIAL FOR EACH PETAL
 			this._traverseChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
 				child.material = this.material;
 			});
+
+			// CREATE POLLEN
 			this._createPollen(this.numberOfPollen);
 			this.toSeed();
 			callback();
@@ -101,11 +104,11 @@ class Flower extends THREE.Object3D {
 		let forceRotation = this.oldRotation.clone().sub(props.rotation);
 
 		// Save old rotation
-		this.oldRotation.set(this.flowerObject.rotation.x, this.flowerObject.rotation.y, this.flowerObject.rotation.z)
+		this.oldRotation.set(this.flowerObject.rotation.x, this.flowerObject.rotation.y, this.flowerObject.rotation.z);
 
 		// ##
 		// GIROSCOPE ROTATION
-		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z)
+		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
 
 		// ##
 		// UPDATE POLLENS
