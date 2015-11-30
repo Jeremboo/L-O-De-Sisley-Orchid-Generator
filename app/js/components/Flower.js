@@ -4,6 +4,9 @@ import swiftEvent from "js/core/SwiftEventDispatcher";
 
 import Pollen from 'js/components/Pollen';
 
+import petalVert from 'shaders/petal-vert';
+import petalFrag from 'shaders/petal-frag';
+
 
 class Flower extends THREE.Object3D {
 	constructor(){
@@ -18,9 +21,22 @@ class Flower extends THREE.Object3D {
 		this.isSeed = false;
 		this.growing = false;
 		// -- material
-		this.material = new THREE.MeshLambertMaterial( { color: 0xFB6AAB, shading: THREE.FlatShading, side: THREE.DoubleSide } );
+		this.petalTexture = THREE.ImageUtils.loadTexture('tex/texture_03.jpg');
+		this.flexibilityTexture = THREE.ImageUtils.loadTexture('tex/texture_flexibility.jpg');
+		this.textureMaterial = new THREE.ShaderMaterial( {
+		  uniforms: {
+		    petalMap: { type: "t", value: this.petalTexture },
+		    flexibilityMap: { type: "t", value: this.flexibilityTexture },
+				oldModelMatrix : { type : 'm4', value : new THREE.Matrix4() }
+		  },
+		  vertexShader: petalVert,
+		  fragmentShader: petalFrag,
+			side: THREE.DoubleSide
+		});
+
 		// -- objet/mesh
-		this.flowerObject = false;
+		this.petalsObject = false;
+		this.flowerObject = new THREE.Object3D();
 
 		// -- polen
 		this.pollens = [];
@@ -42,12 +58,13 @@ class Flower extends THREE.Object3D {
 		// ##
 		// LOAD flower
 		LoadingManager._binds.load(props.objURL, (object) => {
-			this.flowerObject = object;
+			this.petalsObject = object;
+			this.flowerObject.add(this.petalsObject);
 
-			this._traverseChilds( ( child ) => {
+			this._traversePetalsChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
-				child.material = this.material;
-				//TODO mettre la texture
+				child.material = this.textureMaterial;
+				child.material.uniforms.oldModelMatrix.value = child.matrixWorld.clone();
 			});
 			this._createPollen(this.numberOfPollen);
 			this.toSeed();
@@ -97,16 +114,14 @@ class Flower extends THREE.Object3D {
 			this.grow();
 		}
 
-		// ##
-		// VELOCITY
-		let forceRotation = this.oldRotation.clone().sub(props.rotation);
-
-		// Save old rotation
-		this.oldRotation.set(this.flowerObject.rotation.x, this.flowerObject.rotation.y, this.flowerObject.rotation.z)
+		this._traversePetalsChilds( ( child ) => {
+			child.material.uniforms.oldModelMatrix.value = child.matrixWorld.clone();
+			//TODO faire de la vélocité ici aussi
+		});
 
 		// ##
 		// GIROSCOPE ROTATION
-		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z)
+		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
 
 		// ##
 		// UPDATE POLLENS
@@ -137,8 +152,8 @@ class Flower extends THREE.Object3D {
 		}
 	}
 
-	_traverseChilds(fct){
-		this.flowerObject.traverse( (c) => {
+	_traversePetalsChilds(fct){
+		this.petalsObject.traverse( (c) => {
 			if ( c instanceof THREE.Mesh ) {
 				fct(c);
 			}
