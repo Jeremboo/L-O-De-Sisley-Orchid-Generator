@@ -115,13 +115,14 @@ class Flower extends THREE.Object3D {
 		}
 
 		this._traversePetalsChilds( ( child ) => {
-			child.material.uniforms.oldModelMatrix.value = child.matrixWorld.clone();
+			 child.material.uniforms.oldModelMatrix.value = child.matrixWorld.clone();
 			//TODO faire de la vélocité ici aussi
 		});
 
 		// ##
 		// GIROSCOPE ROTATION
 		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
+		//this.flowerObject.rotation.y += 0.1;
 
 		// ##
 		// UPDATE POLLENS
