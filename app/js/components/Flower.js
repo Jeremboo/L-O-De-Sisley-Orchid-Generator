@@ -66,6 +66,8 @@ class Flower extends THREE.Object3D {
 				child.material = this.textureMaterial;
 				child.material.uniforms.oldModelMatrix.value = child.matrixWorld.clone();
 			});
+
+			// CREATE POLLEN
 			this._createPollen(this.numberOfPollen);
 			this.toSeed();
 			callback();
@@ -122,7 +124,6 @@ class Flower extends THREE.Object3D {
 		// ##
 		// GIROSCOPE ROTATION
 		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
-		//this.flowerObject.rotation.y += 0.1;
 
 		// ##
 		// UPDATE POLLENS
