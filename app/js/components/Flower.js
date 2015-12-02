@@ -4,7 +4,7 @@ import swiftEvent from "js/core/SwiftEventDispatcher";
 
 import Pollen from 'js/components/Pollen';
 
-import petalVert from 'shaders/petal-vert';
+import springinessVert from 'shaders/springiness-vert';
 import petalFrag from 'shaders/petal-frag';
 
 
@@ -22,14 +22,14 @@ class Flower extends THREE.Object3D {
 		this.growing = false;
 		// -- material
 		this.petalTexture = THREE.ImageUtils.loadTexture('tex/texture_03.jpg');
-		this.flexibilityTexture = THREE.ImageUtils.loadTexture('tex/texture_flexibility.jpg');
+		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/texture_springiness.jpg');
 		this.textureMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
 		    petalMap: { type: "t", value: this.petalTexture },
-		    flexibilityMap: { type: "t", value: this.flexibilityTexture },
-				oldModelMatrix : { type : 'm4', value : new THREE.Matrix4() }
+		    springinessMap: { type: "t", value: this.springinessTexture },
+				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 		  },
-		  vertexShader: petalVert,
+		  vertexShader: springinessVert,
 		  fragmentShader: petalFrag,
 			side: THREE.DoubleSide
 		});
@@ -64,11 +64,10 @@ class Flower extends THREE.Object3D {
 			this._traversePetalsChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
 				child.material = this.textureMaterial;
-				child.material.uniforms.oldModelMatrix.value = child.matrixWorld.clone();
 			});
 
 			// CREATE POLLEN
-			this._createPollen(this.numberOfPollen);
+			//this._createPollen(this.numberOfPollen);
 			this.toSeed();
 			callback();
 		});
@@ -116,14 +115,22 @@ class Flower extends THREE.Object3D {
 			this.grow();
 		}
 
-		this._traversePetalsChilds( ( child ) => {
-			 child.material.uniforms.oldModelMatrix.value = child.matrixWorld.clone();
-			//TODO faire de la vélocité ici aussi
-		});
-
 		// ##
-		// GIROSCOPE ROTATION
-		this.flowerObject.rotation.set(props.rotation.x, props.rotation.y, props.rotation.z);
+		// ROTATION
+		// - dist between new rotation targeted and current rotation
+		let distRotation = props.rotation.clone().sub(this.flowerObject.rotation.toVector3());
+		let matrixDistRotation = this._createRotationMatrix(distRotation);
+	  // - force to apply at flowerObject
+		let forceRotation = distRotation.multiplyScalar(props.velRotation);
+		forceRotation.y *= 5; // minimise force in Y.
+
+		// - update rotation with forceRotation
+		this.flowerObject.rotation.setFromVector3(this.flowerObject.rotation.toVector3().add(forceRotation));
+
+		// - update shader rotationForceMatrix in springiness-vert
+		this._traversePetalsChilds( ( child ) => {
+			 child.material.uniforms.rotationForceMatrix.value = matrixDistRotation;
+		});
 
 		// ##
 		// UPDATE POLLENS
@@ -144,6 +151,23 @@ class Flower extends THREE.Object3D {
 		if(or > 0){
 			this._createPollen(or);
 		}
+	}
+
+	_createRotationMatrix(vectRotation) {
+		let m = new THREE.Matrix4();
+		let m1 = new THREE.Matrix4();
+		let m2 = new THREE.Matrix4();
+		let m3 = new THREE.Matrix4();
+
+
+		m1.makeRotationX( -vectRotation.x );
+		m2.makeRotationY( -vectRotation.y );
+		m3.makeRotationY( -vectRotation.z );
+
+		m.multiplyMatrices( m1, m2 );
+		m.multiply( m3 );
+
+		return m;
 	}
 
 	_traversePollens(fct) {
