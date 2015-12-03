@@ -16,10 +16,10 @@ loop.add(webgl._binds.onUpdate);
 // ##
 // GUI
 let gui = new dat.GUI();
-gui.add(props, 'stress', 0, 1);
-gui.add(props, 'tiredness', 0, 1);
-gui.add(props, 'mood', 0, 1);
-
+var f2 = gui.addFolder('Flower');
+gui.add(props, 'textured');
+gui.add(props, 'surpriseEffect');
+gui.add(props, 'velSpringiness', 0, 0.5);
 //gui.close();
 
 // ##
@@ -47,16 +47,8 @@ swiftEvent.subscribe("flowerLoad", (flowerData) => {
 // RENDERER
 loop.start();
 
+swiftEvent.publish("flowerLoad",{});
 
-// ##
-// TEMPS
-document.addEventListener('keydown', (e) => {
-  if(e.keyCode == 32){
-      swiftEvent.publish("flowerLoad",{});
-  }
-});
-// TEMPS
-// ##
 
 // ##
 // ON RESIZE

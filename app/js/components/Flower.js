@@ -16,16 +16,22 @@ class Flower extends THREE.Object3D {
 		// INIT
 		this.numberOfPistil = 3;
 		this.oldRotation = new THREE.Vector3( 0, 0, 0 );
-		// -- bool
+		// - bool
 		this.alreadyOnScene = false;
 		this.isSeed = false;
 		this.growing = false;
-		// -- material
+		// - material
+		// -- textures
 		this.petalTexture = THREE.ImageUtils.loadTexture('tex/texture_03.jpg');
 		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/texture_springiness.jpg');
+		this.springinessTextureSurprise = THREE.ImageUtils.loadTexture('tex/texture_springiness_surprise.jpg');
+		this.currentSpringinessTexture = false;
+		this.currentTexture = false;
+		this._checkTexture();
+		// -- shader material
 		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
-		    petalMap: { type: "t", value: this.petalTexture },
+		    petalMap: { type: "t", value: this.currentTexture },
 		    springinessMap: { type: "t", value: this.springinessTexture },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 		  },
@@ -33,12 +39,11 @@ class Flower extends THREE.Object3D {
 		  fragmentShader: petalFrag,
 			side: THREE.DoubleSide
 		});
-
-		// -- objet/mesh
+		// - objet/mesh
 		this.petalsObject = false;
 		this.flowerObject = new THREE.Object3D();
 
-		// -- polen
+		// - pistil
 		this.pistil = [];
 
 		// ##
@@ -119,24 +124,41 @@ class Flower extends THREE.Object3D {
 		// ROTATION
 		// - dist between new rotation targeted and current rotation
 		let distRotation = props.rotation.clone().sub(this.flowerObject.rotation.toVector3());
-		let matrixDistRotation = this._createRotationMatrix(distRotation);
+		let distRotationMatrix = this._createRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
-		let forceRotation = distRotation.multiplyScalar(props.velRotation);
-		forceRotation.y *= 3; // minimise force in Y.
+		let rotationForce = distRotation.multiplyScalar(props.velSpringiness);
 
-		// - update rotation with forceRotation
-		this.flowerObject.rotation.setFromVector3(this.flowerObject.rotation.toVector3().add(forceRotation));
-
-		// - update shader rotationForceMatrix in springiness-vert
-		this._traversePetalsChilds( ( child ) => {
-			 child.material.uniforms.rotationForceMatrix.value = matrixDistRotation;
-		});
+		// - update rotation with rotationForce
+		this.flowerObject.rotation.setFromVector3(this.flowerObject.rotation.toVector3().add(rotationForce));
 
 		// ##
-		// UPDATE PISTILS
-		this._traversePistil((pistil) => {
-			pistil._binds.onUpdate(matrixDistRotation);
+		// UPDATE
+		this._checkTexture();
+		// - update shader
+		this._traversePetalsChilds( ( child ) => {
+			// -- texture
+			child.material.uniforms.petalMap.value = this.currentTexture;
+			child.material.uniforms.springinessMap.value = this.currentSpringinessTexture;
+			// -- rotation force
+			child.material.uniforms.rotationForceMatrix.value = distRotationMatrix;
 		});
+		// - update pistil
+		this._traversePistil((pistil) => {
+			pistil._binds.onUpdate(distRotationMatrix);
+		});
+	}
+
+	_checkTexture(){
+		if(props.surpriseEffect) {
+			this.currentSpringinessTexture = this.springinessTextureSurprise;
+		} else {
+			this.currentSpringinessTexture = this.springinessTexture;
+		}
+		if(props.textured) {
+			this.currentTexture = this.petalTexture;
+		} else {
+			this.currentTexture = this.currentSpringinessTexture;
+		}
 	}
 
 	_createPistil(or) {
