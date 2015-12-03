@@ -2,9 +2,9 @@ import props from 'js/core/props';
 import LoadingManager from 'js/core/LoadingManager';
 import swiftEvent from "js/core/SwiftEventDispatcher";
 
-import Pollen from 'js/components/Pollen';
+import Pistil from 'js/components/Pistil';
 
-import springinessVert from 'shaders/springiness-vert';
+import petalVert from 'shaders/petal-vert';
 import petalFrag from 'shaders/petal-frag';
 
 
@@ -14,7 +14,7 @@ class Flower extends THREE.Object3D {
 
 		// ##
 		// INIT
-		this.numberOfPollen = 3;
+		this.numberOfPistil = 3;
 		this.oldRotation = new THREE.Vector3( 0, 0, 0 );
 		// -- bool
 		this.alreadyOnScene = false;
@@ -23,13 +23,13 @@ class Flower extends THREE.Object3D {
 		// -- material
 		this.petalTexture = THREE.ImageUtils.loadTexture('tex/texture_03.jpg');
 		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/texture_springiness.jpg');
-		this.textureMaterial = new THREE.ShaderMaterial( {
+		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
 		    petalMap: { type: "t", value: this.petalTexture },
 		    springinessMap: { type: "t", value: this.springinessTexture },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 		  },
-		  vertexShader: springinessVert,
+		  vertexShader: petalVert,
 		  fragmentShader: petalFrag,
 			side: THREE.DoubleSide
 		});
@@ -39,7 +39,7 @@ class Flower extends THREE.Object3D {
 		this.flowerObject = new THREE.Object3D();
 
 		// -- polen
-		this.pollens = [];
+		this.pistil = [];
 
 		// ##
 		// EVENTS
@@ -63,11 +63,11 @@ class Flower extends THREE.Object3D {
 
 			this._traversePetalsChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
-				child.material = this.textureMaterial;
+				child.material = this.flowerShaderMaterial;
 			});
 
-			// CREATE POLLEN
-			//this._createPollen(this.numberOfPollen);
+			// CREATE PISTIL
+			this._createPistil(this.numberOfPistil);
 			this.toSeed();
 			callback();
 		});
@@ -83,16 +83,16 @@ class Flower extends THREE.Object3D {
 	_growing(flowerData) {
 		if(this.isSeed){
 			this.growing = true;
-			this._traversePollens((pollen) => {
-				pollen.growing = true;
+			this._traversePistil((pistil) => {
+				pistil.growing = true;
 			});
 			setTimeout(() => {
 				this.growing = false;
 				this.isSeed = false;
 				console.log("Growing ended");
-				this._traversePollens((pollen) => {
-					pollen.growing = false;
-					pollen.isSeed = false;
+				this._traversePistil((pistil) => {
+					pistil.growing = false;
+					pistil.isSeed = false;
 				});
 			},2000);
 		} else {
@@ -122,7 +122,7 @@ class Flower extends THREE.Object3D {
 		let matrixDistRotation = this._createRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
 		let forceRotation = distRotation.multiplyScalar(props.velRotation);
-		forceRotation.y *= 5; // minimise force in Y.
+		forceRotation.y *= 3; // minimise force in Y.
 
 		// - update rotation with forceRotation
 		this.flowerObject.rotation.setFromVector3(this.flowerObject.rotation.toVector3().add(forceRotation));
@@ -133,23 +133,23 @@ class Flower extends THREE.Object3D {
 		});
 
 		// ##
-		// UPDATE POLLENS
-		this._traversePollens((pollen) => {
-			pollen._binds.onUpdate();
+		// UPDATE PISTILS
+		this._traversePistil((pistil) => {
+			pistil._binds.onUpdate(matrixDistRotation);
 		});
 	}
 
-	_createPollen(or) {
+	_createPistil(or) {
 		or = or-1;
-		// - pollen
-		var p = new Pollen(or);
+		// - pistil
+		var p = new Pistil(or, this.flowerShaderMaterial);
 		p.toSeed();
 		// - add to flower object
-		this.flowerObject.add(p.pollenMesh);
-		this.pollens.push(p);
+		this.flowerObject.add(p.pistilMesh);
+		this.pistil.push(p);
 
 		if(or > 0){
-			this._createPollen(or);
+			this._createPistil(or);
 		}
 	}
 
@@ -170,11 +170,11 @@ class Flower extends THREE.Object3D {
 		return m;
 	}
 
-	_traversePollens(fct) {
+	_traversePistil(fct) {
 		let i = 0,
-			l = this.pollens.length;
+			l = this.pistil.length;
 		for ( i ; i < l ; i++) {
-			fct(this.pollens[i]);
+			fct(this.pistil[i]);
 		}
 	}
 

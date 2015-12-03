@@ -1,20 +1,17 @@
 varying vec2 vUv;
-uniform sampler2D springinessMap;
 uniform mat4 rotationForceMatrix;
 
 void main() {
 	vUv = uv;
 
-	vec4 flexTexture = texture2D( springinessMap, vUv );
-
+	float vel = 1.0 - vUv.x;
 
 	vec4 targetPos = vec4(position, 1.0) * rotationForceMatrix;
 	vec4 oldPos = vec4(position, 1.0);
 
-	vec4 pos = oldPos + ( (targetPos - oldPos) * flexTexture.x ) ;
-
+	vec4 pos = oldPos + ( (targetPos - oldPos) * vel ) ;
 
 	gl_Position = projectionMatrix *
-                modelViewMatrix *
-                pos;
+	                modelViewMatrix *
+	                pos;
 }
