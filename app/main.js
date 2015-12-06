@@ -16,10 +16,10 @@ loop.add(webgl._binds.onUpdate);
 // ##
 // GUI
 let gui = new dat.GUI();
-gui.add(props, 'stress', 0, 1);
-gui.add(props, 'tiredness', 0, 1);
-gui.add(props, 'mood', 0, 1);
-
+gui.add(props, 'velSpringiness', 0, 0.5);
+gui.add(props, 'stress', 0, 10);
+gui.add(props, 'tiredness', 0, 10);
+gui.add(props, 'mood', 0, 10);
 //gui.close();
 
 // ##

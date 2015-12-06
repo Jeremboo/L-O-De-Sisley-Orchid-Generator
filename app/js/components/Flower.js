@@ -28,6 +28,7 @@ class Flower extends THREE.Object3D {
 		    petalMap: { type: "t", value: this.petalTexture },
 		    springinessMap: { type: "t", value: this.springinessTexture },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
+				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 		  },
 		  vertexShader: petalVert,
 		  fragmentShader: petalFrag,
@@ -119,23 +120,43 @@ class Flower extends THREE.Object3D {
 		// ROTATION
 		// - dist between new rotation targeted and current rotation
 		let distRotation = props.rotation.clone().sub(this.flowerObject.rotation.toVector3());
-		let matrixDistRotation = this._createRotationMatrix(distRotation);
+		let distRotationMatrix = this._createRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
-		let forceRotation = distRotation.multiplyScalar(props.velRotation);
-		forceRotation.y *= 3; // minimise force in Y.
+		let rotationForce = distRotation.multiplyScalar(props.velSpringiness);
+		// rotationForce.y *= 3; // minimise force in Y.
 
-		// - update rotation with forceRotation
-		this.flowerObject.rotation.setFromVector3(this.flowerObject.rotation.toVector3().add(forceRotation));
-
-		// - update shader rotationForceMatrix in springiness-vert
-		this._traversePetalsChilds( ( child ) => {
-			 child.material.uniforms.rotationForceMatrix.value = matrixDistRotation;
-		});
+		// - update rotation with rotationForce
+		this.flowerObject.rotation.setFromVector3(this.flowerObject.rotation.toVector3().add(rotationForce));
 
 		// ##
-		// UPDATE PISTILS
+		// WIND
+		// 0 - haut / milieu  ( 1, 0, 0 )
+		// 1 - milieu / gauche ( 0, -1, 0 )
+		// 2 - bas / gauche ( -1, -1, 0 )
+		// 3 - bas / milieu ( -1, 0, 0 )
+		// 4 - bas / droit ( -1, 1, 0 )
+		// 5 - milieu / droit ( 0, -1, 0 )
+		// 6 - haut / milieu ( 1, 0, 0 )
+
+		let time = Date.now();
+		// let windFreq = Math.sin(time / ( 6000 / (props.stress)) ) // * Math.sin(time / 200);
+		let windAmpl = 20 - props.stress;
+		let windStrength = (Math.cos(time / ( 2000 / props.stress )) / windAmpl ) // * windFreq;
+		let windForce = new THREE.Vector3( Math.sin( time / 2000 ), Math.sin( time / 3000 ), 0 ).multiplyScalar(windStrength);
+		let windForceMatrix = this._createRotationMatrix(windForce);
+
+		// ##
+		// UPDATE
+		// - update shader
+		this._traversePetalsChilds( ( child ) => {
+			// -- rotation force
+			child.material.uniforms.rotationForceMatrix.value = distRotationMatrix;
+			// -- wind force
+			child.material.uniforms.windForceMatrix.value = windForceMatrix;
+		});
+		// - update pistil
 		this._traversePistil((pistil) => {
-			pistil._binds.onUpdate(matrixDistRotation);
+			pistil._binds.onUpdate(distRotationMatrix, windForce, windForceMatrix);
 		});
 	}
 
@@ -158,7 +179,6 @@ class Flower extends THREE.Object3D {
 		let m1 = new THREE.Matrix4();
 		let m2 = new THREE.Matrix4();
 		let m3 = new THREE.Matrix4();
-
 
 		m1.makeRotationX( -vectRotation.x );
 		m2.makeRotationY( -vectRotation.y );

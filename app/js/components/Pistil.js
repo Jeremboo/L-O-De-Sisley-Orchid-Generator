@@ -3,8 +3,6 @@ import props from 'js/core/props';
 import pistilVert from 'shaders/pistil-vert';
 import pistilFrag from 'shaders/pistil-frag';
 
-import pistilHeadVert from 'shaders/pistilHead-vert';
-import pistilHeadFrag from 'shaders/pistilHead-frag';
 
 class Pistil extends THREE.Object3D {
 	constructor(orientation){
@@ -34,7 +32,8 @@ class Pistil extends THREE.Object3D {
 		// -- material
 		this.stemShaderMaterial = new THREE.ShaderMaterial({
 			uniforms : {
-				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() }
+				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
+				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() }
 			},
 			vertexShader: pistilVert,
 			fragmentShader: pistilFrag
@@ -46,22 +45,18 @@ class Pistil extends THREE.Object3D {
 		// -- pistilHead geometry/mesh
 		this.pistilHeadGeometry = new THREE.SphereGeometry( this.size*5, this.radiusSegment, this.segment );
 		// -- material
-		this.pistilHeadShaderMaterial = new THREE.ShaderMaterial({
-			uniforms : {
-				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() }
-			},
-			vertexShader: pistilHeadVert,
-			fragmentShader: pistilHeadFrag
-		});
+		this.headMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
 		// -- mesh
-		this.pistilHeadMesh = new THREE.Mesh( this.pistilHeadGeometry, this.pistilHeadShaderMaterial );
+		this.pistilHeadMesh = new THREE.Mesh( this.pistilHeadGeometry, this.headMaterial );
+		this.pistilHeadObject = new THREE.Object3D();
+		this.pistilHeadObject.add(this.pistilHeadMesh);
 		// -- position
 		this.pistilHeadMesh.position.set( this.pistilHeadPosition.x, this.pistilHeadPosition.y, this.pistilHeadPosition.z);
 
 		// PISTIL (STEM + HEAD )
 		this.pistilMesh = new THREE.Object3D();
-		this.pistilMesh.add(this.pistilHeadMesh);
 		this.pistilMesh.add(this.pistilStemMesh);
+		this.pistilMesh.add(this.pistilHeadObject);
 
 		// ##
 		// INIT POSITION & SIZE
@@ -85,14 +80,17 @@ class Pistil extends THREE.Object3D {
 		this.pistilMesh.scale.set(mouv,mouv,mouv)
 	}
 
-	_onUpdate(matrixDistRotation) {
+	_onUpdate(matrixDistRotation, windForce, windForceMatrix) {
 		if(this.growing){
 			this.grow();
 		}
 
 		// update shader
 		this.pistilStemMesh.material.uniforms.rotationForceMatrix.value = matrixDistRotation;
-		this.pistilHeadMesh.material.uniforms.rotationForceMatrix.value = matrixDistRotation;
+		this.pistilStemMesh.material.uniforms.windForceMatrix.value = windForceMatrix;
+
+		// update rotation pistilHead
+		this.pistilHeadObject.rotation.setFromVector3(windForce);
 	}
 
 	createCustomCurve(){
