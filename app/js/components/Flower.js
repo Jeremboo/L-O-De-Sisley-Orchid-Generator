@@ -7,6 +7,9 @@ import Pistil from 'js/components/Pistil';
 import petalVert from 'shaders/petal-vert';
 import petalFrag from 'shaders/petal-frag';
 
+const GROWING = 1;
+const TOSEED = 2;
+
 
 class Flower extends THREE.Object3D {
 	constructor(){
@@ -18,8 +21,7 @@ class Flower extends THREE.Object3D {
 		this.oldRotation = new THREE.Vector3( 0, 0, 0 );
 		// -- bool
 		this.alreadyOnScene = false;
-		this.isSeed = false;
-		this.growing = false;
+		this.animation = false;
 		// -- material
 		this.petalTexture = THREE.ImageUtils.loadTexture('tex/texture_03.jpg');
 		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/texture_springiness.jpg');
@@ -45,14 +47,21 @@ class Flower extends THREE.Object3D {
 		// ##
 		// EVENTS
 		swiftEvent.subscribe("flowerGrow", (flowerData) => {
-			this._binds.growing(flowerData);
+			if (this.alreadyOnScene) {
+				this.animation = GROWING;
+				//TODO ajouter les bonnes données
+			}
+		});
+		swiftEvent.subscribe("flowerToSeed", () => {
+			if (this.alreadyOnScene) {
+				this.animation = TOSEED;
+			}
 		});
 
 		// ##
 		// SAVE BINDING
 		this._binds = {};
 		this._binds.onUpdate = this._onUpdate.bind(this);
-		this._binds.growing = this._growing.bind(this);
 	}
 
 	init(callback) {
@@ -62,6 +71,9 @@ class Flower extends THREE.Object3D {
 			this.petalsObject = object;
 			this.flowerObject.add(this.petalsObject);
 
+			this.flowerObject.scale.set(0,0,0);
+			this.flowerObject.rotation.x = -1;
+
 			this._traversePetalsChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
 				child.material = this.flowerShaderMaterial;
@@ -69,51 +81,22 @@ class Flower extends THREE.Object3D {
 
 			// CREATE PISTIL
 			this._createPistil(this.numberOfPistil);
-			this.toSeed();
-			callback();
+			callback(this.flowerObject);
 		});
 	}
 
-	toSeed(){
-		this.flowerObject.scale.set(0,0,0);
-		this.flowerObject.rotation.x = -1;
-		this.isSeed = true;
-		//TODO mettre la graine
-	}
-
-	_growing(flowerData) {
-		if(this.isSeed){
-			this.growing = true;
-			this._traversePistil((pistil) => {
-				pistil.growing = true;
-			});
-			setTimeout(() => {
-				this.growing = false;
-				this.isSeed = false;
-				console.log("Growing ended");
-				this._traversePistil((pistil) => {
-					pistil.growing = false;
-					pistil.isSeed = false;
-				});
-			},2000);
-		} else {
-			console.error("Can not growing. Flower is not on seed.");
-		}
-	}
-
-	grow() {
-		let flowerSize = ( 10 - this.flowerObject.scale.x ) * 0.03;
-		this.flowerObject.scale.x += flowerSize;
-		this.flowerObject.scale.y += flowerSize;
-		this.flowerObject.scale.z += flowerSize;
-
-		let flowerRotation = -this.flowerObject.rotation.x * 0.03;
-		this.flowerObject.rotation.x += flowerRotation;
-	}
-
 	_onUpdate() {
-		if(this.growing){
-			this.grow();
+		// ##
+		// Animation
+		switch(this.animation){
+			case GROWING :
+				this._onGrow();
+				break;
+			case TOSEED :
+				this._onToSeed();
+				break;
+			default :
+				break;
 		}
 
 		// ##
@@ -160,11 +143,36 @@ class Flower extends THREE.Object3D {
 		});
 	}
 
+	_onToSeed(){
+		this._animateFlower(-0.1, -1);
+		this._traversePistil((pistil) => {
+			pistil.animatePistil(0);
+		});
+	}
+
+	_onGrow() {
+		this._animateFlower(10, 0);
+		this._traversePistil((pistil) => {
+			pistil.animatePistil(0.035);
+		});
+	}
+
+	_animateFlower(size, rotation) {
+		let vel = 0.03;
+		let force = ( size - this.flowerObject.scale.x ) * vel;
+		this.flowerObject.scale.addScalar(force);
+
+		let forceRotation = ( rotation - this.flowerObject.rotation.x ) * vel;
+		this.flowerObject.rotation.x += forceRotation;
+		if(Math.abs(force) < 0.01){
+			this.animation = false;
+		}
+	}
+
 	_createPistil(or) {
 		or = or-1;
 		// - pistil
-		var p = new Pistil(or, this.flowerShaderMaterial);
-		p.toSeed();
+		let p = new Pistil(or, this.flowerShaderMaterial);
 		// - add to flower object
 		this.flowerObject.add(p.pistilMesh);
 		this.pistil.push(p);

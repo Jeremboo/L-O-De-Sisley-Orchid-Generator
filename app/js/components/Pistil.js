@@ -10,20 +10,16 @@ class Pistil extends THREE.Object3D {
 
 		// ##
 		// INIT
-		this.SCALE = new THREE.Vector3(0.03, 0.03, 0.03 );
 		this.POZ = new THREE.Vector3(0, 0.03, -0.02 );
-		this.ROTATION = new THREE.Vector3(-this.getRandomFloat(0.5, 1), 0.5 - (orientation/2), 0 );
-		// - bool
-		this.isSeed = false;
-		this.growing = false;
+		this.ROTATION = new THREE.Euler(-this._getRandomFloat(0.5, 1), 0.5 - (orientation/2), 0 );
 		// - var
 		this.segments = 32;
 		this.radiusSegment = 32;
 		this.size = 0.1;
-		this.length = this.getRandomFloat(5, 12);
-		this.curve = this.getRandomFloat(1, 3);
+		this.length = this._getRandomFloat(5, 12);
+		this.curve = this._getRandomFloat(1, 3);
 
-		this.curve = this.createCustomCurve();
+		this.curve = this._createCustomCurve();
 		this.pistilHeadPosition = this.curve.getPoints()[this.curve.getPoints().length-1];
 
 		// - STEM
@@ -51,7 +47,7 @@ class Pistil extends THREE.Object3D {
 		this.pistilHeadObject = new THREE.Object3D();
 		this.pistilHeadObject.add(this.pistilHeadMesh);
 		// -- position
-		this.pistilHeadMesh.position.set( this.pistilHeadPosition.x, this.pistilHeadPosition.y, this.pistilHeadPosition.z);
+		this.pistilHeadMesh.position.copy(this.pistilHeadPosition);
 
 		// PISTIL (STEM + HEAD )
 		this.pistilMesh = new THREE.Object3D();
@@ -60,8 +56,9 @@ class Pistil extends THREE.Object3D {
 
 		// ##
 		// INIT POSITION & SIZE
-		this.pistilMesh.position.set(this.POZ.x,this.POZ.y,this.POZ.z);
-		this.pistilMesh.rotation.set(this.ROTATION.x, this.ROTATION.y, this.ROTATION.z);
+		this.pistilMesh.scale.set(0,0,0);
+		this.pistilMesh.position.copy(this.POZ);
+		this.pistilMesh.rotation.copy(this.ROTATION);
 
 		// ##
 		// SAVE BINDING
@@ -69,23 +66,14 @@ class Pistil extends THREE.Object3D {
 		this._binds.onUpdate = this._onUpdate.bind(this);
 	}
 
-	toSeed() {
-		this.pistilMesh.scale.set(0,0,0);
-		this.isSeed = true;
-	}
-
-	grow() {
-		let scaleDist = this.SCALE.x - this.pistilMesh.scale.x;
-		let mouv = this.pistilMesh.scale.x + scaleDist*0.02;
-		this.pistilMesh.scale.set(mouv,mouv,mouv)
+	animatePistil(size) {
+		let force = ( size - this.pistilMesh.scale.x ) * 0.03;
+		this.pistilMesh.scale.addScalar(force);
 	}
 
 	_onUpdate(matrixDistRotation, windForce, windForceMatrix) {
-		if(this.growing){
-			this.grow();
-		}
 
-		// update shader
+		// update shader for Stem
 		this.pistilStemMesh.material.uniforms.rotationForceMatrix.value = matrixDistRotation;
 		this.pistilStemMesh.material.uniforms.windForceMatrix.value = windForceMatrix;
 
@@ -93,7 +81,7 @@ class Pistil extends THREE.Object3D {
 		this.pistilHeadObject.rotation.setFromVector3(windForce);
 	}
 
-	createCustomCurve(){
+	_createCustomCurve(){
 		let CustomSinCurve = THREE.Curve.create(
 		    function ( length, curve ) { //custom curve constructor
 		        this.curve = (curve === undefined) ? 1 : curve;
@@ -110,7 +98,7 @@ class Pistil extends THREE.Object3D {
 		return new CustomSinCurve(this.length, this.curve);
 	}
 
-	getRandomFloat(min, max) {
+	_getRandomFloat(min, max) {
         return Math.random() * (max - min) + min;
 	}
 }
