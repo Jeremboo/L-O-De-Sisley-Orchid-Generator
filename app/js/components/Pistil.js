@@ -56,7 +56,7 @@ class Pistil extends THREE.Object3D {
 
 		// ##
 		// INIT POSITION & SIZE
-		this.pistilMesh.scale.set(0,0,0);
+		this.pistilMesh.scale.set(0.0001, 0.0001, 0.0001);
 		this.pistilMesh.position.copy(this.POZ);
 		this.pistilMesh.rotation.copy(this.ROTATION);
 

@@ -71,7 +71,7 @@ class Flower extends THREE.Object3D {
 			this.petalsObject = object;
 			this.flowerObject.add(this.petalsObject);
 
-			this.flowerObject.scale.set(0,0,0);
+			this.flowerObject.scale.set(0.0001, 0.0001, 0.0001) ;
 			this.flowerObject.rotation.x = -1;
 
 			this._traversePetalsChilds( ( child ) => {
@@ -144,7 +144,7 @@ class Flower extends THREE.Object3D {
 	}
 
 	_onToSeed(){
-		this._animateFlower(-0.1, -1);
+		this._animateFlower(0.001, -1);
 		this._traversePistil((pistil) => {
 			pistil.animatePistil(0);
 		});
@@ -164,7 +164,7 @@ class Flower extends THREE.Object3D {
 
 		let forceRotation = ( rotation - this.flowerObject.rotation.x ) * vel;
 		this.flowerObject.rotation.x += forceRotation;
-		if(Math.abs(force) < 0.01){
+		if(Math.abs(force) < 0.001){
 			this.animation = false;
 		}
 	}
