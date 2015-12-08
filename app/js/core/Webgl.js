@@ -17,7 +17,7 @@ class Webgl {
 			antialias : true
 		});
 		this.renderer.setPixelRatio( window.devicePixelRatio );
-		this.renderer.setClearColor(0xCBE0E7);
+		this.renderer.setClearColor(0xfff4e7);
 		this.dom = this.renderer.domElement;
 
 		this.usePostprocessing = false;

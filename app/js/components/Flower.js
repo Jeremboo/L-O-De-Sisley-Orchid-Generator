@@ -23,7 +23,7 @@ class Flower extends THREE.Object3D {
 		this.alreadyOnScene = false;
 		this.animation = false;
 		// -- material
-		this.petalTexture = THREE.ImageUtils.loadTexture('tex/texture_03.jpg');
+		this.petalTexture = THREE.ImageUtils.loadTexture('tex/ex_02.jpg');
 		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/texture_springiness.jpg');
 		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
