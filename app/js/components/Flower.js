@@ -49,7 +49,9 @@ class Flower extends THREE.Object3D {
 		swiftEvent.subscribe("flowerGrow", (flowerData) => {
 			if (this.alreadyOnScene) {
 				this.animation = GROWING;
-				//TODO ajouter les bonnes données
+				props.stress = flowerData.stress;
+			  props.tiredness = flowerData.tiredness;
+			  props.mood = flowerData.mood
 			}
 		});
 		swiftEvent.subscribe("flowerToSeed", () => {

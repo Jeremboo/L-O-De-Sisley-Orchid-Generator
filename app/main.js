@@ -18,9 +18,9 @@ loop.add(webgl._binds.onUpdate);
 let gui = new dat.GUI();
 let guiController = gui.add(props, 'flowerToSeed').listen();
 gui.add(props, 'velSpringiness', 0, 0.5);
-gui.add(props, 'stress', 0, 10);
-gui.add(props, 'tiredness', 0, 10);
-gui.add(props, 'mood', 0, 10);
+gui.add(props, 'stress', 0, 10).listen();
+gui.add(props, 'tiredness', 0, 10).listen();
+gui.add(props, 'mood', 0, 10).listen();
 
 guiController.onChange(function(value) {
 	toggleFlower();
@@ -63,7 +63,11 @@ swiftEvent.publish("flowerLoad");
 document.addEventListener('keydown', (e) => {
   if(e.keyCode == 32){
 		props.flowerToSeed = true;
-		swiftEvent.publish("flowerGrow");
+		swiftEvent.publish("flowerGrow", {
+			stress : Math.random()*10,
+			tiredness : Math.random()*10,
+			mood : Math.random()*10
+		});
   }
 });
 
@@ -73,7 +77,11 @@ function toggleFlower(){
 		swiftEvent.publish("flowerToSeed");
 	} else {
 		// open flower
-		swiftEvent.publish("flowerGrow");
+		swiftEvent.publish("flowerGrow", {
+			stress : Math.random()*10,
+			tiredness : Math.random()*10,
+			mood : Math.random()*10
+		});
 	}
 }
 // TEMPS
