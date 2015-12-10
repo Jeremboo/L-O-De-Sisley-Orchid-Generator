@@ -5,7 +5,7 @@ import pistilFrag from 'shaders/pistil-frag';
 
 
 class Pistil extends THREE.Object3D {
-	constructor(orientation){
+	constructor(orientation, color){
 		super();
 
 		// ##
@@ -16,9 +16,9 @@ class Pistil extends THREE.Object3D {
 		this.segments = 32;
 		this.radiusSegment = 32;
 		this.size = 0.1;
-		this.length = this._getRandomFloat(5, 12);
-		this.curve = this._getRandomFloat(1, 3);
+		this.color = color;
 
+		this.length = this._getRandomFloat(5, 12);
 		this.curve = this._createCustomCurve();
 		this.pistilHeadPosition = this.curve.getPoints()[this.curve.getPoints().length-1];
 
@@ -29,7 +29,8 @@ class Pistil extends THREE.Object3D {
 		this.stemShaderMaterial = new THREE.ShaderMaterial({
 			uniforms : {
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
-				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() }
+				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
+				color : {type : "v4", value : this.color },
 			},
 			vertexShader: pistilVert,
 			fragmentShader: pistilFrag
@@ -69,6 +70,10 @@ class Pistil extends THREE.Object3D {
 	animatePistil(size) {
 		let force = ( size - this.pistilMesh.scale.x ) * 0.03;
 		this.pistilMesh.scale.addScalar(force);
+	}
+
+	changeColor(newColor){
+		this.pistilStemMesh.material.uniforms.color.value = newColor;
 	}
 
 	_onUpdate(matrixDistRotation, windForce, windForceMatrix) {

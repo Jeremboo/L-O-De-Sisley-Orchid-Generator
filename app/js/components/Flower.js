@@ -19,6 +19,7 @@ class Flower extends THREE.Object3D {
 		// INIT
 		this.numberOfPistil = 3;
 		this.oldRotation = new THREE.Vector3( 0, 0, 0 );
+		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
 		// -- bool
 		this.alreadyOnScene = false;
 		this.animation = false;
@@ -31,7 +32,7 @@ class Flower extends THREE.Object3D {
 		    springinessMap: { type: "t", value: this.springinessTexture },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
-				textureBackgroundColor : {type : "v4", value : this._getVec4Color(props.textureBackgroundColor)},
+				textureBackgroundColor : {type : "v4", value : this.petalBackgroundColor },
 		  },
 		  vertexShader: petalVert,
 		  fragmentShader: petalFrag,
@@ -147,8 +148,12 @@ class Flower extends THREE.Object3D {
 
 	// ## TEMP
 	changeTextureBackgroundColor(){
+		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
 		this._traversePetalsChilds( ( child ) => {
-			child.material.uniforms.textureBackgroundColor.value = this._getVec4Color(props.textureBackgroundColor);
+			child.material.uniforms.textureBackgroundColor.value = this.petalBackgroundColor;
+		});
+		this._traversePistil((pistil) => {
+			pistil.changeColor(this.petalBackgroundColor);
 		});
 	}
 	// ## TEMP
@@ -182,7 +187,7 @@ class Flower extends THREE.Object3D {
 	_createPistil(or) {
 		or = or-1;
 		// - pistil
-		let p = new Pistil(or, this.flowerShaderMaterial);
+		let p = new Pistil(or, this.petalBackgroundColor);
 		// - add to flower object
 		this.flowerObject.add(p.pistilMesh);
 		this.pistil.push(p);
