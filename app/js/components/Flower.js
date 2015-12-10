@@ -23,7 +23,7 @@ class Flower extends THREE.Object3D {
 		this.alreadyOnScene = false;
 		this.animation = false;
 		// -- material
-		this.petalTexture = THREE.ImageUtils.loadTexture('tex/ex_02.jpg');
+		this.petalTexture = THREE.ImageUtils.loadTexture('tex/text_background.jpg');
 		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/texture_springiness.jpg');
 		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
@@ -31,6 +31,7 @@ class Flower extends THREE.Object3D {
 		    springinessMap: { type: "t", value: this.springinessTexture },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
+				textureBackgroundColor : {type : "v4", value : this._getVec4Color(props.textureBackgroundColor)},
 		  },
 		  vertexShader: petalVert,
 		  fragmentShader: petalFrag,
@@ -77,7 +78,6 @@ class Flower extends THREE.Object3D {
 			this.flowerObject.rotation.x = -1;
 
 			this._traversePetalsChilds( ( child ) => {
-				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
 				child.material = this.flowerShaderMaterial;
 			});
 
@@ -105,7 +105,7 @@ class Flower extends THREE.Object3D {
 		// ROTATION
 		// - dist between new rotation targeted and current rotation
 		let distRotation = props.rotation.clone().sub(this.flowerObject.rotation.toVector3());
-		let distRotationMatrix = this._createRotationMatrix(distRotation);
+		let distRotationMatrix = this._getRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
 		let rotationForce = distRotation.multiplyScalar(props.velSpringiness);
 		// rotationForce.y *= 3; // minimise force in Y.
@@ -128,7 +128,7 @@ class Flower extends THREE.Object3D {
 		let windAmpl = 20 - props.stress;
 		let windStrength = (Math.cos(time / ( 2000 / props.stress )) / windAmpl ) // * windFreq;
 		let windForce = new THREE.Vector3( Math.sin( time / 2000 ), Math.sin( time / 3000 ), 0 ).multiplyScalar(windStrength);
-		let windForceMatrix = this._createRotationMatrix(windForce);
+		let windForceMatrix = this._getRotationMatrix(windForce);
 
 		// ##
 		// UPDATE
@@ -144,6 +144,14 @@ class Flower extends THREE.Object3D {
 			pistil._binds.onUpdate(distRotationMatrix, windForce, windForceMatrix);
 		});
 	}
+
+	// ## TEMP
+	changeTextureBackgroundColor(){
+		this._traversePetalsChilds( ( child ) => {
+			child.material.uniforms.textureBackgroundColor.value = this._getVec4Color(props.textureBackgroundColor);
+		});
+	}
+	// ## TEMP
 
 	_onToSeed(){
 		this._animateFlower(0.001, -1);
@@ -184,22 +192,6 @@ class Flower extends THREE.Object3D {
 		}
 	}
 
-	_createRotationMatrix(vectRotation) {
-		let m = new THREE.Matrix4();
-		let m1 = new THREE.Matrix4();
-		let m2 = new THREE.Matrix4();
-		let m3 = new THREE.Matrix4();
-
-		m1.makeRotationX( -vectRotation.x );
-		m2.makeRotationY( -vectRotation.y );
-		m3.makeRotationY( -vectRotation.z );
-
-		m.multiplyMatrices( m1, m2 );
-		m.multiply( m3 );
-
-		return m;
-	}
-
 	_traversePistil(fct) {
 		let i = 0,
 			l = this.pistil.length;
@@ -215,6 +207,31 @@ class Flower extends THREE.Object3D {
 			}
 		});
 	}
+
+	_getRotationMatrix(vectRotation) {
+		let m = new THREE.Matrix4();
+		let m1 = new THREE.Matrix4();
+		let m2 = new THREE.Matrix4();
+		let m3 = new THREE.Matrix4();
+
+		m1.makeRotationX( -vectRotation.x );
+		m2.makeRotationY( -vectRotation.y );
+		m3.makeRotationY( -vectRotation.z );
+
+		m.multiplyMatrices( m1, m2 );
+		m.multiply( m3 );
+
+		return m;
+	}
+
+	_getVec4Color(color){
+    let r = color[0]/256;
+    let g = color[1]/256;
+    let b = color[2]/256;
+		let v4 = new THREE.Vector4(r,g,b,1);
+    return v4;
+	}
+
 }
 
 module.exports = Flower;

@@ -21,6 +21,17 @@ gui.add(props, 'velSpringiness', 0, 0.5);
 gui.add(props, 'stress', 0, 10).listen();
 gui.add(props, 'tiredness', 0, 10).listen();
 gui.add(props, 'mood', 0, 10).listen();
+var controller =  gui.addColor(props, 'textureBackgroundColor');
+
+controller.onChange(function() {
+	flower.changeTextureBackgroundColor();
+});
+
+controller.onFinishChange(function(value) {
+  // Fires when a controller loses focus.
+  alert("The new value is " + value);
+});
+
 
 guiController.onChange(function(value) {
 	toggleFlower();
