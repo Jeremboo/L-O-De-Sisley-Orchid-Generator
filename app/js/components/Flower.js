@@ -23,16 +23,19 @@ class Flower extends THREE.Object3D {
 		// -- bool
 		this.alreadyOnScene = false;
 		this.animation = false;
+		// -- textures
+		this.petalTexture = THREE.ImageUtils.loadTexture('tex/petal_background.jpg');
+		this.petalRacineTexture = THREE.ImageUtils.loadTexture('tex/petal_base.png');
+		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/petal_springiness.jpg');
 		// -- material
-		this.petalTexture = THREE.ImageUtils.loadTexture('tex/text_background.jpg');
-		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/texture_springiness.jpg');
 		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
 		    petalMap: { type: "t", value: this.petalTexture },
+				petalRacineMap : { type: "t", value: this.petalRacineTexture },
 		    springinessMap: { type: "t", value: this.springinessTexture },
+				backgroundColor : {type : "v4", value : this.petalBackgroundColor },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
-				textureBackgroundColor : {type : "v4", value : this.petalBackgroundColor },
 		  },
 		  vertexShader: petalVert,
 		  fragmentShader: petalFrag,
@@ -150,7 +153,7 @@ class Flower extends THREE.Object3D {
 	changeTextureBackgroundColor(){
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
 		this._traversePetalsChilds( ( child ) => {
-			child.material.uniforms.textureBackgroundColor.value = this.petalBackgroundColor;
+			child.material.uniforms.backgroundColor.value = this.petalBackgroundColor;
 		});
 		this._traversePistil((pistil) => {
 			pistil.changeColor(this.petalBackgroundColor);
