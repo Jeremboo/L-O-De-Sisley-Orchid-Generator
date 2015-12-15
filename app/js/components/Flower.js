@@ -65,6 +65,7 @@ class Flower extends THREE.Object3D {
 		LoadingManager._binds.load(props.objURL, (object) => {
 			this.petalsObject = object;
 			this.flowerObject.add(this.petalsObject);
+			this.flowerObject.position.y = -3;
 
 			this._traversePetalsChilds( ( child ) => {
 				child.geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );

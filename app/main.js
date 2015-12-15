@@ -16,10 +16,9 @@ loop.add(webgl._binds.onUpdate);
 // ##
 // GUI
 let gui = new dat.GUI();
-var f2 = gui.addFolder('Flower');
 gui.add(props, 'textured');
 gui.add(props, 'surpriseEffect');
-gui.add(props, 'velSpringiness', 0, 0.5);
+gui.add(props, 'velSpringiness', 0, 0.2);
 //gui.close();
 
 // ##
