@@ -26,13 +26,12 @@ class Flower extends THREE.Object3D {
 		this.animation = false;
 		// -- textures
 		this.petalTexture = THREE.ImageUtils.loadTexture('tex/petal_background.jpg');
-		this.petalPatternTexture = THREE.ImageUtils.loadTexture('tex/petal_base.png');
 		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/petal_springiness.jpg');
 		// -- material
 		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
 		    petalMap: { type: "t", value: this.petalTexture },
-				petalPatternMap : { type: "t", value: this.petalPatternTexture },
+				petalPatternMap : { type: "t", value: null },
 		    springinessMap: { type: "t", value: this.springinessTexture },
 				backgroundColor : {type : "v4", value : this.petalBackgroundColor },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
@@ -43,11 +42,9 @@ class Flower extends THREE.Object3D {
 			side: THREE.DoubleSide
 		});
 
-		// -- objet/mesh
-		this.petalsObject = false;
-
-		// -- polen
-		this.pistil = [];
+		// -- children
+		this.petals = [];
+		this.pistils = [];
 
 		// ##
 		// EVENTS
@@ -75,14 +72,17 @@ class Flower extends THREE.Object3D {
 		// ##
 		// LOAD flower
 		LoadingManager._binds.load(props.objURL, (object) => {
-			this.petalsObject = object;
-			this.add(this.petalsObject);
+			let petals = object;
+			this.add(petals);
 
 			this.scale.set(0.0001, 0.0001, 0.0001) ;
 			this.rotation.x = -1;
 
-			this._traversePetalsChilds( ( child ) => {
-				child.material = this.flowerShaderMaterial;
+			petals.traverse(child => {
+				if ( child instanceof THREE.Mesh ) {
+					let petal = new Petal(child, this.flowerShaderMaterial);
+					this.petals.push(petal);
+				}
 			});
 
 			// CREATE PISTIL
@@ -136,15 +136,12 @@ class Flower extends THREE.Object3D {
 
 		// ##
 		// UPDATE
-		// - update shader
-		this._traversePetalsChilds( ( child ) => {
-			// -- rotation force
-			child.material.uniforms.rotationForceMatrix.value = distRotationMatrix;
-			// -- wind force
-			child.material.uniforms.windForceMatrix.value = windForceMatrix;
+		// - update petals
+		this._traverse(this.petals, petal => {
+			petal.onUpdate(distRotationMatrix, windForceMatrix);
 		});
-		// - update pistil
-		this._traversePistil((pistil) => {
+		// - update pistils
+		this._traverse(this.pistils,  pistil => {
 			pistil._binds.onUpdate(distRotationMatrix, windForce, windForceMatrix);
 		});
 	}
@@ -152,10 +149,10 @@ class Flower extends THREE.Object3D {
 	// ## TEMP
 	changeTextureBackgroundColor(){
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
-		this._traversePetalsChilds( ( child ) => {
-			child.material.uniforms.backgroundColor.value = this.petalBackgroundColor;
+		this._traverse(this.petals, petal  => {
+			petal.updateColor(this.petalBackgroundColor);
 		});
-		this._traversePistil((pistil) => {
+		this._traverse(this.pistils, pistil => {
 			pistil.changeColor(this.petalBackgroundColor);
 		});
 	}
@@ -163,14 +160,14 @@ class Flower extends THREE.Object3D {
 
 	_onToSeed(){
 		this._animateFlower(0.001, -1);
-		this._traversePistil((pistil) => {
+		this._traverse(this.pistils, pistil => {
 			pistil.animatePistil(0);
 		});
 	}
 
 	_onGrow() {
 		this._animateFlower(10, 0);
-		this._traversePistil((pistil) => {
+		this._traverse(this.pistils, pistil => {
 			pistil.animatePistil(0.035);
 		});
 	}
@@ -193,27 +190,19 @@ class Flower extends THREE.Object3D {
 		let p = new Pistil(or, this.petalBackgroundColor);
 		// - add to flower object
 		this.add(p);
-		this.pistil.push(p);
+		this.pistils.push(p);
 
 		if(or > 0){
 			this._createPistil(or);
 		}
 	}
 
-	_traversePistil(fct) {
+	_traverse(arr, fct) {
 		let i = 0,
-			l = this.pistil.length;
+			l = arr.length;
 		for ( i ; i < l ; i++) {
-			fct(this.pistil[i]);
+			fct(arr[i]);
 		}
-	}
-
-	_traversePetalsChilds(fct){
-		this.petalsObject.traverse( (c) => {
-			if ( c instanceof THREE.Mesh ) {
-				fct(c);
-			}
-		});
 	}
 
 	_getRotationMatrix(vectRotation) {
