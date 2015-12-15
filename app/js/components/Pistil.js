@@ -51,15 +51,14 @@ class Pistil extends THREE.Object3D {
 		this.pistilHeadMesh.position.copy(this.pistilHeadPosition);
 
 		// PISTIL (STEM + HEAD )
-		this.pistilMesh = new THREE.Object3D();
-		this.pistilMesh.add(this.pistilStemMesh);
-		this.pistilMesh.add(this.pistilHeadObject);
+		this.add(this.pistilStemMesh);
+		this.add(this.pistilHeadObject);
 
 		// ##
 		// INIT POSITION & SIZE
-		this.pistilMesh.scale.set(0.0001, 0.0001, 0.0001);
-		this.pistilMesh.position.copy(this.POZ);
-		this.pistilMesh.rotation.copy(this.ROTATION);
+		this.scale.set(0.0001, 0.0001, 0.0001);
+		this.position.copy(this.POZ);
+		this.rotation.copy(this.ROTATION);
 
 		// ##
 		// SAVE BINDING
@@ -68,8 +67,8 @@ class Pistil extends THREE.Object3D {
 	}
 
 	animatePistil(size) {
-		let force = ( size - this.pistilMesh.scale.x ) * 0.03;
-		this.pistilMesh.scale.addScalar(force);
+		let force = ( size - this.scale.x ) * 0.03;
+		this.scale.addScalar(force);
 	}
 
 	changeColor(newColor){

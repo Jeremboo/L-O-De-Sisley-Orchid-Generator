@@ -3,6 +3,7 @@ import LoadingManager from 'js/core/LoadingManager';
 import swiftEvent from "js/core/SwiftEventDispatcher";
 
 import Pistil from 'js/components/Pistil';
+import Petal from 'js/components/Petal';
 
 import petalVert from 'shaders/petal-vert';
 import petalFrag from 'shaders/petal-frag';
@@ -25,13 +26,13 @@ class Flower extends THREE.Object3D {
 		this.animation = false;
 		// -- textures
 		this.petalTexture = THREE.ImageUtils.loadTexture('tex/petal_background.jpg');
-		this.petalRacineTexture = THREE.ImageUtils.loadTexture('tex/petal_base.png');
+		this.petalPatternTexture = THREE.ImageUtils.loadTexture('tex/petal_base.png');
 		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/petal_springiness.jpg');
 		// -- material
 		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
 		  uniforms: {
 		    petalMap: { type: "t", value: this.petalTexture },
-				petalRacineMap : { type: "t", value: this.petalRacineTexture },
+				petalPatternMap : { type: "t", value: this.petalPatternTexture },
 		    springinessMap: { type: "t", value: this.springinessTexture },
 				backgroundColor : {type : "v4", value : this.petalBackgroundColor },
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
@@ -44,7 +45,6 @@ class Flower extends THREE.Object3D {
 
 		// -- objet/mesh
 		this.petalsObject = false;
-		this.flowerObject = new THREE.Object3D();
 
 		// -- polen
 		this.pistil = [];
@@ -76,10 +76,10 @@ class Flower extends THREE.Object3D {
 		// LOAD flower
 		LoadingManager._binds.load(props.objURL, (object) => {
 			this.petalsObject = object;
-			this.flowerObject.add(this.petalsObject);
+			this.add(this.petalsObject);
 
-			this.flowerObject.scale.set(0.0001, 0.0001, 0.0001) ;
-			this.flowerObject.rotation.x = -1;
+			this.scale.set(0.0001, 0.0001, 0.0001) ;
+			this.rotation.x = -1;
 
 			this._traversePetalsChilds( ( child ) => {
 				child.material = this.flowerShaderMaterial;
@@ -87,7 +87,7 @@ class Flower extends THREE.Object3D {
 
 			// CREATE PISTIL
 			this._createPistil(this.numberOfPistil);
-			callback(this.flowerObject);
+			callback();
 		});
 	}
 
@@ -108,14 +108,14 @@ class Flower extends THREE.Object3D {
 		// ##
 		// ROTATION
 		// - dist between new rotation targeted and current rotation
-		let distRotation = props.rotation.clone().sub(this.flowerObject.rotation.toVector3());
+		let distRotation = props.rotation.clone().sub(this.rotation.toVector3());
 		let distRotationMatrix = this._getRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
 		let rotationForce = distRotation.multiplyScalar(props.velSpringiness);
 		// rotationForce.y *= 3; // minimise force in Y.
 
 		// - update rotation with rotationForce
-		this.flowerObject.rotation.setFromVector3(this.flowerObject.rotation.toVector3().add(rotationForce));
+		this.rotation.setFromVector3(this.rotation.toVector3().add(rotationForce));
 
 		// ##
 		// WIND
@@ -177,11 +177,11 @@ class Flower extends THREE.Object3D {
 
 	_animateFlower(size, rotation) {
 		let vel = 0.03;
-		let force = ( size - this.flowerObject.scale.x ) * vel;
-		this.flowerObject.scale.addScalar(force);
+		let force = ( size - this.scale.x ) * vel;
+		this.scale.addScalar(force);
 
-		let forceRotation = ( rotation - this.flowerObject.rotation.x ) * vel;
-		this.flowerObject.rotation.x += forceRotation;
+		let forceRotation = ( rotation - this.rotation.x ) * vel;
+		this.rotation.x += forceRotation;
 		if(Math.abs(force) < 0.001){
 			this.animation = false;
 		}
@@ -192,7 +192,7 @@ class Flower extends THREE.Object3D {
 		// - pistil
 		let p = new Pistil(or, this.petalBackgroundColor);
 		// - add to flower object
-		this.flowerObject.add(p.pistilMesh);
+		this.add(p);
 		this.pistil.push(p);
 
 		if(or > 0){

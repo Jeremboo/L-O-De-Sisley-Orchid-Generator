@@ -16,42 +16,33 @@ loop.add(webgl._binds.onUpdate);
 // ##
 // GUI
 let gui = new dat.GUI();
-let guiController = gui.add(props, 'flowerToSeed').listen();
+let flowerController = gui.add(props, 'flowerToSeed').listen();
+let canvasController = gui.add(props, 'showCanvasPetalPattern').listen();
 gui.add(props, 'velSpringiness', 0, 0.5);
 gui.add(props, 'stress', 0, 10).listen();
 gui.add(props, 'tiredness', 0, 10).listen();
 gui.add(props, 'mood', 0, 10).listen();
-var controller =  gui.addColor(props, 'textureBackgroundColor');
-
-controller.onChange(function() {
-	flower.changeTextureBackgroundColor();
-});
-
-controller.onFinishChange(function(value) {
-  // Fires when a controller loses focus.
-  alert("The new value is " + value);
-});
+let backgroundColorController =  gui.addColor(props, 'textureBackgroundColor');
 
 
-guiController.onChange(function(value) {
+flowerController.onChange(value => {
 	toggleFlower();
 });
+canvasController.onChange(value => {
+	//TODO afficher ou non la canvas
+});
+backgroundColorController.onChange(() => {
+	flower.changeTextureBackgroundColor();
+});
 //gui.close();
-
-// ##
-// LIGHT
-var ambient = new THREE.PointLight( 0xffffff, 1, 100 );
-ambient.position.set(1,10,10);
-webgl.add( ambient );
-
 
 // ##
 // FLOWER
 var flower = new Flower();
 swiftEvent.subscribe("flowerLoad", () => {
 	if (!flower.alreadyOnScene) {
-		flower.init((flowerObject) => {
-			webgl.add(flowerObject);
+		flower.init(() => {
+			webgl.add(flower);
 			loop.add(flower._binds.onUpdate);
 			flower.alreadyOnScene = true;
 			swiftEvent.publish("onFinishLoaded");
