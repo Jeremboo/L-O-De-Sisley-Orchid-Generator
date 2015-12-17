@@ -29,12 +29,12 @@ flowerController.onChange(value => {
 	toggleFlower();
 });
 canvasController.onChange(value => {
-	//TODO afficher ou non la canvas
+	toggleCanvas();
 });
 backgroundColorController.onChange(() => {
 	flower.changeTextureBackgroundColor();
 });
-//gui.close();
+gui.close();
 
 // ##
 // FLOWER
@@ -84,6 +84,16 @@ function toggleFlower(){
 			tiredness : Math.random()*10,
 			mood : Math.random()*10
 		});
+	}
+}
+
+var canvas = document.getElementById('flower-pattern');
+toggleCanvas();
+function toggleCanvas(){
+	if(props.showCanvasPetalPattern){
+		canvas.style.display = 'block';
+	} else {
+		canvas.style.display = 'none';
 	}
 }
 // TEMPS

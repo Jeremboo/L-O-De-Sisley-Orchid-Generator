@@ -16,3 +16,9 @@ header {
 	left : 10px;
 	z-index : 1;
 }
+
+#flower-pattern {
+	margin : 10px;
+	z-index: 2;
+	border : 1px solid black;
+}
