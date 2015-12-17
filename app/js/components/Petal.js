@@ -54,7 +54,7 @@ class Petal {
 
   _drawTexture(){
     //Appliquer la base avec
-    let textureBaseHeight = this.TEXTURE_HEIGHT * this._getRandomFloat(0.2, 1);
+    let textureBaseHeight = this.TEXTURE_HEIGHT  * this._getRandomFloat(0.2, 1.2) //TODO avoir un ratio en fonction de l'humeur ?;
     this.ctx.drawImage(this.patternTextureBase, 0, 0, this.TEXTURE_WIDTH, textureBaseHeight);
       //une taille différente
       // une rotation différente
