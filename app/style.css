@@ -6,9 +6,6 @@ html, body {
 	height : 100%;
 	color: #f3f3f4;
 }
-canvas {
-	position: absolute;
-}
 
 header {
 	position : fixed;
@@ -17,8 +14,8 @@ header {
 	z-index : 1;
 }
 
-#flower-pattern {
+.texture {
+	float: left;
 	margin : 10px;
-	z-index: 2;
 	border : 1px solid black;
 }

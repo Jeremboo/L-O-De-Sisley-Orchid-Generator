@@ -87,13 +87,15 @@ function toggleFlower(){
 	}
 }
 
-var canvas = document.getElementById('flower-pattern');
+var canvas = document.getElementsByClassName('texture');
 toggleCanvas();
 function toggleCanvas(){
+	let status = "none";
 	if(props.showCanvasPetalPattern){
-		canvas.style.display = 'block';
-	} else {
-		canvas.style.display = 'none';
+	 status = "block";
+	}
+	for (let i = 0; i < canvas.length; i++) {
+		canvas[i].style.display = status;;
 	}
 }
 // TEMPS

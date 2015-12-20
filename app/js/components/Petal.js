@@ -15,7 +15,8 @@ class Petal {
     // GENERATE PATTERN TEXTURE
     // - create canvas
     this.canvas = document.createElement("canvas");
-    //this.canvas = document.getElementById("flower-pattern");
+    this.canvas.className = "texture";
+    document.body.appendChild(this.canvas);
     this.canvas.width = this.TEXTURE_WIDTH;
     this.canvas.height = this.TEXTURE_HEIGHT;
     this.ctx = this.canvas.getContext("2d");
