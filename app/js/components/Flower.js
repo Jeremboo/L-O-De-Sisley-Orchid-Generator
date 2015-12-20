@@ -5,9 +5,6 @@ import swiftEvent from "js/core/SwiftEventDispatcher";
 import Pistil from 'js/components/Pistil';
 import Petal from 'js/components/Petal';
 
-import petalVert from 'shaders/petal-vert';
-import petalFrag from 'shaders/petal-frag';
-
 const GROWING = 1;
 const TOSEED = 2;
 
@@ -24,23 +21,6 @@ class Flower extends THREE.Object3D {
 		// -- bool
 		this.alreadyOnScene = false;
 		this.animation = false;
-		// -- textures
-		this.petalTexture = THREE.ImageUtils.loadTexture('tex/petal_background.jpg');
-		this.springinessTexture = THREE.ImageUtils.loadTexture('tex/petal_springiness.jpg');
-		// -- material
-		this.flowerShaderMaterial = new THREE.ShaderMaterial( {
-		  uniforms: {
-		    petalMap: { type: "t", value: this.petalTexture },
-				petalPatternMap : { type: "t", value: null },
-		    springinessMap: { type: "t", value: this.springinessTexture },
-				backgroundColor : {type : "v4", value : this.petalBackgroundColor },
-				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
-				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
-		  },
-		  vertexShader: petalVert,
-		  fragmentShader: petalFrag,
-			side: THREE.DoubleSide
-		});
 
 		// -- children
 		this.petals = [];
@@ -71,7 +51,7 @@ class Flower extends THREE.Object3D {
 	init(callback) {
 		// ##
 		// LOAD flower
-		LoadingManager._binds.load(props.objURL, (object) => {
+		LoadingManager.loadObj(props.objURL, (object) => {
 			let petals = object;
 			this.add(petals);
 
@@ -80,7 +60,7 @@ class Flower extends THREE.Object3D {
 
 			petals.traverse(child => {
 				if ( child instanceof THREE.Mesh ) {
-					let petal = new Petal(child, this.flowerShaderMaterial);
+					let petal = new Petal(child, this.petalBackgroundColor);
 					this.petals.push(petal);
 				}
 			});

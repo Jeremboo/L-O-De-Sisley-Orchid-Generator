@@ -1,27 +1,28 @@
 import OBJLoader from 'js/vendors/loaders/OBJLoader';
 
-
 class LoadingManager {
-	constructor() {
-		this._binds = {};
-		this._binds.load = this._load.bind(this);
-		this._binds.loadWithMtl = this._loadWithMtl.bind(this);
-	}
+	constructor(){}
 
-	_load(fileName, callback) {
+	loadObj(fileName, callback) {
 
 		let loader = new THREE.OBJLoader( );
 			loader.load( fileName, function ( obj ) {
 			callback(obj)
-		}, this._onProgress.bind(this), this._onError.bind(this) );
+		}, this._onProgress, this._onError );
 	}
 
-	_loadWithMtl(OBJFileName, MTLFileName, callback) {
+	loadObjWithMtl(OBJFileName, MTLFileName, callback) {
 
 		let loader = new THREE.OBJMTLLoader();
 		loader.load( OBJFileName, MTLFileName, function ( obj ) {
 			callback(obj)
-		}, this._onProgress.bind(this), this._onError.bind(this) );
+		}, this._onProgress, this._onError );
+	}
+
+	loadImage(url) {
+		let img = new Image();
+		img.src = url;
+		return img
 	}
 
 	_onProgress( xhr ) {

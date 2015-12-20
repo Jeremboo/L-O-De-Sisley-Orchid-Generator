@@ -14,8 +14,16 @@ header {
 	z-index : 1;
 }
 
+#params {
+	position: absolute;
+	width: 100%;
+	overflow-x: scroll;
+	bottom: 0;
+}
+#wrapper-canvas {
+	width: 300%;
+}
+
 .texture {
-	float: left;
-	margin : 10px;
 	border : 1px solid black;
 }

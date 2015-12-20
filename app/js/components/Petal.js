@@ -1,43 +1,54 @@
-class Petal {
-  constructor(mesh, material) {
+import props from 'js/core/props';
 
-    // ##
-    // CONST
-    this.TEXTURE_WIDTH = 512;
-    this.TEXTURE_HEIGHT = 512;
+import petalVert from 'shaders/petal-vert';
+import petalFrag from 'shaders/petal-frag';
+
+const TEXTURE_WIDTH = 256;
+const TEXTURE_HEIGHT = 256;
+
+
+class Petal {
+  constructor(mesh, backgroundColor) {
 
     // ##
 		// INIT
-    this.mMesh = mesh; // TODO voir pour héritage
-    this.mMaterial = material;
+    this.mMesh = mesh;
 
     // ##
     // GENERATE PATTERN TEXTURE
     // - create canvas
     this.canvas = document.createElement("canvas");
+    // TEMPS
     this.canvas.className = "texture";
-    document.body.appendChild(this.canvas);
-    this.canvas.width = this.TEXTURE_WIDTH;
-    this.canvas.height = this.TEXTURE_HEIGHT;
+    document.getElementById("wrapper-canvas").appendChild(this.canvas);
+    // TEMPS
+    this.canvas.width = TEXTURE_WIDTH;
+    this.canvas.height = TEXTURE_HEIGHT;
     this.ctx = this.canvas.getContext("2d");
-    // - create textures
-    // -- load images for texture
-    //TODO avoir les images déjà chargées
-    this.patternTextureBase = new Image();
-    this.patternTextureBase.src = 'tex/petal_base.png';
-    this.patternTexturePoint = new Image();
-    this.patternTexturePoint.src = 'tex/petal_points.png';
-    // -- add images to canvas
-    this.patternTextureBase.onload = () => {
-      this._drawTexture();
-    };
+    // -- use canvas to texture
     this.patternTexture = new THREE.Texture(this.canvas);
-    // - update material
-    this.mMaterial.uniforms.petalPatternMap.value = this.patternTexture;
+    // - create texture with imgs
+    this._drawTexture();
 
     // ##
-    // SET MATERIAL AT METAL MESH
-    this.mMesh.material = material;
+    // PETAL MATERIAL
+    // - create material
+    this.petalShaderMaterial = new THREE.ShaderMaterial( {
+      uniforms: {
+  			backgroundColor : {type : "v4", value : backgroundColor },
+  			rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
+  			windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
+  			petalMap: { type: "t", value: props.texts.petalBackground },
+  			springinessMap: { type: "t", value: props.texts.petalSpringiness },
+  			petalPatternMap : { type: "t", value: this.patternTexture },
+  		},
+      vertexShader: petalVert,
+      fragmentShader: petalFrag,
+      side: THREE.DoubleSide
+    });
+    // - apply material to petalMesh
+    this.mMesh.material = this.petalShaderMaterial;
+
   }
 
   onUpdate(distRotationMatrix, windForceMatrix){
@@ -55,21 +66,21 @@ class Petal {
 
   _drawTexture(){
     //Appliquer la base avec
-    let textureBaseHeight = this.TEXTURE_HEIGHT  * this._getRandomFloat(0.2, 1.2) //TODO avoir un ratio en fonction de l'humeur ?;
-    this.ctx.drawImage(this.patternTextureBase, 0, 0, this.TEXTURE_WIDTH, textureBaseHeight);
+    let textureBaseHeight = TEXTURE_HEIGHT  * this._getRandomFloat(0.2, 1.2) //TODO avoir un ratio en fonction de l'humeur ?;
+    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, textureBaseHeight);
       //une taille différente
       // une rotation différente
       // une opacitée différente
 
     //Appliquer les points avec
-    this.ctx.drawImage(this.patternTexturePoint, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), this.TEXTURE_WIDTH, this.TEXTURE_HEIGHT);
+    this.ctx.drawImage(props.imgs.petalPoints, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
       //une taille différente
       // une rotation différente
 
     //Appliquer les points deuxième fois  avec
     // une rotation & taille différente
     this.ctx.rotate(this._getRandomFloat(0, 360*Math.PI))
-    this.ctx.drawImage(this.patternTexturePoint, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), this.TEXTURE_WIDTH, this.TEXTURE_HEIGHT);
+    this.ctx.drawImage(props.imgs.petalPoints, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
     this.ctx.restore();
 
     // ##
