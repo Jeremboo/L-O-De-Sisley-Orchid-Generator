@@ -34,6 +34,9 @@ class Flower extends THREE.Object3D {
 				props.stress = flowerData.stress;
 			  props.tiredness = flowerData.tiredness;
 			  props.mood = flowerData.mood
+				// - update flower
+				this.changeTexturePattern();
+				this.changeTextureBackgroundColor();
 			}
 		});
 		swiftEvent.subscribe("flowerToSeed", () => {
@@ -129,10 +132,15 @@ class Flower extends THREE.Object3D {
 	changeTextureBackgroundColor(){
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
 		this._traverse(this.petals, petal  => {
-			petal.updateColor(this.petalBackgroundColor);
+			petal.changeColor(this.petalBackgroundColor);
 		});
 		this._traverse(this.pistils, pistil => {
 			pistil.changeColor(this.petalBackgroundColor);
+		});
+	}
+	changeTexturePattern(){
+		this._traverse(this.petals, petal  => {
+			petal.changeTexture();
 		});
 	}
 	// ## TEMP

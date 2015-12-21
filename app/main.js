@@ -15,18 +15,22 @@ loop.add(webgl._binds.onUpdate);
 
 // ##
 // GUI
-let gui = new dat.GUI();
-gui.add(props, 'stress', 0, 10).listen();
-gui.add(props, 'tiredness', 0, 10).listen();
-gui.add(props, 'mood', 0, 10).listen();
-let guiHackFolder = gui.addFolder('hack');
-let canvasController = guiHackFolder.add(props, 'showCanvasPetalPattern').listen();
-let backgroundColorController =  guiHackFolder.addColor(props, 'textureBackgroundColor');
+let gui = new dat.GUI(),
+	guiStress = gui.add(props, 'stress', 0, 10).listen(),
+	guiTiredness = gui.add(props, 'tiredness', 0, 10).listen(),
+	guiMood = gui.add(props, 'mood', 0, 10).listen(),
+	guiHackFolder = gui.addFolder('hack'),
+	guiCanvasShowed = guiHackFolder.add(props, 'showCanvasPetalPattern').listen(),
+	guiTextureBackgroundColor =  guiHackFolder.addColor(props, 'textureBackgroundColor')
+;
 
-canvasController.onChange(value => {
+guiTiredness.onChange(value => {
+	flower.changeTexturePattern();
+});
+guiCanvasShowed.onChange(value => {
 	toggleCanvas();
 });
-backgroundColorController.onChange(() => {
+guiTextureBackgroundColor.onChange(() => {
 	flower.changeTextureBackgroundColor();
 });
 //gui.close();
