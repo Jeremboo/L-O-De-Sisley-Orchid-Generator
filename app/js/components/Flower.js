@@ -91,8 +91,8 @@ class Flower extends THREE.Object3D {
 		let distRotation = props.rotation.clone().sub(this.rotation.toVector3());
 		let distRotationMatrix = this._getRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
-		let rotationForce = distRotation.multiplyScalar(props.velSpringiness);
-		// rotationForce.y *= 3; // minimise force in Y.
+		let rotationForce = distRotation.multiplyScalar(0.150 - (0.012 * props.tiredness));
+		rotationForce.y *= 1.5; // minimise force in Y.
 
 		// - update rotation with rotationForce
 		this.rotation.setFromVector3(this.rotation.toVector3().add(rotationForce));
@@ -108,9 +108,8 @@ class Flower extends THREE.Object3D {
 		// 6 - haut / milieu ( 1, 0, 0 )
 
 		let time = Date.now();
-		// let windFreq = Math.sin(time / ( 6000 / (props.stress)) ) // * Math.sin(time / 200);
 		let windAmpl = 20 - props.stress;
-		let windStrength = (Math.cos(time / ( 2000 / props.stress )) / windAmpl ) // * windFreq;
+		let windStrength = ( Math.cos(time / ( 2000 / props.stress )) / windAmpl );
 		let windForce = new THREE.Vector3( Math.sin( time / 2000 ), Math.sin( time / 3000 ), 0 ).multiplyScalar(windStrength);
 		let windForceMatrix = this._getRotationMatrix(windForce);
 
