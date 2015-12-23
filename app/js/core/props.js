@@ -19,7 +19,20 @@ var props = {
   texts : {
     petalBackground : THREE.ImageUtils.loadTexture('tex/petal_background.jpg'),
     petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.jpg')
-  }
+  },
+  colors : [
+    [247, 201, 84],
+    [232, 163, 84],
+    [251, 164, 139],
+    [206, 127, 134],
+    [160, 92, 128],
+    [73, 90, 146],
+    [95, 73, 148],
+    [61, 121, 133],
+    [169, 195, 153],
+    [168, 183, 10],
+    [149, 96, 107]
+  ]
 }
 
 module.exports = props;

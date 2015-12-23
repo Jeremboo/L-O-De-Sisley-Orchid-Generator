@@ -33,7 +33,9 @@ class Flower extends THREE.Object3D {
 				this.animation = GROWING;
 				props.stress = flowerData.stress;
 			  props.tiredness = flowerData.tiredness;
-			  props.mood = flowerData.mood
+			  props.mood = flowerData.mood;
+				// - update backgroundColor
+				props.textureBackgroundColor = props.colors[Math.round(props.mood)];
 				// - update flower
 				this.changeTexturePattern();
 				this.changeTextureBackgroundColor();

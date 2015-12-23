@@ -27,6 +27,10 @@ let gui = new dat.GUI(),
 guiTiredness.onChange(value => {
 	flower.changeTexturePattern();
 });
+guiMood.onChange(value => {
+	props.textureBackgroundColor = props.colors[Math.round(props.mood)];
+	flower.changeTextureBackgroundColor();
+});
 guiCanvasShowed.onChange(value => {
 	toggleCanvas();
 });
