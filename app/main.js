@@ -21,6 +21,7 @@ let gui = new dat.GUI(),
 	guiMood = gui.add(props, 'mood', 0, 10).listen(),
 	guiHackFolder = gui.addFolder('hack'),
 	guiCanvasShowed = guiHackFolder.add(props, 'showCanvasPetalPattern').listen(),
+	guiMouseCapture = guiHackFolder.add(props, 'mouseCapture').listen(),
 	guiTextureBackgroundColor =  guiHackFolder.addColor(props, 'textureBackgroundColor')
 ;
 
@@ -33,6 +34,11 @@ guiMood.onChange(value => {
 });
 guiCanvasShowed.onChange(value => {
 	toggleCanvas();
+});
+guiMouseCapture.onChange(value => {
+	if(!value){
+		props.rotation.set(0, 0, 0);
+	}
 });
 guiTextureBackgroundColor.onChange(() => {
 	flower.changeTextureBackgroundColor();
@@ -57,22 +63,22 @@ swiftEvent.subscribe("flowerLoad", () => {
 // RENDERER
 loop.start();
 
-// ##
-// LOAD FLOWER
-swiftEvent.publish("flowerLoad");
-
-
 
 // ##
 // TEMPS
+// - loadFlower
+swiftEvent.publish("flowerLoad");
 document.addEventListener('keydown', (e) => {
   if(e.keyCode == 32){
-		props.flowerToSeed = true;
-		swiftEvent.publish("flowerGrow", {
-			stress : Math.random()*10,
-			tiredness : Math.random()*10,
-			mood : Math.random()*10
-		});
+		if(flower.openned){
+			swiftEvent.publish("flowerToSeed");
+		} else {
+			swiftEvent.publish("flowerGrow", {
+				stress : Math.random()*10,
+				tiredness : Math.random()*10,
+				mood : Math.random()*10
+			});
+		}
   }
 });
 

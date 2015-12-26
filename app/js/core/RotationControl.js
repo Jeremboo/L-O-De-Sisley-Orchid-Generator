@@ -17,7 +17,7 @@ class RotationControl {
   }
 
   _onOrientationMove(event){
-    this.rotateElement((55-event.beta)/this.ratio,(event.gamma)/this.ratio);
+    this.rotateElement(event.beta/this.ratio,event.gamma/this.ratio);
   }
 
   _onMouseMove(event) {
@@ -27,7 +27,9 @@ class RotationControl {
   }
 
   rotateElement(x, y){
-    props.rotation.set( x, y, 0);
+    if(props.mouseCapture){
+      props.rotation.set( x, y, 0);
+    }
   }
 }
 

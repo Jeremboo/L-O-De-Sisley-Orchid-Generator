@@ -7,6 +7,7 @@ var props = {
   tiredness : 5,
   mood : 5,
   // - hack
+  mouseCapture : true,
   showCanvasPetalPattern : false,
   textureBackgroundColor : [200, 288, 258],
   // GLOBAL DATA
@@ -32,6 +33,15 @@ var props = {
     [169, 195, 153],
     [168, 183, 10],
     [149, 96, 107]
+  ],
+  closedPetalPosition : [
+    new THREE.Vector3(0.5, 0, 0),         // 0 - haut / milieu
+    new THREE.Vector3(1, 0, -1),          // 1 - milieu / gauche
+    new THREE.Vector3(-0.65, 0.6, -0.65), // 2 - bas / gauche
+    new THREE.Vector3(-1, 0, 0),          // 3 - bas / milieu
+    new THREE.Vector3(-0.65, -0.6, 0.65), // 4 - bas / droit
+    new THREE.Vector3(1, 0, 1),           // 5 - milieu / droit
+    new THREE.Vector3(1, 0, 0),           // 6 - haut / milieu
   ]
 }
 

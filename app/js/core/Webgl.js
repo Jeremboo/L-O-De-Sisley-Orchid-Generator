@@ -9,7 +9,7 @@ class Webgl {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
-		this.camera.position.z = 20;
+		this.camera.position.z = 4;
 		this.controls = new THREE.OrbitControls( this.camera );
   		//this.controls.addEventListener( 'change', render );
 

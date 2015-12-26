@@ -8,8 +8,15 @@ const TEXTURE_HEIGHT = 256;
 
 
 class Petal {
-  constructor(mesh, backgroundColor) {
+  constructor(id, mesh, backgroundColor) {
+    this.id = id;
     this.mMesh = mesh;
+    // ##
+    // INIT
+    this.closedPetalPosition = props.closedPetalPosition[this.id]
+    // - init petal to seed.
+    this.mMesh.rotation.setFromVector3(this.closedPetalPosition);
+    this.mMesh.scale.multiplyScalar(0.2);
 
     // ##
     // GENERATE PATTERN TEXTURE
@@ -66,6 +73,22 @@ class Petal {
 		this.mMesh.material.uniforms.rotationForceMatrix.value = distRotationMatrix;
 		// - wind force
 		this.mMesh.material.uniforms.windForceMatrix.value = windForceMatrix;
+  }
+
+  onGrow(){
+    this._animatePetal(new THREE.Vector3(), 1);
+  }
+  onToSeed(){
+    this._animatePetal(this.closedPetalPosition.clone(), 0.2);
+  }
+
+  _animatePetal(vectorTargeted, scaleTargeted){
+    // - PETAL ROTATION
+    let forceRotation = vectorTargeted.sub(this.mMesh.rotation.toVector3()).multiplyScalar(0.03);
+    this.mMesh.rotation.setFromVector3(this.mMesh.rotation.toVector3().add(forceRotation));
+    // - PETAL SIZE
+    let force = (scaleTargeted - this.mMesh.scale.x ) * 0.03;
+		this.mMesh.scale.addScalar(force);
   }
 
   // TEMPS

@@ -59,11 +59,6 @@ class Pistil extends THREE.Object3D {
 		this.scale.set(0.0001, 0.0001, 0.0001);
 		this.position.copy(this.POZ);
 		this.rotation.copy(this.ROTATION);
-
-		// ##
-		// SAVE BINDING
-		this._binds = {};
-		this._binds.onUpdate = this._onUpdate.bind(this);
 	}
 
 	animatePistil(size) {
@@ -75,7 +70,7 @@ class Pistil extends THREE.Object3D {
 		this.pistilStemMesh.material.uniforms.color.value = newColor;
 	}
 
-	_onUpdate(matrixDistRotation, windForce, windForceMatrix) {
+	onUpdate(matrixDistRotation, windForce, windForceMatrix) {
 
 		// update shader for Stem
 		this.pistilStemMesh.material.uniforms.rotationForceMatrix.value = matrixDistRotation;
@@ -84,6 +79,13 @@ class Pistil extends THREE.Object3D {
 		// update rotation pistilHead
 		this.pistilHeadObject.rotation.setFromVector3(windForce);
 	}
+
+	onGrow(){
+		this.animatePistil(0.035);
+  }
+  onToSeed(){
+		this.animatePistil(0);
+  }
 
 	_createCustomCurve(){
 		let CustomSinCurve = THREE.Curve.create(

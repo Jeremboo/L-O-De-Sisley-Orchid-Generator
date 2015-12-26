@@ -7,6 +7,7 @@ import Petal from 'js/components/Petal';
 
 const GROWING = 1;
 const TOSEED = 2;
+const APPEAR = 3;
 
 
 class Flower extends THREE.Object3D {
@@ -20,16 +21,19 @@ class Flower extends THREE.Object3D {
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
 		// -- bool
 		this.alreadyOnScene = false;
+		this.openned = false;
 		this.animation = false;
-
 		// -- children
 		this.petals = [];
 		this.pistils = [];
+		// -- actions for children during animation
+		this.childrenAnimationFct = ()=>{};
 
 		// ##
 		// EVENTS
 		swiftEvent.subscribe("flowerGrow", (flowerData) => {
 			if (this.alreadyOnScene) {
+				this.openned = true;
 				this.animation = GROWING;
 				props.stress = flowerData.stress;
 			  props.tiredness = flowerData.tiredness;
@@ -43,6 +47,7 @@ class Flower extends THREE.Object3D {
 		});
 		swiftEvent.subscribe("flowerToSeed", () => {
 			if (this.alreadyOnScene) {
+				this.openned = false;
 				this.animation = TOSEED;
 			}
 		});
@@ -60,18 +65,21 @@ class Flower extends THREE.Object3D {
 			let petals = object;
 			this.add(petals);
 
-			this.scale.set(0.0001, 0.0001, 0.0001) ;
-			this.rotation.x = -1;
-
+			// CREATE PETALS CLASS
 			petals.traverse(child => {
 				if ( child instanceof THREE.Mesh ) {
-					let petal = new Petal(child, this.petalBackgroundColor);
+					let petal = new Petal(this.petals.length, child, this.petalBackgroundColor);
 					this.petals.push(petal);
 				}
 			});
 
-			// CREATE PISTIL
+			// CREATE PISTIL CLASS
 			this._createPistil(this.numberOfPistil);
+
+			// SHOW FLOWER
+			this.scale.set(0.0001, 0.0001, 0.0001);
+			this.animation = APPEAR;
+
 			callback();
 		});
 	}
@@ -86,6 +94,9 @@ class Flower extends THREE.Object3D {
 			case TOSEED :
 				this._onToSeed();
 				break;
+			case APPEAR :
+				this._onAppear();
+				break;
 			default :
 				break;
 		}
@@ -96,7 +107,7 @@ class Flower extends THREE.Object3D {
 		let distRotation = props.rotation.clone().sub(this.rotation.toVector3());
 		let distRotationMatrix = this._getRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
-		let rotationForce = distRotation.multiplyScalar(0.150 - (0.012 * props.tiredness));
+		let rotationForce = distRotation.multiplyScalar(0.15 - (0.012 * props.tiredness));
 		rotationForce.y *= 1.5; // minimise force in Y.
 
 		// - update rotation with rotationForce
@@ -104,14 +115,6 @@ class Flower extends THREE.Object3D {
 
 		// ##
 		// WIND
-		// 0 - haut / milieu  ( 1, 0, 0 )
-		// 1 - milieu / gauche ( 0, -1, 0 )
-		// 2 - bas / gauche ( -1, -1, 0 )
-		// 3 - bas / milieu ( -1, 0, 0 )
-		// 4 - bas / droit ( -1, 1, 0 )
-		// 5 - milieu / droit ( 0, -1, 0 )
-		// 6 - haut / milieu ( 1, 0, 0 )
-
 		let time = Date.now();
 		let windAmpl = 20 - props.stress;
 		let windStrength = ( Math.cos(time / ( 2000 / props.stress )) / windAmpl );
@@ -122,14 +125,17 @@ class Flower extends THREE.Object3D {
 		// UPDATE
 		// - update petals
 		this._traverse(this.petals, petal => {
-			petal.onUpdate(distRotationMatrix, windForceMatrix);
+			petal.onUpdate(distRotationMatrix, windForceMatrix, this.animation);
+			this.childrenAnimationFct(petal);
 		});
 		// - update pistils
 		this._traverse(this.pistils,  pistil => {
-			pistil._binds.onUpdate(distRotationMatrix, windForce, windForceMatrix);
+			pistil.onUpdate(distRotationMatrix, windForce, windForceMatrix);
+			this.childrenAnimationFct(pistil);
 		});
 	}
 
+	// ##
 	// ## TEMP
 	changeTextureBackgroundColor(){
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
@@ -146,30 +152,36 @@ class Flower extends THREE.Object3D {
 		});
 	}
 	// ## TEMP
+	// ##
 
 	_onToSeed(){
-		this._animateFlower(0.001, -1);
-		this._traverse(this.pistils, pistil => {
-			pistil.animatePistil(0);
-		});
+		this._rotateFlowerOnX(-1.5);
+		this.childrenAnimationFct = (children)=>{
+			children.onToSeed();
+		};
 	}
 
 	_onGrow() {
-		this._animateFlower(10, 0);
-		this._traverse(this.pistils, pistil => {
-			pistil.animatePistil(0.035);
-		});
+		this._rotateFlowerOnX(0);
+		this.childrenAnimationFct = (children)=>{
+			children.onGrow();
+		};
 	}
 
-	_animateFlower(size, rotation) {
-		let vel = 0.03;
-		let force = ( size - this.scale.x ) * vel;
+	_onAppear() {
+		let force = ( 1 - this.scale.x ) * 0.1;
 		this.scale.addScalar(force);
-
-		let forceRotation = ( rotation - this.rotation.x ) * vel;
-		this.rotation.x += forceRotation;
 		if(Math.abs(force) < 0.001){
 			this.animation = false;
+		}
+	}
+
+	_rotateFlowerOnX(rotation) {
+		let force = ( rotation - this.rotation.x ) * 0.03;
+		this.rotation.x += force;
+		if(Math.abs(force) < 0.001){
+			this.animation = false;
+			this.childrenAnimationFct = ()=>{};
 		}
 	}
 
