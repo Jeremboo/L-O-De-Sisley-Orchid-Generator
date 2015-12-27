@@ -7,6 +7,10 @@ html, body {
 	color: #f3f3f4;
 }
 
+body > canvas {
+	position: absolute;
+	z-index: -1;
+}
 header {
 	position : fixed;
 	top : 10px;
@@ -15,7 +19,6 @@ header {
 }
 
 #params {
-	display: none;
 	position: absolute;
 	width: 100%;
 	overflow-x: scroll;
@@ -27,4 +30,49 @@ header {
 
 .texture {
 	border : 1px solid black;
+}
+
+h1, p {
+	margin: 0;
+}
+h1 {
+	color : #5D5E87;
+	font-family: 'bellotaregular';
+}
+h1 span {
+	font-size: 0.5em;
+}
+
+p {
+	color : #5D5E87;
+	font-family: 'santanaregular';
+}
+
+a {
+	color : #E4CE78;
+}
+
+@font-face {
+    font-family: 'bellotaregular';
+    src: url('fonts/bellota-regular-webfont.eot');
+    src: url('fonts/bellota-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/bellota-regular-webfont.woff2') format('woff2'),
+         url('fonts/bellota-regular-webfont.woff') format('woff'),
+         url('fonts/bellota-regular-webfont.ttf') format('truetype'),
+         url('fonts/bellota-regular-webfont.svg#bellotaregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'santanaregular';
+    src: url('fonts/santana-webfont.eot');
+    src: url('fonts/santana-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/santana-webfont.woff2') format('woff2'),
+         url('fonts/santana-webfont.woff') format('woff'),
+         url('fonts/santana-webfont.ttf') format('truetype'),
+         url('fonts/santana-webfont.svg#santanaregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }

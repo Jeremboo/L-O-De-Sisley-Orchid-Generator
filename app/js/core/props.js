@@ -3,11 +3,11 @@ import LoadingManager from 'js/core/LoadingManager';
 var props = {
   // GUI
   // - global
-  stress : 10,
-  tiredness : 5,
+  wind : 10,
+  vel : 5,
   mood : 5,
   // - hack
-  showCanvasPetalPattern : false,
+  showCanvasPetalPattern : true,
   textureBackgroundColor : [200, 288, 258],
   // GLOBAL DATA
   objURL : '3d_model/flower.obj',

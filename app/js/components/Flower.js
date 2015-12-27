@@ -31,8 +31,8 @@ class Flower extends THREE.Object3D {
 		swiftEvent.subscribe("flowerGrow", (flowerData) => {
 			if (this.alreadyOnScene) {
 				this.animation = GROWING;
-				props.stress = flowerData.stress;
-			  props.tiredness = flowerData.tiredness;
+				props.wind = flowerData.stress;
+			  props.vel = flowerData.tiredness;
 			  props.mood = flowerData.mood
 				// - update flower
 				this.changeTexturePattern();
@@ -94,7 +94,7 @@ class Flower extends THREE.Object3D {
 		let distRotation = props.rotation.clone().sub(this.rotation.toVector3());
 		let distRotationMatrix = this._getRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
-		let rotationForce = distRotation.multiplyScalar(0.150 - (0.012 * props.tiredness));
+		let rotationForce = distRotation.multiplyScalar(0.150 - (0.012 * props.vel));
 		rotationForce.y *= 1.5; // minimise force in Y.
 
 		// - update rotation with rotationForce
@@ -111,8 +111,8 @@ class Flower extends THREE.Object3D {
 		// 6 - haut / milieu ( 1, 0, 0 )
 
 		let time = Date.now();
-		let windAmpl = 20 - props.stress;
-		let windStrength = ( Math.cos(time / ( 2000 / props.stress )) / windAmpl );
+		let windAmpl = 20 - props.wind;
+		let windStrength = ( Math.cos(time / ( 2000 / props.wind )) / windAmpl );
 		let windForce = new THREE.Vector3( Math.sin( time / 2000 ), Math.sin( time / 3000 ), 0 ).multiplyScalar(windStrength);
 		let windForceMatrix = this._getRotationMatrix(windForce);
 

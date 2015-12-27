@@ -16,15 +16,13 @@ loop.add(webgl._binds.onUpdate);
 // ##
 // GUI
 let gui = new dat.GUI(),
-	guiStress = gui.add(props, 'stress', 0, 10).listen(),
-	guiTiredness = gui.add(props, 'tiredness', 0, 10).listen(),
-	guiMood = gui.add(props, 'mood', 0, 10).listen(),
-	guiHackFolder = gui.addFolder('hack'),
-	guiCanvasShowed = guiHackFolder.add(props, 'showCanvasPetalPattern').listen(),
-	guiTextureBackgroundColor =  guiHackFolder.addColor(props, 'textureBackgroundColor')
+	guiCanvasShowed = gui.add(props, 'showCanvasPetalPattern').listen(),
+	guiWind = gui.add(props, 'wind', 0, 10).listen(),
+	guiVel = gui.add(props, 'vel', 0, 10).listen(),
+	guiTextureBackgroundColor =  gui.addColor(props, 'textureBackgroundColor')
 ;
 
-guiTiredness.onChange(value => {
+guiVel.onChange(value => {
 	flower.changeTexturePattern();
 });
 guiCanvasShowed.onChange(value => {
@@ -44,7 +42,11 @@ swiftEvent.subscribe("flowerLoad", () => {
 			webgl.add(flower);
 			loop.add(flower._binds.onUpdate);
 			flower.alreadyOnScene = true;
-			swiftEvent.publish("onFinishLoaded");
+			swiftEvent.publish("flowerGrow", {
+				stress : Math.random()*10,
+				tiredness : Math.random()*10,
+				mood : Math.random()*10
+			});
 		});
 	}
 });
@@ -57,21 +59,8 @@ loop.start();
 // LOAD FLOWER
 swiftEvent.publish("flowerLoad");
 
-
-
 // ##
-// TEMPS
-document.addEventListener('keydown', (e) => {
-  if(e.keyCode == 32){
-		props.flowerToSeed = true;
-		swiftEvent.publish("flowerGrow", {
-			stress : Math.random()*10,
-			tiredness : Math.random()*10,
-			mood : Math.random()*10
-		});
-  }
-});
-
+// FCT
 function toggleCanvas(){
 	let status = "none";
 	if(props.showCanvasPetalPattern){
@@ -79,8 +68,6 @@ function toggleCanvas(){
 	}
 	document.getElementById('params').style.display = status;
 }
-// TEMPS
-// ##
 
 // ##
 // ON RESIZE
