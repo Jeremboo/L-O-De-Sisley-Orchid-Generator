@@ -18,8 +18,8 @@ var props = {
     petalPoints : LoadingManager.loadImage('tex/petal_points.png')
   },
   texts : {
-    petalBackground : THREE.ImageUtils.loadTexture('tex/petal_background.jpg'),
-    petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.jpg')
+    petalBackground : THREE.ImageUtils.loadTexture('tex/petal_background.png'),
+    petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.png')
   }
 }
 
