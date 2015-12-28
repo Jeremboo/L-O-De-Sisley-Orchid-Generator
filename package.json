@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "brunch watch --server",
-    "deploy": "npm install && bower install && brunch build --production"
+    "deploy": "rm -rf public/ && npm install && bower install && brunch build --production"
   },
   "dependencies": {
     "auto-reload-brunch": ">= 1.0 < 1.9",
