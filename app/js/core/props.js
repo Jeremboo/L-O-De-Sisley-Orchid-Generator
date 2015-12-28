@@ -8,6 +8,7 @@ var props = {
   mood : 5,
   // - hack
   showCanvasPetalPattern : true,
+  mouseCapture : true,
   textureBackgroundColor : [255, 255, 255],
   // GLOBAL DATA
   objURL : '3d_model/flower.obj',

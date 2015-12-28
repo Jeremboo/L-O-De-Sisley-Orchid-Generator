@@ -16,10 +16,11 @@ loop.add(webgl._binds.onUpdate);
 // ##
 // GUI
 let gui = new dat.GUI(),
-	guiCanvasShowed = gui.add(props, 'showCanvasPetalPattern').listen(),
 	guiWind = gui.add(props, 'wind', 0, 10).listen(),
 	guiVel = gui.add(props, 'vel', 0, 10).listen(),
-	guiTextureBackgroundColor =  gui.addColor(props, 'textureBackgroundColor').listen();
+	guiCanvasShowed = gui.add(props, 'showCanvasPetalPattern').listen(),
+	guiMouseCapture = gui.add(props, 'mouseCapture').listen(),
+	guiTextureBackgroundColor =  gui.addColor(props, 'textureBackgroundColor').listen()
 ;
 
 guiVel.onChange(value => {
@@ -30,6 +31,11 @@ guiCanvasShowed.onChange(value => {
 });
 guiTextureBackgroundColor.onChange(() => {
 	flower.changeTextureBackgroundColor();
+});
+guiMouseCapture.onChange(value => {
+	if(!value){
+		props.rotation.set(0, 0, 0);
+	}
 });
 //gui.close();
 
