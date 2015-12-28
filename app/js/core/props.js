@@ -8,7 +8,7 @@ var props = {
   mood : 5,
   // - hack
   showCanvasPetalPattern : true,
-  textureBackgroundColor : [200, 288, 258],
+  textureBackgroundColor : [255, 255, 255],
   // GLOBAL DATA
   objURL : '3d_model/flower.obj',
   rotation : new THREE.Vector3( 0, 0, 0 ),

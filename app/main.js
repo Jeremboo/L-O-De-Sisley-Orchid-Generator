@@ -19,7 +19,7 @@ let gui = new dat.GUI(),
 	guiCanvasShowed = gui.add(props, 'showCanvasPetalPattern').listen(),
 	guiWind = gui.add(props, 'wind', 0, 10).listen(),
 	guiVel = gui.add(props, 'vel', 0, 10).listen(),
-	guiTextureBackgroundColor =  gui.addColor(props, 'textureBackgroundColor')
+	guiTextureBackgroundColor =  gui.addColor(props, 'textureBackgroundColor').listen();
 ;
 
 guiVel.onChange(value => {
@@ -60,6 +60,27 @@ loop.start();
 swiftEvent.publish("flowerLoad");
 
 // ##
+// ON RESIZE
+window.addEventListener( "resize", () => {
+	webgl._binds.onResize();
+}, false );
+
+
+// ##
+// ON CLICK TO RANDOMIZE
+document.getElementById('randomize').addEventListener('click', () => {
+	if (flower.alreadyOnScene) {
+		props.textureBackgroundColor = [random(0,255), random(0,255), random(0,255)];
+		swiftEvent.publish("flowerGrow", {
+			stress : Math.random()*10,
+			tiredness : Math.random()*10,
+			mood : Math.random()*10
+		});
+	}
+});
+
+
+// ##
 // FCT
 function toggleCanvas(){
 	let status = "none";
@@ -69,8 +90,6 @@ function toggleCanvas(){
 	document.getElementById('params').style.display = status;
 }
 
-// ##
-// ON RESIZE
-window.addEventListener( "resize", () => {
-	webgl._binds.onResize();
-}, false );
+function random(min, max) {
+			return Math.random() * (max - min) + min;
+}

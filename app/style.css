@@ -1,3 +1,4 @@
+/* Generic */
 html, body {
 	position: relative;
 	margin: 0;
@@ -11,25 +12,12 @@ body > canvas {
 	position: absolute;
 	z-index: -1;
 }
+
 header {
 	position : fixed;
 	top : 10px;
 	left : 10px;
 	z-index : 1;
-}
-
-#params {
-	position: absolute;
-	width: 100%;
-	overflow-x: scroll;
-	bottom: 0;
-}
-#wrapper-canvas {
-	width: 300%;
-}
-
-.texture {
-	border : 1px solid black;
 }
 
 h1, p {
@@ -52,6 +40,48 @@ a {
 	color : #E4CE78;
 }
 
+/* params */
+#params {
+	position: absolute;
+	width: 100%;
+	overflow-x: scroll;
+	bottom: 0;
+}
+#wrapper-canvas {
+	width: 300%;
+}
+
+.texture {
+	border : 1px solid black;
+}
+
+/*Button */
+.Button {
+	cursor: pointer;
+	padding: 9px;
+	margin : 5px;
+	background-color: #E7BE53;
+	border: none;
+	border-radius: 5px;
+	font-family: 'bellotaregular';
+	color : white;
+}
+.Button:active{
+	background-color: #B29235;
+}
+.Button.Button_blue{
+	background-color: #7979A7;
+}
+.Button.Button_blue:active {
+	background-color: #505276;
+}
+
+#randomize {
+	margin-left: 0;
+	margin-top: 18px;
+}
+
+/* Fonts */
 @font-face {
     font-family: 'bellotaregular';
     src: url('fonts/bellota-regular-webfont.eot');

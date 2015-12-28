@@ -13,17 +13,6 @@ class Petal {
 
     // ##
     // GENERATE PATTERN TEXTURE
-    // - texture params
-    this.textureBaseHeight = TEXTURE_HEIGHT * this._getRandomFloat(0.2, 1.2);
-    this.petalPointsPos1 = {
-      x : this._getRandomFloat(-100, 100),
-      y : this._getRandomFloat(-100, 100)
-    }
-    this.petalPointsPos2 = {
-      x : this._getRandomFloat(-100, 100),
-      y : this._getRandomFloat(-100, 100),
-      r : this._getRandomFloat(0, 360*Math.PI)
-    }
     // - create canvas
     this.canvas = document.createElement("canvas");
     // TEMPS
@@ -81,20 +70,21 @@ class Petal {
   _drawTexture(){
     // - Add base
     // -- change base height
-    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, this.textureBaseHeight);
+    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * this._getRandomFloat(0.2, 1.2));
 
     // - Add points
-    this.ctx.globalAlpha = props.tiredness/10;
+    this.ctx.globalAlpha = props.vel/10;
     // -- First Texture points
     // --- Random position
-    this.ctx.drawImage(props.imgs.petalPoints, this.petalPointsPos1.x, this.petalPointsPos1.y, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    this.ctx.drawImage(props.imgs.petalPoints, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
     // -- Second Texture points
     // --- Random Rotation
-    this.ctx.rotate(this.petalPointsPos2.r);
+    let rotation =  this._getRandomFloat(0, 360*Math.PI);
+    this.ctx.rotate(rotation);
     // --- Random position
-    this.ctx.drawImage(props.imgs.petalPoints, this.petalPointsPos2.x, this.petalPointsPos2.y, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    this.ctx.drawImage(props.imgs.petalPoints, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
     this.ctx.globalAlpha = 1;
-    this.ctx.rotate(-this.petalPointsPos2.r);
+    this.ctx.rotate(-rotation);
 
     // ##
     // UPDATE TEXTURE
