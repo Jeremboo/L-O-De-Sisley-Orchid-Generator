@@ -18,7 +18,7 @@ loop.add(webgl._binds.onUpdate);
 let gui = new dat.GUI(),
 	guiWind = gui.add(props, 'wind', 0, 10).listen(),
 	guiVel = gui.add(props, 'vel', 0, 10).listen(),
-	guiCanvasShowed = gui.add(props, 'showCanvasPetalPattern').listen(),
+	guiCanvasShowed = gui.add(props, 'showTextures').listen(),
 	guiMouseCapture = gui.add(props, 'mouseCapture').listen(),
 	guiTextureBackgroundColor =  gui.addColor(props, 'textureBackgroundColor').listen()
 ;
@@ -62,8 +62,12 @@ swiftEvent.subscribe("flowerLoad", () => {
 loop.start();
 
 // ##
-// LOAD FLOWER
+// START
+// - LOAD FLOWER
 swiftEvent.publish("flowerLoad");
+// - canvas
+toggleCanvas();
+
 
 // ##
 // ON RESIZE
@@ -90,7 +94,7 @@ document.getElementById('randomize').addEventListener('click', () => {
 // FCT
 function toggleCanvas(){
 	let status = "none";
-	if(props.showCanvasPetalPattern){
+	if(props.showTextures){
 	 status = "block";
 	}
 	document.getElementById('params').style.display = status;

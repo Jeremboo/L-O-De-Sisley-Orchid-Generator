@@ -7,7 +7,7 @@ var props = {
   vel : 5,
   mood : 5,
   // - hack
-  showCanvasPetalPattern : true,
+  showTextures : false,
   mouseCapture : true,
   textureBackgroundColor : [255, 255, 255],
   // GLOBAL DATA
