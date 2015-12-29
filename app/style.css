@@ -28,3 +28,11 @@ header {
 .texture {
 	border : 1px solid black;
 }
+
+/* Mobile */
+@media all and (max-device-width: 480px)
+{
+    .dg{
+			display: none;
+		}
+}

@@ -59,6 +59,7 @@ swiftEvent.subscribe("flowerLoad", () => {
 
 // ##
 // RENDERER
+onResize();
 loop.start();
 
 
@@ -92,6 +93,23 @@ function toggleCanvas(){
 
 // ##
 // ON RESIZE
-window.addEventListener( "resize", () => {
-	webgl._binds.onResize();
-}, false );
+window.addEventListener( "resize", onResize, false );
+
+// ##
+// FCT
+
+function onResize(){
+	checkMobile();
+	webgl.onResize();
+}
+
+function checkMobile(){
+	let w = window.screen.availWidth || window.innerWidth;
+	let h = window.screen.availWidth || window.innerHeight;
+
+	if( w <= 800 && h <= 600){
+		props.onMobile = true;
+	} else {
+		props.onMobile = false;
+	}
+}

@@ -9,7 +9,6 @@ class Webgl {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
-		this.camera.position.z = 4;
 		this.controls = new THREE.OrbitControls( this.camera );
   		//this.controls.addEventListener( 'change', render );
 
@@ -25,13 +24,11 @@ class Webgl {
 		this.initPostprocessing();
 
 		this._binds = {};
-		this._binds.onUpdate = this._onUpdate.bind( this );
-		this._binds.onResize = this._onResize.bind( this );
+		this._binds.onUpdate = this.onUpdate.bind(this);
 	}
 
 	init() {
-		window.addEventListener( "orientationchange", this._binds.onResize, false );
-		this._onResize();
+		window.addEventListener( "orientationchange", this.onResize, false );
 	}
 
 	initPostprocessing() {
@@ -44,7 +41,7 @@ class Webgl {
 		this.scene.add(mesh);
 	}
 
-	_onUpdate() {
+	onUpdate() {
 		if (this.usePostprocessing) {
 			//reset this.composer
 		} else {
@@ -54,9 +51,17 @@ class Webgl {
 		}
 	}
 
-	_onResize() {
+	onResize() {
 		let width = window.innerWidth;
 		let height = window.innerHeight;
+
+		if(props.onMobile){
+			this.camera.position.y = 10;
+			this.camera.position.z = 40;
+		} else {
+			this.camera.position.y = 0;
+			this.camera.position.z = 4;
+		}
 
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();

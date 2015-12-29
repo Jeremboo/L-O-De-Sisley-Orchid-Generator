@@ -1,6 +1,8 @@
 import LoadingManager from 'js/core/LoadingManager';
 
 var props = {
+  // BOOL
+  onMobile : false,
   // GUI
   // - global
   stress : 10,
