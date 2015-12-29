@@ -62,6 +62,27 @@ swiftEvent.subscribe("flowerLoad", () => {
 onResize();
 loop.start();
 
+// ##
+// ON RESIZE
+window.addEventListener( "resize", onResize, false );
+
+// ##
+// FCT
+function onResize(){
+	checkMobile();
+	webgl.onResize();
+}
+
+function checkMobile(){
+	let w = window.screen.availWidth || window.innerWidth;
+	let h = window.screen.availWidth || window.innerHeight;
+
+	if( w <= 800 && h <= 600){
+		props.onMobile = true;
+	} else {
+		props.onMobile = false;
+	}
+}
 
 // ##
 // TEMPS
@@ -80,6 +101,14 @@ document.addEventListener('keydown', (e) => {
 		}
   }
 });
+// -- openFlowerAutomaticalally
+// swiftEvent.subscribe("onFinishLoaded", () => {
+// 	swiftEvent.publish("flowerGrow", {
+// 		stress : Math.random()*10,
+// 		tiredness : Math.random()*10,
+// 		mood : Math.random()*10
+// 	});
+// });
 
 function toggleCanvas(){
 	let status = "none";
@@ -90,26 +119,3 @@ function toggleCanvas(){
 }
 // TEMPS
 // ##
-
-// ##
-// ON RESIZE
-window.addEventListener( "resize", onResize, false );
-
-// ##
-// FCT
-
-function onResize(){
-	checkMobile();
-	webgl.onResize();
-}
-
-function checkMobile(){
-	let w = window.screen.availWidth || window.innerWidth;
-	let h = window.screen.availWidth || window.innerHeight;
-
-	if( w <= 800 && h <= 600){
-		props.onMobile = true;
-	} else {
-		props.onMobile = false;
-	}
-}
