@@ -19,6 +19,7 @@ class Flower extends THREE.Object3D {
 		this.numberOfPistil = 3;
 		this.oldRotation = new THREE.Vector3( 0, 0, 0 );
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
+		this.timer = 0;
 		// -- bool
 		this.alreadyOnScene = false;
 		this.openned = false;
@@ -117,10 +118,11 @@ class Flower extends THREE.Object3D {
 
 		// ##
 		// WIND
-		let time = Date.now();
-		let windAmpl = 20 - props.stress;
-		let windStrength = ( Math.cos(time / ( 2000 / props.stress )) / windAmpl );
-		let windForce = new THREE.Vector3( Math.sin( time / 2000 ), Math.sin( time / 3000 ), 0 ).multiplyScalar(windStrength);
+		this.timer += 0.01;
+		let time = this.timer;
+		let windAmpl = props.stress / 40;
+		let windStrength = Math.cos(time * (props.stress / 2) ) * windAmpl;
+		let windForce = new THREE.Vector3( Math.sin( time * (props.stress / 3) * 1.3 ), Math.sin( time ), 0 ).multiplyScalar(windStrength);
 		let windForceMatrix = this._getRotationMatrix(windForce);
 
 		// ##
