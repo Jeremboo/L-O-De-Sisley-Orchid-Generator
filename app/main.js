@@ -53,8 +53,6 @@ swiftEvent.subscribe("flowerLoad", () => {
 		flower.init(() => {
 			webgl.add(flower);
 			loop.add(flower._binds.onUpdate);
-			flower.alreadyOnScene = true;
-			swiftEvent.publish("onFinishLoaded");
 		});
 	}
 });

@@ -43,6 +43,8 @@ class Flower extends THREE.Object3D {
 				// - update flower
 				this.changeTexturePattern();
 				this.changeTextureBackgroundColor();
+			} else {
+				console.error("Flower is not in scene");
 			}
 		});
 		swiftEvent.subscribe("flowerToSeed", () => {
@@ -173,6 +175,8 @@ class Flower extends THREE.Object3D {
 		this.scale.addScalar(force);
 		if(Math.abs(force) < 0.001){
 			this.animation = false;
+			this.alreadyOnScene = true;
+			swiftEvent.publish("onFinishLoaded");
 		}
 	}
 
