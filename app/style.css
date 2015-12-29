@@ -7,6 +7,11 @@ html, body {
 	color: #f3f3f4;
 }
 
+body > canvas {
+	position: absolute;
+	z-index: -1;
+}
+
 header {
 	position : fixed;
 	top : 10px;

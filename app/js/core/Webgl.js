@@ -9,6 +9,8 @@ class Webgl {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
+		this.camera.position.z = 4;
+
 		this.controls = new THREE.OrbitControls( this.camera );
   		//this.controls.addEventListener( 'change', render );
 
@@ -56,11 +58,9 @@ class Webgl {
 		let height = window.innerHeight;
 
 		if(props.onMobile){
-			this.camera.position.y = 10;
-			this.camera.position.z = 40;
+			this.camera.position.y = 1;
 		} else {
 			this.camera.position.y = 0;
-			this.camera.position.z = 4;
 		}
 
 		this.camera.aspect = width / height;
