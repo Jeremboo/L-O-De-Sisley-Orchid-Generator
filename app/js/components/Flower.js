@@ -17,7 +17,7 @@ class Flower extends THREE.Object3D {
 		// ##
 		// INIT
 		this.numberOfPistil = 3;
-		this.oldRotation = new THREE.Vector3( 0, 0, 0 );
+		this.baseRotation = new THREE.Vector3( -2, 0, 0 );
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
 		this.timer = 0;
 		// -- bool
@@ -107,7 +107,7 @@ class Flower extends THREE.Object3D {
 		// ##
 		// ROTATION
 		// - dist between new rotation targeted and current rotation
-		let distRotation = props.rotation.clone().sub(this.rotation.toVector3());
+		let distRotation = props.rotation.clone().sub(this.rotation.toVector3().add(this.baseRotation));
 		let distRotationMatrix = this._getRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
 		let rotationForce = distRotation.multiplyScalar(0.15 - (0.012 * props.tiredness));
@@ -159,7 +159,7 @@ class Flower extends THREE.Object3D {
 	// ##
 
 	_onToSeed(){
-		this._rotateFlowerOnX(-1.5);
+		this._rotateFlowerOnX(-2);
 		this.childrenAnimationFct = (children)=>{
 			children.onToSeed();
 		};
@@ -183,8 +183,8 @@ class Flower extends THREE.Object3D {
 	}
 
 	_rotateFlowerOnX(rotation) {
-		let force = ( rotation - this.rotation.x ) * 0.03;
-		this.rotation.x += force;
+		let force = ( rotation - this.baseRotation.x ) * 0.03;
+		this.baseRotation.x += force;
 		if(Math.abs(force) < 0.001){
 			this.animation = false;
 			this.childrenAnimationFct = ()=>{};
