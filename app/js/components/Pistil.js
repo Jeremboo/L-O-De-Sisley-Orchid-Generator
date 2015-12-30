@@ -1,4 +1,5 @@
 import props from 'js/core/props';
+import utils from 'js/core/Utils';
 
 import pistilVert from 'shaders/pistil-vert';
 import pistilFrag from 'shaders/pistil-frag';
@@ -11,7 +12,7 @@ class Pistil extends THREE.Object3D {
 		// ##
 		// INIT
 		this.POZ = new THREE.Vector3(0, 0.03, -0.02 );
-		this.ROTATION = new THREE.Euler(-this._getRandomFloat(0.5, 1), 0.5 - (orientation/2), 0 );
+		this.ROTATION = new THREE.Euler(-utils.getRandomFloat(0.5, 1), 0.5 - (orientation/2), 0 );
 		// - var
 		this.segments = 32;
 		this.radiusSegment = 32;
@@ -19,7 +20,7 @@ class Pistil extends THREE.Object3D {
 		this.color = color;
 		this.scalePistilOpened = 0.035;
 
-		this.length = this._getRandomFloat(5, 12);
+		this.length = utils.getRandomFloat(5, 12);
 		this.curve = this._createCustomCurve();
 		this.pistilHeadPosition = this.curve.getPoints()[this.curve.getPoints().length-1];
 
@@ -97,26 +98,21 @@ class Pistil extends THREE.Object3D {
 		this.animatePistil(0);
   }
 
-	// FCTS UTILS
 	_createCustomCurve(){
 		let CustomSinCurve = THREE.Curve.create(
-		    function ( length, curve ) { //custom curve constructor
-		        this.curve = (curve === undefined) ? 1 : curve;
-		        this.length = (length === undefined) ? 1 : length;
-		    },
-		    function ( t ) { //getPoint: t is between 0-1
-		        let tx = 0,
-		            ty = Math.sin( t * this.curve ),
-		            tz = t * this.length;
+				function ( length, curve ) { //custom curve constructor
+						this.curve = (curve === undefined) ? 1 : curve;
+						this.length = (length === undefined) ? 1 : length;
+				},
+				function ( t ) { //getPoint: t is between 0-1
+						let tx = 0,
+								ty = Math.sin( t * this.curve ),
+								tz = t * this.length;
 
-		        return new THREE.Vector3(tx, ty, tz);
-		    }
+						return new THREE.Vector3(tx, ty, tz);
+				}
 		);
 		return new CustomSinCurve(this.length, this.curve);
-	}
-
-	_getRandomFloat(min, max) {
-        return Math.random() * (max - min) + min;
 	}
 }
 

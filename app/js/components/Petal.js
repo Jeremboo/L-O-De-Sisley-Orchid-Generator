@@ -1,4 +1,5 @@
 import props from 'js/core/props';
+import utils from 'js/core/Utils';
 
 import petalVert from 'shaders/petal-vert';
 import petalFrag from 'shaders/petal-frag';
@@ -14,9 +15,9 @@ class Petal {
     // ##
     // INIT
     // - get position to petal closed
-    this.closedPetalPosition = props.closedPetalPosition[this.id]
+    this.closedPetalRotation = props.closedPetalPosition[this.id];
     // - init petal to seed.
-    this.mMesh.rotation.setFromVector3(this.closedPetalPosition);
+    this.mMesh.rotation.setFromVector3(this.closedPetalRotation);
 
     // ##
     // GENERATE PATTERN TEXTURE
@@ -78,21 +79,21 @@ class Petal {
   _onGrow(){
     let red = 0.6; // reduce the closed position
     let posTargeted = new THREE.Vector3(
-      this._getXBetweenTwoNumbers(0, this.closedPetalPosition.x * red, props.tiredness),
-      this._getXBetweenTwoNumbers(0, this.closedPetalPosition.y * red, props.tiredness),
-      this._getXBetweenTwoNumbers(0, this.closedPetalPosition.z * red, props.tiredness)
+      utils.getXBetweenTwoNumbers(0, this.closedPetalRotation.x * red, props.tiredness),
+      utils.getXBetweenTwoNumbers(0, this.closedPetalRotation.y * red, props.tiredness),
+      utils.getXBetweenTwoNumbers(0, this.closedPetalRotation.z * red, props.tiredness)
     );
     this._animatePetal(posTargeted);
   }
 
   _onToSeed(){
-    this._animatePetal(this.closedPetalPosition);
+    this._animatePetal(this.closedPetalRotation);
   }
 
   _animatePetal(vectorTargeted){
     // - PETAL ROTATION
-    let forceRotation = vectorTargeted.clone()
-    forceRotation.sub(this.mMesh.rotation.toVector3()).multiplyScalar(0.03);
+    let dist = vectorTargeted.clone().sub(this.mMesh.rotation.toVector3());
+    let forceRotation = dist.multiplyScalar(0.03);
     this.mMesh.rotation.setFromVector3(this.mMesh.rotation.toVector3().add(forceRotation));
   }
 
@@ -115,36 +116,25 @@ class Petal {
   _drawTexture(){
     // - Add base
     // -- update base height
-    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * this._getRandomFloat(0.2, 1.2));
+    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * utils.getRandomFloat(0.2, 1.2));
 
     // - Add points
     this.ctx.globalAlpha = props.mood/10;
     // -- First Texture points
     // --- Random position
-    this.ctx.drawImage(props.imgs.petalPoints, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    this.ctx.drawImage(props.imgs.petalPoints, utils.getRandomFloat(-100, 100), utils.getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
     // -- Second Texture points
     // --- Random Rotation
-    let rotation =  this._getRandomFloat(0, 360*Math.PI);
+    let rotation =  utils.getRandomFloat(0, 360*Math.PI);
     this.ctx.rotate(rotation);
     // --- Random position
-    this.ctx.drawImage(props.imgs.petalPoints, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    this.ctx.drawImage(props.imgs.petalPoints, utils.getRandomFloat(-100, 100), utils.getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
     this.ctx.globalAlpha = 1;
     this.ctx.rotate(-rotation);
 
     // ##
     // UPDATE TEXTURE
     this.patternTexture.needsUpdate = true;
-  }
-
-  // ##########
-  // FCTS UTILS
-  // ##########
-  _getRandomFloat(min, max) {
-        return Math.random() * (max - min) + min;
-	}
-
-  _getXBetweenTwoNumbers(min, max, x){
-    return min + ( x * ( (max - min)/10 ));
   }
 }
 module.exports = Petal;

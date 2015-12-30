@@ -1,6 +1,7 @@
 import props from 'js/core/props';
-import LoadingManager from 'js/core/LoadingManager';
+import utils from 'js/core/Utils';
 import swiftEvent from "js/core/SwiftEventDispatcher";
+import LoadingManager from 'js/core/LoadingManager';
 
 import Pistil from 'js/components/Pistil';
 import Petal from 'js/components/Petal';
@@ -18,15 +19,19 @@ class Flower extends THREE.Object3D {
 		// INIT
 		this.numberOfPistil = 3;
 		this.baseRotation = new THREE.Vector3( -2, 0, 0 );
-		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
-		this.timer = 0;
+		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
 		this.velAnimation = 0.03;
+		// - openning
+		this.flowerOpenning = {
+			min : -2,
+			max : 0
+		};
 		// - scale
-		this.flowerScale = {};
-		this.flowerScale.toSeed = 0.2;
-		this.flowerScale.min = 0.5;
-		this.flowerScale.max = 1;
-		this.flowerScale.ratio = this.flowerScale.max - this.flowerScale.min;
+		this.flowerScale = {
+			toSeed : 0.2,
+			min : 0.5,
+			max : 1
+		};
 		// -- bool
 		this.alreadyOnScene = false;
 		this.openned = false;
@@ -49,7 +54,7 @@ class Flower extends THREE.Object3D {
 				// - update flower
 				this.updatePetalsTexture();
 			} else {
-				console.error("Flower is not in scene");
+				console.error("Flower is not initialized yet.");
 			}
 		});
 		swiftEvent.subscribe("flowerToSeed", () => {
@@ -115,7 +120,7 @@ class Flower extends THREE.Object3D {
 		// ROTATION
 		// - dist between new rotation targeted and current rotation
 		let distRotation = props.rotation.clone().sub(this.rotation.toVector3().add(this.baseRotation));
-		let distRotationMatrix = this._getRotationMatrix(distRotation);
+		let distRotationMatrix = utils.getRotationMatrix(distRotation);
 	  // - force to apply at flowerObject
 		let rotationForce = distRotation.multiplyScalar(0.15 - (0.012 * props.tiredness));
 		rotationForce.y *= 1.5; // minimise force in Y.
@@ -125,37 +130,40 @@ class Flower extends THREE.Object3D {
 
 		// ##
 		// WIND
-		this.timer += 0.01;
-		let time = this.timer;
-		let windAmpl = props.stress / 40;
+		let time = Date.now()/2000;
+		let windAmpl = 0.1 + props.stress / 40;
 		let windStrength = Math.cos(time * (props.stress / 2) ) * windAmpl;
 		let windForce = new THREE.Vector3( Math.sin( time * (props.stress / 3) * 1.3 ), Math.sin( time ), 0 ).multiplyScalar(windStrength);
-		let windForceMatrix = this._getRotationMatrix(windForce);
+		let windForceMatrix = utils.getRotationMatrix(windForce);
 
 		// ##
 		// UPDATE CHILDREN
 		// - update petals
-		this._traverse(this.petals, petal => {
+		utils.traverseArr(this.petals, petal => {
 			petal.onUpdate(distRotationMatrix, windForceMatrix, this.animation);
 		});
 		// - update pistils
-		this._traverse(this.pistils,  pistil => {
+		utils.traverseArr(this.pistils,  pistil => {
 			pistil.onUpdate(distRotationMatrix, windForce, windForceMatrix);
 		});
 	}
 
 	_onToSeed(){
-		this._rotateFlowerOnX(-2);
+		this._rotateFlowerOnX(this.flowerOpenning.min);
 		this._scalingFlower(this.flowerScale.toSeed);
 		mediator.publish("onToSeed");
 	}
 
 	_onGrow() {
 		// rotation
-		let rotationTargeted = this._getXBetweenTwoNumbers(0, -1.3, props.tiredness);
+		let rotationTargeted = utils.getXBetweenTwoNumbers(
+			this.flowerOpenning.max,
+			this.flowerOpenning.min,
+			props.tiredness
+		);
 		this._rotateFlowerOnX(rotationTargeted);
 		// scale
-    let scaleTargeted = this._getXBetweenTwoNumbers(
+    let scaleTargeted = utils.getXBetweenTwoNumbers(
       this.flowerScale.max,
 			this.flowerScale.min,
       props.tiredness
@@ -171,30 +179,6 @@ class Flower extends THREE.Object3D {
 		});
 	}
 
-	// ##########
-	// UPDATING PARAMETERS
-	// ##########
-	updatePetalsTexture(){
-		this.updateTextureBackgroundColor();
-		this.updateTexturePattern();
-	}
-
-	updateTextureBackgroundColor(){
-		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
-		this._traverse(this.petals, petal  => {
-			petal.updateColor(this.petalBackgroundColor);
-			//petal.updateTexture();
-		});
-		this._traverse(this.pistils, pistil => {
-			pistil.updateColor(this.petalBackgroundColor);
-		});
-	}
-	updateTexturePattern(){
-		this._traverse(this.petals, petal  => {
-			petal.updateTexture();
-		});
-	}
-	// TODO fusionner l'enssemble pour la version Sisley
 
 	// ##########
 	// ANIMATION
@@ -221,6 +205,35 @@ class Flower extends THREE.Object3D {
 	}
 
 	// ##########
+	// UPDATING PARAMETERS
+	// ##########
+	updateAppearence(){
+		this.animation = GROWING;
+	}
+	updatePetalsTexture(){
+		this.updateTextureBackgroundColor();
+		this.updateTexturePattern();
+	}
+
+	updateTextureBackgroundColor(){
+		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
+		utils.traverseArr(this.petals, petal  => {
+			petal.updateColor(this.petalBackgroundColor);
+			//petal.updateTexture();
+		});
+		utils.traverseArr(this.pistils, pistil => {
+			pistil.updateColor(this.petalBackgroundColor);
+		});
+	}
+	updateTexturePattern(){
+		utils.traverseArr(this.petals, petal  => {
+			petal.updateTexture();
+		});
+	}
+	// TODO fusionner l'enssemble pour la version Sisley
+
+
+	// ##########
 	// PISTILS
 	// ##########
 	_createPistil(or) {
@@ -235,45 +248,6 @@ class Flower extends THREE.Object3D {
 			this._createPistil(or);
 		}
 	}
-
-	// ##########
-	// FCTS UTILS
-	// ##########
-	_traverse(arr, fct) {
-		let i = 0,
-			l = arr.length;
-		for ( i ; i < l ; i++) {
-			fct(arr[i]);
-		}
-	}
-
-	_getRotationMatrix(vectRotation) {
-		let m = new THREE.Matrix4();
-		let m1 = new THREE.Matrix4();
-		let m2 = new THREE.Matrix4();
-		let m3 = new THREE.Matrix4();
-
-		m1.makeRotationX( -vectRotation.x );
-		m2.makeRotationY( -vectRotation.y );
-		m3.makeRotationY( -vectRotation.z );
-
-		m.multiplyMatrices( m1, m2 );
-		m.multiply( m3 );
-
-		return m;
-	}
-
-	_getVec4Color(color){
-    let r = color[0]/256;
-    let g = color[1]/256;
-    let b = color[2]/256;
-		let v4 = new THREE.Vector4(r,g,b,1);
-    return v4;
-	}
-
-	_getXBetweenTwoNumbers(min, max, x){
-    return min + ( x * ( (max - min)/10 ));
-  }
 }
 
 module.exports = Flower;

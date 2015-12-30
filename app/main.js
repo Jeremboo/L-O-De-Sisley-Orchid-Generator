@@ -26,6 +26,8 @@ let gui = new dat.GUI(),
 ;
 
 guiTiredness.onChange(value => {
+	//TODO relancer l'animation
+	flower.updateAppearence();
 });
 guiMood.onChange(value => {
 	props.textureBackgroundColor = props.colors[Math.round(props.mood)];

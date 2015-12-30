@@ -11,8 +11,8 @@ class Webgl {
 		this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
 		this.camera.position.z = 4;
 
-		this.controls = new THREE.OrbitControls( this.camera );
-  		//this.controls.addEventListener( 'change', render );
+		//this.controls = new THREE.OrbitControls( this.camera );
+  	//this.controls.addEventListener( 'change', render );
 
 		this.renderer = new THREE.WebGLRenderer({
 			antialias : true

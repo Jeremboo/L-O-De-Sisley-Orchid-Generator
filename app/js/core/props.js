@@ -5,13 +5,13 @@ var props = {
   onMobile : false,
   // GUI
   // - global
-  stress : 10,
-  tiredness : 5,
-  mood : 5,
+  stress : 0,
+  tiredness : 0,
+  mood : 0,
   // - hack
   mouseCapture : true,
   showCanvasPetalPattern : false,
-  textureBackgroundColor : [200, 288, 258],
+  textureBackgroundColor : [117, 131, 177],
   // GLOBAL DATA
   objURL : '3d_model/flower.obj',
   rotation : new THREE.Vector3( 0, 0, 0 ),
@@ -20,21 +20,21 @@ var props = {
     petalPoints : LoadingManager.loadImage('tex/petal_points.png')
   },
   texts : {
-    petalBackground : THREE.ImageUtils.loadTexture('tex/petal_background.jpg'),
-    petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.jpg')
+    petalBackground : THREE.ImageUtils.loadTexture('tex/petal_background.png'),
+    petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.png')
   },
   colors : [
     [247, 201, 84],
+    [249, 183, 112],
     [232, 163, 84],
     [251, 164, 139],
-    [206, 127, 134],
-    [160, 92, 128],
-    [73, 90, 146],
-    [95, 73, 148],
-    [61, 121, 133],
+    [206, 128, 134],
+    [173, 119, 144],
+    [160, 92, 129],
+    [113, 106, 153],
+    [60, 121, 134],
     [169, 195, 153],
-    [168, 183, 10],
-    [149, 96, 107]
+    [168, 183, 100]
   ],
   closedPetalPosition : [
     new THREE.Vector3(0.5, 0, 0),         // 0 - haut / milieu
