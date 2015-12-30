@@ -34,8 +34,6 @@ class Flower extends THREE.Object3D {
 		// -- children
 		this.petals = [];
 		this.pistils = [];
-		// -- actions for children during animation
-		this.childrenAnimationFct = ()=>{};
 
 		// ##
 		// EVENTS
@@ -139,22 +137,17 @@ class Flower extends THREE.Object3D {
 		// - update petals
 		this._traverse(this.petals, petal => {
 			petal.onUpdate(distRotationMatrix, windForceMatrix, this.animation);
-			this.childrenAnimationFct(petal);
 		});
 		// - update pistils
 		this._traverse(this.pistils,  pistil => {
 			pistil.onUpdate(distRotationMatrix, windForce, windForceMatrix);
-			this.childrenAnimationFct(pistil);
 		});
 	}
 
 	_onToSeed(){
 		this._rotateFlowerOnX(-2);
 		this._scalingFlower(this.flowerScale.toSeed);
-
-		this.childrenAnimationFct = (children)=>{
-			children.onToSeed();
-		};
+		mediator.publish("onToSeed");
 	}
 
 	_onGrow() {
@@ -168,10 +161,7 @@ class Flower extends THREE.Object3D {
       props.tiredness
     );
 		this._scalingFlower(scaleTargeted);
-
-		this.childrenAnimationFct = (children)=>{
-			children.onGrow();
-		};
+		mediator.publish("onGrow");
 	}
 
 	_onAppear() {
@@ -223,9 +213,7 @@ class Flower extends THREE.Object3D {
 
 	_testAniationEnd(f, callback){
 		if(Math.abs(f) < 0.001){
-			console.log("Animation endded")
 			this.animation = false;
-			this.childrenAnimationFct = ()=>{};
 			if(callback){
 				callback();
 			}

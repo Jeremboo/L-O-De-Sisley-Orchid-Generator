@@ -53,6 +53,14 @@ class Petal {
     // - apply material to petalMesh
     this.mMesh.material = this.petalShaderMaterial;
 
+    // ##
+    // MEDIATOR LISTENER
+    mediator.subscribe("onGrow", () => {
+      this._onGrow();
+    });
+    mediator.subscribe("onToSeed", () => {
+      this._onToSeed();
+    });
   }
 
   // ##########
@@ -67,7 +75,7 @@ class Petal {
 		this.mMesh.material.uniforms.windForceMatrix.value = windForceMatrix;
   }
 
-  onGrow(){
+  _onGrow(){
     let red = 0.6; // reduce the closed position
     let posTargeted = new THREE.Vector3(
       this._getXBetweenTwoNumbers(0, this.closedPetalPosition.x * red, props.tiredness),
@@ -77,7 +85,7 @@ class Petal {
     this._animatePetal(posTargeted);
   }
 
-  onToSeed(){
+  _onToSeed(){
     this._animatePetal(this.closedPetalPosition);
   }
 

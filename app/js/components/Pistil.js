@@ -60,6 +60,15 @@ class Pistil extends THREE.Object3D {
 		this.scale.set(0.0001, 0.0001, 0.0001);
 		this.position.copy(this.POZ);
 		this.rotation.copy(this.ROTATION);
+
+		// ##
+    // MEDIATOR LISTENER
+    mediator.subscribe("onGrow", () => {
+      this._onGrow();
+    });
+    mediator.subscribe("onToSeed", () => {
+      this._onToSeed();
+    });
 	}
 
 	animatePistil(size) {
@@ -81,10 +90,10 @@ class Pistil extends THREE.Object3D {
 		this.pistilHeadObject.rotation.setFromVector3(windForce);
 	}
 
-	onGrow(){
+	_onGrow(){
 		this.animatePistil(this.scalePistilOpened);
   }
-  onToSeed(){
+  _onToSeed(){
 		this.animatePistil(0);
   }
 
