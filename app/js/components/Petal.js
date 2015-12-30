@@ -13,10 +13,10 @@ class Petal {
     this.mMesh = mesh;
     // ##
     // INIT
+    // - get position to petal closed
     this.closedPetalPosition = props.closedPetalPosition[this.id]
     // - init petal to seed.
     this.mMesh.rotation.setFromVector3(this.closedPetalPosition);
-    this.mMesh.scale.multiplyScalar(0.2);
 
     // ##
     // GENERATE PATTERN TEXTURE
@@ -55,6 +55,9 @@ class Petal {
 
   }
 
+  // ##########
+  // ONUPDATE
+  // ##########
   onUpdate(distRotationMatrix, windForceMatrix){
     // ##
 		// UPDATE SHADER
@@ -65,38 +68,49 @@ class Petal {
   }
 
   onGrow(){
-    this._animatePetal(new THREE.Vector3(), 1);
+    let red = 0.6; // reduce the closed position
+    let posTargeted = new THREE.Vector3(
+      this._getXBetweenTwoNumbers(0, this.closedPetalPosition.x * red, props.tiredness),
+      this._getXBetweenTwoNumbers(0, this.closedPetalPosition.y * red, props.tiredness),
+      this._getXBetweenTwoNumbers(0, this.closedPetalPosition.z * red, props.tiredness)
+    );
+    this._animatePetal(posTargeted);
   }
+
   onToSeed(){
-    this._animatePetal(this.closedPetalPosition.clone(), 0.2);
+    this._animatePetal(this.closedPetalPosition);
   }
 
-  _animatePetal(vectorTargeted, scaleTargeted){
+  _animatePetal(vectorTargeted){
     // - PETAL ROTATION
-    let forceRotation = vectorTargeted.sub(this.mMesh.rotation.toVector3()).multiplyScalar(0.03);
+    let forceRotation = vectorTargeted.clone()
+    forceRotation.sub(this.mMesh.rotation.toVector3()).multiplyScalar(0.03);
     this.mMesh.rotation.setFromVector3(this.mMesh.rotation.toVector3().add(forceRotation));
-    // - PETAL SIZE
-    let force = (scaleTargeted - this.mMesh.scale.x ) * 0.03;
-		this.mMesh.scale.addScalar(force);
   }
 
-  // TEMPS
-  changeColor(color){
+  // ##########
+	// UPDATING PARAMETERS
+	// ##########
+  updateColor(color){
     this.mMesh.material.uniforms.backgroundColor.value = color;
   }
-  changeTexture(){
+  updateTexture(){
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this._drawTexture();
   }
-  // TEMPS
+  // TODO fusionner l'enssemble pour la version Sisley
 
+
+  // ##########
+  // TEXTURE DRAWING
+  // ##########
   _drawTexture(){
     // - Add base
-    // -- change base height
+    // -- update base height
     this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * this._getRandomFloat(0.2, 1.2));
 
     // - Add points
-    this.ctx.globalAlpha = props.tiredness/10;
+    this.ctx.globalAlpha = props.mood/10;
     // -- First Texture points
     // --- Random position
     this.ctx.drawImage(props.imgs.petalPoints, this._getRandomFloat(-100, 100), this._getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
@@ -114,8 +128,15 @@ class Petal {
     this.patternTexture.needsUpdate = true;
   }
 
+  // ##########
+  // FCTS UTILS
+  // ##########
   _getRandomFloat(min, max) {
         return Math.random() * (max - min) + min;
 	}
+
+  _getXBetweenTwoNumbers(min, max, x){
+    return min + ( x * ( (max - min)/10 ));
+  }
 }
 module.exports = Petal;

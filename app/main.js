@@ -26,11 +26,10 @@ let gui = new dat.GUI(),
 ;
 
 guiTiredness.onChange(value => {
-	flower.changeTexturePattern();
 });
 guiMood.onChange(value => {
 	props.textureBackgroundColor = props.colors[Math.round(props.mood)];
-	flower.changeTextureBackgroundColor();
+	flower.updatePetalsTexture();
 });
 guiCanvasShowed.onChange(value => {
 	toggleCanvas();
@@ -41,7 +40,7 @@ guiMouseCapture.onChange(value => {
 	}
 });
 guiTextureBackgroundColor.onChange(() => {
-	flower.changeTextureBackgroundColor();
+	flower.updateTextureBackgroundColor();
 });
 //gui.close();
 
@@ -58,13 +57,13 @@ swiftEvent.subscribe("flowerLoad", () => {
 });
 
 // ##
-// RENDERER
-onResize();
-loop.start();
-
-// ##
 // ON RESIZE
 window.addEventListener( "resize", onResize, false );
+
+// ##
+// START
+onResize();
+loop.start();
 
 // ##
 // FCT

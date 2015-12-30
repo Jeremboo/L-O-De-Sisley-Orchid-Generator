@@ -20,6 +20,13 @@ class Flower extends THREE.Object3D {
 		this.baseRotation = new THREE.Vector3( -2, 0, 0 );
 		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
 		this.timer = 0;
+		this.velAnimation = 0.03;
+		// - scale
+		this.flowerScale = {};
+		this.flowerScale.toSeed = 0.2;
+		this.flowerScale.min = 0.5;
+		this.flowerScale.max = 1;
+		this.flowerScale.ratio = this.flowerScale.max - this.flowerScale.min;
 		// -- bool
 		this.alreadyOnScene = false;
 		this.openned = false;
@@ -42,8 +49,7 @@ class Flower extends THREE.Object3D {
 				// - update backgroundColor
 				props.textureBackgroundColor = props.colors[Math.round(props.mood)];
 				// - update flower
-				this.changeTexturePattern();
-				this.changeTextureBackgroundColor();
+				this.updatePetalsTexture();
 			} else {
 				console.error("Flower is not in scene");
 			}
@@ -87,6 +93,9 @@ class Flower extends THREE.Object3D {
 		});
 	}
 
+	// ##########
+	// ONUPDATE
+	// ##########
 	_onUpdate() {
 		// ##
 		// Animation
@@ -126,7 +135,7 @@ class Flower extends THREE.Object3D {
 		let windForceMatrix = this._getRotationMatrix(windForce);
 
 		// ##
-		// UPDATE
+		// UPDATE CHILDREN
 		// - update petals
 		this._traverse(this.petals, petal => {
 			petal.onUpdate(distRotationMatrix, windForceMatrix, this.animation);
@@ -139,58 +148,93 @@ class Flower extends THREE.Object3D {
 		});
 	}
 
-	// ##
-	// ## TEMP
-	changeTextureBackgroundColor(){
-		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
-		this._traverse(this.petals, petal  => {
-			petal.changeColor(this.petalBackgroundColor);
-		});
-		this._traverse(this.pistils, pistil => {
-			pistil.changeColor(this.petalBackgroundColor);
-		});
-	}
-	changeTexturePattern(){
-		this._traverse(this.petals, petal  => {
-			petal.changeTexture();
-		});
-	}
-	// ## TEMP
-	// ##
-
 	_onToSeed(){
 		this._rotateFlowerOnX(-2);
+		this._scalingFlower(this.flowerScale.toSeed);
+
 		this.childrenAnimationFct = (children)=>{
 			children.onToSeed();
 		};
 	}
 
 	_onGrow() {
-		this._rotateFlowerOnX(0);
+		// rotation
+		let rotationTargeted = this._getXBetweenTwoNumbers(0, -1.3, props.tiredness);
+		this._rotateFlowerOnX(rotationTargeted);
+		// scale
+    let scaleTargeted = this._getXBetweenTwoNumbers(
+      this.flowerScale.max,
+			this.flowerScale.min,
+      props.tiredness
+    );
+		this._scalingFlower(scaleTargeted);
+
 		this.childrenAnimationFct = (children)=>{
 			children.onGrow();
 		};
 	}
 
 	_onAppear() {
-		let force = ( 1 - this.scale.x ) * 0.1;
-		this.scale.addScalar(force);
-		if(Math.abs(force) < 0.001){
-			this.animation = false;
+		this._scalingFlower(this.flowerScale.toSeed, () => {
 			this.alreadyOnScene = true;
 			swiftEvent.publish("onFinishLoaded");
-		}
+		});
 	}
 
-	_rotateFlowerOnX(rotation) {
-		let force = ( rotation - this.baseRotation.x ) * 0.03;
+	// ##########
+	// UPDATING PARAMETERS
+	// ##########
+	updatePetalsTexture(){
+		this.updateTextureBackgroundColor();
+		this.updateTexturePattern();
+	}
+
+	updateTextureBackgroundColor(){
+		this.petalBackgroundColor = this._getVec4Color(props.textureBackgroundColor);
+		this._traverse(this.petals, petal  => {
+			petal.updateColor(this.petalBackgroundColor);
+			//petal.updateTexture();
+		});
+		this._traverse(this.pistils, pistil => {
+			pistil.updateColor(this.petalBackgroundColor);
+		});
+	}
+	updateTexturePattern(){
+		this._traverse(this.petals, petal  => {
+			petal.updateTexture();
+		});
+	}
+	// TODO fusionner l'enssemble pour la version Sisley
+
+	// ##########
+	// ANIMATION
+	// ##########
+	_rotateFlowerOnX(rotation, callback) {
+		let force = ( rotation - this.baseRotation.x ) * this.velAnimation;
 		this.baseRotation.x += force;
-		if(Math.abs(force) < 0.001){
+		this._testAniationEnd(force, callback);
+	}
+
+	_scalingFlower(scale, callback){
+		let force = ( scale - this.scale.x ) * this.velAnimation;
+		this.scale.addScalar(force);
+		this._testAniationEnd(force, callback);
+	}
+
+	_testAniationEnd(f, callback){
+		if(Math.abs(f) < 0.001){
+			console.log("Animation endded")
 			this.animation = false;
 			this.childrenAnimationFct = ()=>{};
+			if(callback){
+				callback();
+			}
 		}
 	}
 
+	// ##########
+	// PISTILS
+	// ##########
 	_createPistil(or) {
 		or = or-1;
 		// - pistil
@@ -204,6 +248,9 @@ class Flower extends THREE.Object3D {
 		}
 	}
 
+	// ##########
+	// FCTS UTILS
+	// ##########
 	_traverse(arr, fct) {
 		let i = 0,
 			l = arr.length;
@@ -236,6 +283,9 @@ class Flower extends THREE.Object3D {
     return v4;
 	}
 
+	_getXBetweenTwoNumbers(min, max, x){
+    return min + ( x * ( (max - min)/10 ));
+  }
 }
 
 module.exports = Flower;

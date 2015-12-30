@@ -17,6 +17,7 @@ class Pistil extends THREE.Object3D {
 		this.radiusSegment = 32;
 		this.size = 0.1;
 		this.color = color;
+		this.scalePistilOpened = 0.035;
 
 		this.length = this._getRandomFloat(5, 12);
 		this.curve = this._createCustomCurve();
@@ -66,7 +67,7 @@ class Pistil extends THREE.Object3D {
 		this.scale.addScalar(force);
 	}
 
-	changeColor(newColor){
+	updateColor(newColor){
 		this.pistilStemMesh.material.uniforms.color.value = newColor;
 	}
 
@@ -81,12 +82,13 @@ class Pistil extends THREE.Object3D {
 	}
 
 	onGrow(){
-		this.animatePistil(0.035);
+		this.animatePistil(this.scalePistilOpened);
   }
   onToSeed(){
 		this.animatePistil(0);
   }
 
+	// FCTS UTILS
 	_createCustomCurve(){
 		let CustomSinCurve = THREE.Curve.create(
 		    function ( length, curve ) { //custom curve constructor
