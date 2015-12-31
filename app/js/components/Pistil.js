@@ -64,23 +64,13 @@ class Pistil extends THREE.Object3D {
 
 		// ##
     // MEDIATOR LISTENER
-    mediator.subscribe("onGrow", () => {
-      this._onGrow();
-    });
-    mediator.subscribe("onToSeed", () => {
-      this._onToSeed();
-    });
+    mediator.subscribe("onGrow", this._onGrow.bind(this));
+    mediator.subscribe("onToSeed", this._onToSeed.bind(this));
 	}
 
-	animatePistil(size) {
-		let force = ( size - this.scale.x ) * 0.03;
-		this.scale.addScalar(force);
-	}
-
-	updateColor(newColor){
-		this.pistilStemMesh.material.uniforms.color.value = newColor;
-	}
-
+	// ##########
+	// ONUPDATE
+	// ##########
 	onUpdate(matrixDistRotation, windForce, windForceMatrix) {
 
 		// update shader for Stem
@@ -98,6 +88,24 @@ class Pistil extends THREE.Object3D {
 		this.animatePistil(0);
   }
 
+	// ##########
+	// ANIMATION
+	// ##########
+	animatePistil(size) {
+		let force = ( size - this.scale.x ) * 0.03;
+		this.scale.addScalar(force);
+	}
+
+	// ##########
+	// UPDATING PARAMETERS
+	// ##########
+	updateColor(newColor){
+		this.pistilStemMesh.material.uniforms.color.value = newColor;
+	}
+
+	// ##########
+	// CUSTOM CURVE BUILDER
+	// ##########
 	_createCustomCurve(){
 		let CustomSinCurve = THREE.Curve.create(
 				function ( length, curve ) { //custom curve constructor

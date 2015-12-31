@@ -49,6 +49,12 @@ guiTextureBackgroundColor.onChange(() => {
 // ##
 // FLOWER
 var flower = new Flower();
+
+
+// ##
+// EVENTS
+
+// -- on flower Load
 swiftEvent.subscribe("flowerLoad", () => {
 	if (!flower.alreadyOnScene) {
 		flower.init(() => {
@@ -58,14 +64,35 @@ swiftEvent.subscribe("flowerLoad", () => {
 	}
 });
 
-// ##
-// ON RESIZE
+// - on flower Grow
+swiftEvent.subscribe("flowerGrow", (flowerData) => {
+	// - stress
+	props.stress = flowerData.stress;
+	// - tiredness
+	props.tiredness = flowerData.tiredness;
+	// - mood
+	props.mood = flowerData.mood;
+	props.textureBackgroundColor = props.colors[Math.round(props.mood)];
+	// UPDATE FLOWER
+	flower.grow();
+});
+
+// - on flower to seed
+swiftEvent.subscribe("flowerToSeed", () => {
+	flower.toSeed();
+});
+// - on resize
 window.addEventListener( "resize", onResize, false );
+
 
 // ##
 // START
 onResize();
 loop.start();
+swiftEvent.publish("flowerLoad");
+
+
+
 
 // ##
 // FCT
@@ -85,31 +112,31 @@ function checkMobile(){
 	}
 }
 
-// ##
+// ########################################################
 // TEMPS
 // - loadFlower
-swiftEvent.publish("flowerLoad");
 document.addEventListener('keydown', (e) => {
-  if(e.keyCode == 32){
-		if(flower.openned){
-			swiftEvent.publish("flowerToSeed");
-		} else {
+	//ArrowDown || Space
+  if(e.keyCode == 38 || e.keyCode == 32){
 			swiftEvent.publish("flowerGrow", {
 				stress : Math.random()*10,
 				tiredness : Math.random()*10,
 				mood : Math.random()*10
 			});
-		}
   }
+	//ArrowUp
+	if(e.keyCode == 40){
+		swiftEvent.publish("flowerToSeed");
+	}
 });
 // -- openFlowerAutomaticalally
-// swiftEvent.subscribe("onFinishLoaded", () => {
-// 	swiftEvent.publish("flowerGrow", {
-// 		stress : Math.random()*10,
-// 		tiredness : Math.random()*10,
-// 		mood : Math.random()*10
-// 	});
-// });
+swiftEvent.subscribe("onFinishLoaded", () => {
+	swiftEvent.publish("flowerGrow", {
+		stress : Math.random()*10,
+		tiredness : Math.random()*10,
+		mood : Math.random()*10
+	});
+});
 
 function toggleCanvas(){
 	let status = "none";
@@ -119,4 +146,4 @@ function toggleCanvas(){
 	document.getElementById('params').style.display = status;
 }
 // TEMPS
-// ##
+// ########################################################

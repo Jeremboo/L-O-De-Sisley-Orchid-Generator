@@ -41,30 +41,6 @@ class Flower extends THREE.Object3D {
 		this.pistils = [];
 
 		// ##
-		// EVENTS
-		swiftEvent.subscribe("flowerGrow", (flowerData) => {
-			if (this.alreadyOnScene) {
-				this.openned = true;
-				this.animation = GROWING;
-				props.stress = flowerData.stress;
-			  props.tiredness = flowerData.tiredness;
-			  props.mood = flowerData.mood;
-				// - update backgroundColor
-				props.textureBackgroundColor = props.colors[Math.round(props.mood)];
-				// - update flower
-				this.updatePetalsTexture();
-			} else {
-				console.error("Flower is not initialized yet.");
-			}
-		});
-		swiftEvent.subscribe("flowerToSeed", () => {
-			if (this.alreadyOnScene) {
-				this.openned = false;
-				this.animation = TOSEED;
-			}
-		});
-
-		// ##
 		// SAVE BINDING
 		this._binds = {};
 		this._binds.onUpdate = this._onUpdate.bind(this);
@@ -94,6 +70,27 @@ class Flower extends THREE.Object3D {
 
 			callback();
 		});
+	}
+
+	grow(){
+		if (this.alreadyOnScene) {
+			this.openned = true;
+			// - appearence
+			this.updateAppearence();
+			// - texture
+			this.updatePetalsTexture();
+		} else {
+			console.error("Flower is not initialized yet.");
+		}
+	}
+	
+	toSeed(){
+		if (this.alreadyOnScene) {
+			this.openned = false;
+			this.animation = TOSEED;
+		} else {
+			console.error("Flower is not initialized yet.");
+		}
 	}
 
 	// ##########
@@ -131,16 +128,20 @@ class Flower extends THREE.Object3D {
 		// ##
 		// WIND
 		let time = Date.now()/2000;
-		let windAmpl = 0.1 + props.stress / 40;
-		let windStrength = Math.cos(time * (props.stress / 2) ) * windAmpl;
-		let windForce = new THREE.Vector3( Math.sin( time * (props.stress / 3) * 1.3 ), Math.sin( time ), 0 ).multiplyScalar(windStrength);
+		let windAmpl = 0.1 + props.stress / 80;
+		let windStrength = Math.cos(time * (props.stress) ) * windAmpl;
+		let windForce = new THREE.Vector3(
+			Math.sin( time * (props.stress / 1.5) * 1.3 ),
+			Math.sin( time ),
+			0
+		).multiplyScalar(windStrength);
 		let windForceMatrix = utils.getRotationMatrix(windForce);
 
 		// ##
 		// UPDATE CHILDREN
 		// - update petals
 		utils.traverseArr(this.petals, petal => {
-			petal.onUpdate(distRotationMatrix, windForceMatrix, this.animation);
+			petal.onUpdate(distRotationMatrix, windForceMatrix);
 		});
 		// - update pistils
 		utils.traverseArr(this.pistils,  pistil => {
@@ -149,8 +150,8 @@ class Flower extends THREE.Object3D {
 	}
 
 	_onToSeed(){
-		this._rotateFlowerOnX(this.flowerOpenning.min);
-		this._scalingFlower(this.flowerScale.toSeed);
+		this._animRotationOnX(this.flowerOpenning.min);
+		this._animScale(this.flowerScale.toSeed);
 		mediator.publish("onToSeed");
 	}
 
@@ -161,19 +162,19 @@ class Flower extends THREE.Object3D {
 			this.flowerOpenning.min,
 			props.tiredness
 		);
-		this._rotateFlowerOnX(rotationTargeted);
+		this._animRotationOnX(rotationTargeted);
 		// scale
     let scaleTargeted = utils.getXBetweenTwoNumbers(
       this.flowerScale.max,
 			this.flowerScale.min,
       props.tiredness
     );
-		this._scalingFlower(scaleTargeted);
+		this._animScale(scaleTargeted);
 		mediator.publish("onGrow");
 	}
 
 	_onAppear() {
-		this._scalingFlower(this.flowerScale.toSeed, () => {
+		this._animScale(this.flowerScale.toSeed, () => {
 			this.alreadyOnScene = true;
 			swiftEvent.publish("onFinishLoaded");
 		});
@@ -183,19 +184,19 @@ class Flower extends THREE.Object3D {
 	// ##########
 	// ANIMATION
 	// ##########
-	_rotateFlowerOnX(rotation, callback) {
+	_animRotationOnX(rotation, callback) {
 		let force = ( rotation - this.baseRotation.x ) * this.velAnimation;
 		this.baseRotation.x += force;
-		this._testAniationEnd(force, callback);
+		this._animTestEnd(force, callback);
 	}
 
-	_scalingFlower(scale, callback){
+	_animScale(scale, callback){
 		let force = ( scale - this.scale.x ) * this.velAnimation;
 		this.scale.addScalar(force);
-		this._testAniationEnd(force, callback);
+		this._animTestEnd(force, callback);
 	}
 
-	_testAniationEnd(f, callback){
+	_animTestEnd(f, callback){
 		if(Math.abs(f) < 0.001){
 			this.animation = false;
 			if(callback){
@@ -204,12 +205,14 @@ class Flower extends THREE.Object3D {
 		}
 	}
 
+
 	// ##########
 	// UPDATING PARAMETERS
 	// ##########
 	updateAppearence(){
 		this.animation = GROWING;
 	}
+
 	updatePetalsTexture(){
 		this.updateTextureBackgroundColor();
 		this.updateTexturePattern();

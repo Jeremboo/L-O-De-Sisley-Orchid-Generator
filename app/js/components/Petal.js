@@ -90,6 +90,9 @@ class Petal {
     this._animatePetal(this.closedPetalRotation);
   }
 
+  // ##########
+  // ANIMATION
+  // ##########
   _animatePetal(vectorTargeted){
     // - PETAL ROTATION
     let dist = vectorTargeted.clone().sub(this.mMesh.rotation.toVector3());
