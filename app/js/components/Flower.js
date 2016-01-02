@@ -20,6 +20,9 @@ class Flower extends THREE.Object3D {
 		this.numberOfPistil = 3;
 		this.baseRotation = new THREE.Vector3( -2, 0, 0 );
 		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
+		this.time = 0;
+		this.windFrequency = 0;
+		this.windPhase = 0;
 		// - openning
 		this.flowerOpenning = {
 			min : -2,
@@ -74,6 +77,8 @@ class Flower extends THREE.Object3D {
 	grow(){
 		if (this.alreadyOnScene) {
 			this.openned = true;
+			// - wind
+			this.updateWindFrequency();
 			// - appearence
 			this.updateAppearence();
 			// - texture
@@ -126,12 +131,12 @@ class Flower extends THREE.Object3D {
 
 		// ##
 		// WIND
-		let time = Date.now()/2000;
-		let windAmpl = 0.1 + props.stress / 80;
-		let windStrength = Math.cos(time * (props.stress) ) * windAmpl;
+		this.time = Date.now()/3000;
+		let windAmpl = 0.1 + props.stress / 50;
+		let windStrength = Math.cos(this.time * this.windFrequency + this.windPhase) * windAmpl;
 		let windForce = new THREE.Vector3(
-			Math.sin( time * (props.stress / 1.5) * 1.3 ),
-			Math.sin( time ),
+			Math.sin(this.time * this.windFrequency + this.windPhase) * (props.stress/8),
+			Math.sin(this.time * 1.3) * Math.cos(this.time),
 			0
 		).multiplyScalar(windStrength);
 		let windForceMatrix = utils.getRotationMatrix(windForce);
@@ -233,6 +238,13 @@ class Flower extends THREE.Object3D {
 		});
 	}
 	// TODO fusionner l'enssemble pour la version Sisley
+
+	updateWindFrequency(){
+		let curr = (this.time * this.windFrequency + this.windPhase) % (2 * Math.PI);
+		let next = (this.time * props.stress) % (2 * Math.PI);
+		this.windPhase = curr - next;
+		this.windFrequency = props.stress;
+	}
 
 
 	// ##########

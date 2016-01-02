@@ -25,8 +25,10 @@ let gui = new dat.GUI(),
 	guiTextureBackgroundColor =  guiHackFolder.addColor(props, 'textureBackgroundColor')
 ;
 
+guiStress.onChange(value => {
+	flower.updateWindFrequency();
+})
 guiTiredness.onChange(value => {
-	//TODO relancer l'animation
 	flower.updateAppearence();
 });
 guiMood.onChange(value => {
@@ -67,6 +69,14 @@ swiftEvent.subscribe("flowerLoad", () => {
 swiftEvent.subscribe("flowerGrow", (flowerData) => {
 	// - stress
 	props.stress = flowerData.stress;
+	// let fct = function() {
+	// 	let force = ( flowerData.stress - props.stress ) * 0.03;
+	// 	props.stress += force;
+	// 	if(Math.abs(force) < 0.001){
+	// 		loop.remove(fct);
+	// 	}
+	// }
+	// loop.add(fct)
 	// - tiredness
 	props.tiredness = flowerData.tiredness;
 	// - mood

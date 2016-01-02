@@ -14,7 +14,7 @@ var props = {
   textureBackgroundColor : [117, 131, 177],
   // GLOBAL DATA
   objURL : '3d_model/flower.obj',
-  rotation : new THREE.Vector3( 0, 0, 0 ),
+  rotation : new THREE.Vector3(),
   imgs : {
     petalBase : LoadingManager.loadImage('tex/petal_base.png'),
     petalPoints : LoadingManager.loadImage('tex/petal_points.png')
