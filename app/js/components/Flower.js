@@ -20,7 +20,6 @@ class Flower extends THREE.Object3D {
 		this.numberOfPistil = 3;
 		this.baseRotation = new THREE.Vector3( -2, 0, 0 );
 		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
-		this.velAnimation = 0.03;
 		// - openning
 		this.flowerOpenning = {
 			min : -2,
@@ -83,7 +82,7 @@ class Flower extends THREE.Object3D {
 			console.error("Flower is not initialized yet.");
 		}
 	}
-	
+
 	toSeed(){
 		if (this.alreadyOnScene) {
 			this.openned = false;
@@ -185,23 +184,23 @@ class Flower extends THREE.Object3D {
 	// ANIMATION
 	// ##########
 	_animRotationOnX(rotation, callback) {
-		let force = ( rotation - this.baseRotation.x ) * this.velAnimation;
-		this.baseRotation.x += force;
-		this._animTestEnd(force, callback);
+		utils.easing(rotation, this.baseRotation.x, {
+			update : (f) => {this.baseRotation.x += f;},
+			callback : () => {this._animEnd(callback);}
+		});
 	}
 
 	_animScale(scale, callback){
-		let force = ( scale - this.scale.x ) * this.velAnimation;
-		this.scale.addScalar(force);
-		this._animTestEnd(force, callback);
+		utils.easing(scale, this.scale.x, {
+			update : (f) => {this.scale.addScalar(f);},
+			callback : () => {this._animEnd(callback);}
+		});
 	}
 
-	_animTestEnd(f, callback){
-		if(Math.abs(f) < 0.001){
-			this.animation = false;
-			if(callback){
-				callback();
-			}
+	_animEnd(clbk){
+		this.animation = false;
+		if(clbk){
+			clbk();
 		}
 	}
 

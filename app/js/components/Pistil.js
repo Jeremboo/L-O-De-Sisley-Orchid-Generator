@@ -92,8 +92,9 @@ class Pistil extends THREE.Object3D {
 	// ANIMATION
 	// ##########
 	animatePistil(size) {
-		let force = ( size - this.scale.x ) * 0.03;
-		this.scale.addScalar(force);
+		utils.easing(size, this.scale.x, {
+			update : (f) => {this.scale.addScalar(f);}
+		});
 	}
 
 	// ##########

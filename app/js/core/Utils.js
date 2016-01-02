@@ -26,6 +26,17 @@ class Utils {
 		return m;
 	}
 
+	easing(target, value, params){
+		let vel = params.vel || 0.03;
+		let f = ( target - value ) * vel;
+		params.update(f);
+		if(Math.abs(f) < 0.001){
+			if(params.callback){
+				params.callback();
+			}
+		}
+	}
+
 	getVec4Color(color){
     let r = color[0]/256;
     let g = color[1]/256;
