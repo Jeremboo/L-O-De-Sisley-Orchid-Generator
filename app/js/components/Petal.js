@@ -99,7 +99,7 @@ class Petal {
     let forceRotation = dist.multiplyScalar(0.03);
     this.mMesh.rotation.setFromVector3(this.mMesh.rotation.toVector3().add(forceRotation));
   }
-
+  
   // ##########
 	// UPDATING PARAMETERS
 	// ##########
@@ -119,7 +119,7 @@ class Petal {
   _drawTexture(){
     // - Add base
     // -- update base height
-    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * utils.getRandomFloat(0.2, 1.2));
+    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * utils.getRandomFloat(0.6, 1));
 
     // - Add points
     this.ctx.globalAlpha = props.mood/10;

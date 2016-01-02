@@ -11,7 +11,7 @@ var props = {
   // - hack
   mouseCapture : true,
   showCanvasPetalPattern : false,
-  textureBackgroundColor : [117, 131, 177],
+  textureBackgroundColor : [152, 146, 180],
   // GLOBAL DATA
   objURL : '3d_model/flower.obj',
   rotation : new THREE.Vector3(),
@@ -24,17 +24,17 @@ var props = {
     petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.png')
   },
   colors : [
-    [247, 201, 84],
-    [249, 183, 112],
-    [232, 163, 84],
-    [251, 164, 139],
-    [206, 128, 134],
-    [173, 119, 144],
-    [160, 92, 129],
-    [113, 106, 153],
-    [60, 121, 134],
-    [169, 195, 153],
-    [168, 183, 100]
+    [251, 218, 131],  // 0
+    [252, 206, 154],  // 1
+    [243, 195, 139],  // 2
+    [253, 194, 177],  // 3
+    [222, 166, 172],  // 4
+    [194, 156, 178],  // 5
+    [190, 138, 166],  // 6
+    [135, 118, 178],  // 7
+    [105, 156, 166],  // 8
+    [202, 218, 192],  // 9
+    [204, 215, 151]   // 10
   ],
   closedPetalPosition : [
     new THREE.Vector3(0.5, 0, 0),         // 0 - haut / milieu
