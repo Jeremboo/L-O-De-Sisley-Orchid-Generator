@@ -53,7 +53,6 @@ var flower = new Flower();
 
 // ##
 // EVENTS
-
 // -- on flower Load
 swiftEvent.subscribe("flowerLoad", () => {
 	if (!flower.alreadyOnScene) {
