@@ -142,6 +142,13 @@ document.addEventListener('keydown', (e) => {
 		swiftEvent.publish("flowerToSeed");
 	}
 });
+document.addEventListener('touchstart', function(e){
+	swiftEvent.publish("flowerGrow", {
+		stress : Math.random()*10,
+		tiredness : Math.random()*10,
+		mood : Math.random()*10
+	});
+});
 // -- openFlowerAutomaticalally
 swiftEvent.subscribe("onFinishLoaded", () => {
 	swiftEvent.publish("flowerGrow", {

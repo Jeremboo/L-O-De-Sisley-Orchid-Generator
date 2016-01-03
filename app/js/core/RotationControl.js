@@ -13,7 +13,14 @@ class RotationControl {
 
   _onOrientationMove(event){
     if(props.onMobile){
-      this.rotateElement(event.beta/this.ratio,event.gamma/this.ratio);
+      let beta = event.beta;
+      if (beta >  90) { beta =  90};
+      if (beta < -90) { beta = -90};
+
+      let x = (beta - 55)*Math.PI/180;
+      let y = (event.gamma)*Math.PI/180;
+      let z = (event.omega)*Math.PI/180;
+      this.rotateElement(x,y,z);
     }
   }
 
@@ -21,13 +28,13 @@ class RotationControl {
     if(!props.onMobile){
       let x = (45 * (event.y - window.innerHeight/2)) / window.innerHeight/2,
           y = (45 * (event.x - window.innerWidth/2)) / window.innerWidth/2;
-      this.rotateElement(x/this.ratio, y/this.ratio);
+      this.rotateElement(x/this.ratio, y/this.ratio, 0);
     }
   }
 
-  rotateElement(x, y){
+  rotateElement(x, y, z){
     if(props.mouseCapture){
-      props.rotation.set( x, y, 0);
+      props.rotation.set( x, y, z);
     }
   }
 }
