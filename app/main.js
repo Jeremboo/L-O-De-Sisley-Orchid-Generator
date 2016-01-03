@@ -22,6 +22,7 @@ let gui = new dat.GUI(),
 	guiHackFolder = gui.addFolder('hack'),
 	guiCanvasShowed = guiHackFolder.add(props, 'showCanvasPetalPattern').listen(),
 	guiMouseCapture = guiHackFolder.add(props, 'mouseCapture').listen(),
+	guiZoom = guiHackFolder.add(props, 'zoom', 1.4, 10).listen(),
 	guiTextureBackgroundColor =  guiHackFolder.addColor(props, 'textureBackgroundColor')
 ;
 
@@ -33,7 +34,7 @@ guiTiredness.onChange(value => {
 });
 guiMood.onChange(value => {
 	props.textureBackgroundColor = props.colors[Math.round(props.mood)];
-	flower.updatePetalsTexture();
+	flower.updateTexture();
 });
 guiCanvasShowed.onChange(value => {
 	toggleCanvas();
@@ -43,8 +44,11 @@ guiMouseCapture.onChange(value => {
 		props.rotation.set(0, 0, 0);
 	}
 });
+guiZoom.onChange(value => {
+	webgl.updateZoom(value);
+});
 guiTextureBackgroundColor.onChange(() => {
-	flower.updateTextureBackgroundColor();
+	flower.updateTexture();
 });
 //gui.close();
 

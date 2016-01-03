@@ -9,7 +9,7 @@ class Webgl {
 		this.scene = new THREE.Scene();
 
 		this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
-		this.camera.position.z = 4;
+		this.camera.position.z = props.zoom;
 
 		//this.controls = new THREE.OrbitControls( this.camera );
   	//this.controls.addEventListener( 'change', render );
@@ -67,6 +67,10 @@ class Webgl {
 		this.camera.updateProjectionMatrix();
 
 		this.renderer.setSize(width, height);
+	}
+
+	updateZoom(newZoom){
+		this.camera.position.z = newZoom;
 	}
 }
 

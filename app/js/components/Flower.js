@@ -20,6 +20,7 @@ class Flower extends THREE.Object3D {
 		this.numberOfPistil = 3;
 		this.baseRotation = new THREE.Vector3( -2, 0, 0 );
 		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
+		this.transitionTimer = 0;
 		this.time = 0;
 		this.windFrequency = 0;
 		this.windPhase = 0;
@@ -77,12 +78,12 @@ class Flower extends THREE.Object3D {
 	grow(){
 		if (this.alreadyOnScene) {
 			this.openned = true;
-			// - wind
+			// - wind (stress)
 			this.updateWindFrequency();
-			// - appearence
+			// - appearence (tiredness)
 			this.updateAppearence();
-			// - texture
-			this.updatePetalsTexture();
+			// - texture (mood)
+			this.updateTexture();
 		} else {
 			console.error("Flower is not initialized yet.");
 		}
@@ -102,7 +103,7 @@ class Flower extends THREE.Object3D {
 	// ##########
 	_onUpdate() {
 		// ##
-		// Animation
+		// ANIMATION (TIREDNESS)
 		switch(this.animation){
 			case GROWING :
 				this._onGrow();
@@ -118,11 +119,11 @@ class Flower extends THREE.Object3D {
 		}
 
 		// ##
-		// ROTATION
+		// ROTATION ( ACCELEROMETER && TIREDNESS )
 		// - dist between new rotation targeted and current rotation
 		let distRotation = props.rotation.clone().sub(this.rotation.toVector3().add(this.baseRotation));
 		let distRotationMatrix = utils.getRotationMatrix(distRotation);
-	  // - force to apply at flowerObject
+		// - force to apply at flowerObject
 		let rotationForce = distRotation.multiplyScalar(0.15 - (0.012 * props.tiredness));
 		rotationForce.y *= 1.5; // minimise force in Y.
 
@@ -130,7 +131,7 @@ class Flower extends THREE.Object3D {
 		this.rotation.setFromVector3(this.rotation.toVector3().add(rotationForce));
 
 		// ##
-		// WIND
+		// WIND (STRESS)
 		this.time = Date.now()/3000;
 		let windAmpl = 0.1 + props.stress / 50;
 		let windStrength = Math.cos(this.time * this.windFrequency + this.windPhase) * windAmpl;
@@ -140,6 +141,14 @@ class Flower extends THREE.Object3D {
 			0
 		).multiplyScalar(windStrength);
 		let windForceMatrix = utils.getRotationMatrix(windForce);
+
+		// ##
+		// TRANSITIONTIMER (MOOD)
+		if(this.transitionTimer >= 0){
+      this._onTransitionUpdating();
+    }
+
+
 
 		// ##
 		// UPDATE CHILDREN
@@ -184,6 +193,22 @@ class Flower extends THREE.Object3D {
 		});
 	}
 
+	_onTransitionUpdating(){
+    //update transition
+    this.transitionTimer -= 0.02;
+		mediator.publish("onTransitionUpdating", this.transitionTimer);
+
+    // test transition end
+    if(this.transitionTimer <= 0){
+			utils.traverseArr(this.petals, petal  => {
+				petal.updateMaterialEnd();
+			});
+			utils.traverseArr(this.pistils, pistil => {
+				pistil.updateMaterialEnd();
+			});
+    }
+  }
+
 
 	// ##########
 	// ANIMATION
@@ -213,39 +238,28 @@ class Flower extends THREE.Object3D {
 	// ##########
 	// UPDATING PARAMETERS
 	// ##########
+	// - tiredness
 	updateAppearence(){
 		this.animation = GROWING;
 	}
-
-	updatePetalsTexture(){
-		this.updateTextureBackgroundColor();
-		this.updateTexturePattern();
-	}
-
-	updateTextureBackgroundColor(){
-		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
-		utils.traverseArr(this.petals, petal  => {
-			petal.updateColor(this.petalBackgroundColor);
-			//petal.updateTexture();
-		});
-		utils.traverseArr(this.pistils, pistil => {
-			pistil.updateColor(this.petalBackgroundColor);
-		});
-	}
-	updateTexturePattern(){
-		utils.traverseArr(this.petals, petal  => {
-			petal.updateTexture();
-		});
-	}
-	// TODO fusionner l'enssemble pour la version Sisley
-
+	// - stress
 	updateWindFrequency(){
 		let curr = (this.time * this.windFrequency + this.windPhase) % (2 * Math.PI);
 		let next = (this.time * props.stress) % (2 * Math.PI);
 		this.windPhase = curr - next;
 		this.windFrequency = props.stress;
 	}
-
+	// - mood
+	updateTexture(){
+		this.transitionTimer = 1;
+		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
+		utils.traverseArr(this.petals, petal  => {
+			petal.updateMaterial(this.petalBackgroundColor);
+		});
+		utils.traverseArr(this.pistils, pistil => {
+			pistil.updateMaterial(this.petalBackgroundColor);
+		});
+	}
 
 	// ##########
 	// PISTILS

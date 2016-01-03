@@ -1,6 +1,8 @@
 import props from 'js/core/props';
 import utils from 'js/core/Utils';
 
+import PetalPatern from 'js/components/PetalPattern';
+
 import petalVert from 'shaders/petal-vert';
 import petalFrag from 'shaders/petal-frag';
 
@@ -14,26 +16,21 @@ class Petal {
     this.mMesh = mesh;
     // ##
     // INIT
+    // - generate Texture
+    this.pattern = new PetalPatern();
     // - get position to petal closed
     this.closedPetalRotation = props.closedPetalPosition[this.id];
     // - init petal to seed.
     this.mMesh.rotation.setFromVector3(this.closedPetalRotation);
+    // - other values
+    this.newPattern = new PetalPatern();
+    this.newBackgroundColor = backgroundColor;
 
-    // ##
-    // GENERATE PATTERN TEXTURE
-    // - create canvas
-    this.canvas = document.createElement("canvas");
+
+    // ##################
     // TEMPS
-    this.canvas.className = "texture";
-    document.getElementById("wrapper-canvas").appendChild(this.canvas);
-    // TEMPS
-    this.canvas.width = TEXTURE_WIDTH;
-    this.canvas.height = TEXTURE_HEIGHT;
-    this.ctx = this.canvas.getContext("2d");
-    // -- use canvas to texture
-    this.patternTexture = new THREE.Texture(this.canvas);
-    // - create texture with imgs
-    this._drawTexture();
+    document.getElementById("wrapper-canvas").appendChild(this.pattern.canvas);
+    // ##################
 
     // ##
     // PETAL MATERIAL
@@ -41,11 +38,15 @@ class Petal {
     this.petalShaderMaterial = new THREE.ShaderMaterial( {
       uniforms: {
   			backgroundColor : {type : "v4", value : backgroundColor },
+  			newBackgroundColor : {type : "v4", value : this.newBackgroundColor },
   			rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
   			windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
-  			petalMap: { type: "t", value: props.texts.petalBackground },
-  			springinessMap: { type: "t", value: props.texts.petalSpringiness },
-  			petalPatternMap : { type: "t", value: this.patternTexture },
+        transitionValue : { type : 'f', value : 0 },
+        transitionMap :{ type: "t", value: props.texts.petalTransition },
+  			petalMap : { type: "t", value: props.texts.petalBackground },
+  			springinessMap : { type: "t", value: props.texts.petalSpringiness },
+  			petalPatternMap : { type: "t", value: this.pattern.texture },
+        newPetalPatternMap : { type: "t", value: this.newPattern.texture },
   		},
       vertexShader: petalVert,
       fragmentShader: petalFrag,
@@ -56,11 +57,12 @@ class Petal {
 
     // ##
     // MEDIATOR LISTENER
-    mediator.subscribe("onGrow", () => {
-      this._onGrow();
-    });
+    mediator.subscribe("onGrow", this._onGrow.bind(this));
     mediator.subscribe("onToSeed", () => {
       this._onToSeed();
+    });
+    mediator.subscribe("onTransitionUpdating", (timer) => {
+      this._onTransitionUpdating(timer)
     });
   }
 
@@ -68,6 +70,10 @@ class Petal {
   // ONUPDATE
   // ##########
   onUpdate(distRotationMatrix, windForceMatrix){
+    if(this.transitionTimer >= 0){
+      this._onTransitionUpdating();
+    }
+
     // ##
 		// UPDATE SHADER
 		// - rotation force
@@ -84,10 +90,17 @@ class Petal {
       utils.getXBetweenTwoNumbers(0, this.closedPetalRotation.z * red, props.tiredness)
     );
     this._animatePetal(posTargeted);
+
+    //this.mMesh.material.uniforms.transitionValue.value = this.transitionTimer;
+
   }
 
   _onToSeed(){
     this._animatePetal(this.closedPetalRotation);
+  }
+
+  _onTransitionUpdating(transitionTimer){
+    this.mMesh.material.uniforms.transitionValue.value = transitionTimer;
   }
 
   // ##########
@@ -99,45 +112,21 @@ class Petal {
     let forceRotation = dist.multiplyScalar(0.03);
     this.mMesh.rotation.setFromVector3(this.mMesh.rotation.toVector3().add(forceRotation));
   }
-  
+
   // ##########
 	// UPDATING PARAMETERS
 	// ##########
-  updateColor(color){
-    this.mMesh.material.uniforms.backgroundColor.value = color;
+  updateMaterial(color){
+    // create new pattern to transition.
+    this.newBackgroundColor = color;
+    this.newPattern.updateTexture();
+    // update material
+    this.mMesh.material.uniforms.newBackgroundColor.value = this.newBackgroundColor;
+    this.mMesh.material.uniforms.newPetalPatternMap.value = this.newPattern.texture;
   }
-  updateTexture(){
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this._drawTexture();
-  }
-  // TODO fusionner l'enssemble pour la version Sisley
-
-
-  // ##########
-  // TEXTURE DRAWING
-  // ##########
-  _drawTexture(){
-    // - Add base
-    // -- update base height
-    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * utils.getRandomFloat(0.6, 1));
-
-    // - Add points
-    this.ctx.globalAlpha = props.mood/10;
-    // -- First Texture points
-    // --- Random position
-    this.ctx.drawImage(props.imgs.petalPoints, utils.getRandomFloat(-100, 100), utils.getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
-    // -- Second Texture points
-    // --- Random Rotation
-    let rotation =  utils.getRandomFloat(0, 360*Math.PI);
-    this.ctx.rotate(rotation);
-    // --- Random position
-    this.ctx.drawImage(props.imgs.petalPoints, utils.getRandomFloat(-100, 100), utils.getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
-    this.ctx.globalAlpha = 1;
-    this.ctx.rotate(-rotation);
-
-    // ##
-    // UPDATE TEXTURE
-    this.patternTexture.needsUpdate = true;
+  updateMaterialEnd(){
+    this.mMesh.material.uniforms.backgroundColor.value = this.newBackgroundColor;
+    this.pattern.clone(this.newPattern);
   }
 }
 module.exports = Petal;

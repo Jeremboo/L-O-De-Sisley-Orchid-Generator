@@ -9,6 +9,7 @@ var props = {
   tiredness : 0,
   mood : 0,
   // - hack
+  zoom : 4,
   mouseCapture : true,
   showCanvasPetalPattern : false,
   textureBackgroundColor : [152, 146, 180],
@@ -21,7 +22,8 @@ var props = {
   },
   texts : {
     petalBackground : THREE.ImageUtils.loadTexture('tex/petal_background.png'),
-    petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.png')
+    petalSpringiness : THREE.ImageUtils.loadTexture('tex/petal_springiness.png'),
+    petalTransition : THREE.ImageUtils.loadTexture('tex/petal_transition.png')
   },
   colors : [
     [251, 218, 131],  // 0

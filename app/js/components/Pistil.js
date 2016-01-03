@@ -18,6 +18,7 @@ class Pistil extends THREE.Object3D {
 		this.radiusSegment = 32;
 		this.size = 0.1;
 		this.color = color;
+		this.newColor = color;
 		this.scalePistilOpened = 0.035;
 
 		this.length = utils.getRandomFloat(5, 12);
@@ -33,6 +34,8 @@ class Pistil extends THREE.Object3D {
 				rotationForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 				windForceMatrix : { type : 'm4', value : new THREE.Matrix4() },
 				color : {type : "v4", value : this.color },
+				newColor : {type : "v4", value : this.newColor },
+				transitionValue : { type : 'f', value : 0 }
 			},
 			vertexShader: pistilVert,
 			fragmentShader: pistilFrag
@@ -66,6 +69,9 @@ class Pistil extends THREE.Object3D {
     // MEDIATOR LISTENER
     mediator.subscribe("onGrow", this._onGrow.bind(this));
     mediator.subscribe("onToSeed", this._onToSeed.bind(this));
+		mediator.subscribe("onTransitionUpdating", (timer) => {
+			this._onTransitionUpdating(timer)
+		});
 	}
 
 	// ##########
@@ -88,6 +94,10 @@ class Pistil extends THREE.Object3D {
 		this.animatePistil(0);
   }
 
+	_onTransitionUpdating(transitionTimer){
+		this.pistilStemMesh.material.uniforms.transitionValue.value = transitionTimer;
+	}
+
 	// ##########
 	// ANIMATION
 	// ##########
@@ -100,9 +110,13 @@ class Pistil extends THREE.Object3D {
 	// ##########
 	// UPDATING PARAMETERS
 	// ##########
-	updateColor(newColor){
-		this.pistilStemMesh.material.uniforms.color.value = newColor;
+	updateMaterial(newColor){
+		this.newColor = newColor;
+		this.pistilStemMesh.material.uniforms.newColor.value = newColor;
 	}
+	updateMaterialEnd(){
+    this.pistilStemMesh.material.uniforms.color.value = this.newColor;
+  }
 
 	// ##########
 	// CUSTOM CURVE BUILDER
