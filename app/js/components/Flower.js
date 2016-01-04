@@ -65,7 +65,7 @@ class Flower extends THREE.Object3D {
       });
 
       // CREATE PISTIL CLASS
-      this._createPistil(this.numberOfPistil);
+      this._createPistil(this.numberOfPistil - 1);
 
       // SHOW FLOWER
       this.scale.set(0.0001, 0.0001, 0.0001);
