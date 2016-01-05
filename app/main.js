@@ -92,6 +92,10 @@ swiftEvent.subscribe('flowerGrow', (flowerData) => {
 swiftEvent.subscribe('flowerToSeed', () => {
   flower.toSeed();
 });
+// - on flower progress
+swiftEvent.subscribe('flowerProgress', () => {
+  flower.progress();
+});
 // - on resize
 window.addEventListener('resize', onResize, false);
 
@@ -125,7 +129,7 @@ function checkMobile() {
 // TEMPS
 // - loadFlower
 document.addEventListener('keydown', (e) => {
-  // ArrowDown || Space
+  // ArrowUp || Space
   if (e.keyCode === 38 || e.keyCode === 32) {
     swiftEvent.publish('flowerGrow', {
       stress: Math.random() * 10,
@@ -133,9 +137,13 @@ document.addEventListener('keydown', (e) => {
       mood: Math.random() * 10,
     });
   }
-  // ArrowUp
+  // ArrowDonw
   if (e.keyCode === 40) {
     swiftEvent.publish('flowerToSeed');
+  }
+  // - Shift
+  if (e.keyCode === 16) {
+    swiftEvent.publish('flowerProgress');
   }
 });
 document.addEventListener('touchstart', (e) => {

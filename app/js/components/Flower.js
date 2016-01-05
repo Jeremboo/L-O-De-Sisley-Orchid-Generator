@@ -9,6 +9,7 @@ import Petal from 'js/components/Petal';
 const GROWING = 1;
 const TOSEED = 2;
 const APPEAR = 3;
+const PROGRESS = 4;
 
 
 class Flower extends THREE.Object3D {
@@ -19,6 +20,7 @@ class Flower extends THREE.Object3D {
     // INIT
     this.numberOfPistil = 3;
     this.baseRotation = new THREE.Vector3(-2, 0, 0);
+    this.progressStep = 0;
     this.transitionTimer = 0;
     this.time = 0;
     this.windFrequency = 0;
@@ -30,7 +32,7 @@ class Flower extends THREE.Object3D {
     };
     // - scale
     this.flowerScale = {
-      toSeed: 0.2,
+      toSeed: 0.1,
       min: 0.5,
       max: 1,
     };
@@ -77,6 +79,7 @@ class Flower extends THREE.Object3D {
   grow() {
     if (this.alreadyOnScene) {
       this.openned = true;
+      this.progressStep = 0;
       // - wind (stress)
       this.updateWindFrequency();
       // - appearence (tiredness)
@@ -97,6 +100,21 @@ class Flower extends THREE.Object3D {
     }
   }
 
+  progress() {
+    if (this.alreadyOnScene) {
+      if (!this.openned) {
+        this.animation = PROGRESS;
+        if (this.progressStep < 3) {
+          this.progressStep++;
+        }
+      } else {
+        console.error('Flower is not to seed. Use this.toSeed() method before');
+      }
+    } else {
+      console.error('Flower is not initialized yet.');
+    }
+  }
+
   // ##########
   // ONUPDATE
   // ##########
@@ -112,6 +130,9 @@ class Flower extends THREE.Object3D {
         break;
       case APPEAR :
         this._onAppear();
+        break;
+      case PROGRESS :
+        this._onProgress();
         break;
       default :
         break;
@@ -189,6 +210,11 @@ class Flower extends THREE.Object3D {
       this.alreadyOnScene = true;
       swiftEvent.publish('onFinishLoaded');
     });
+  }
+
+  _onProgress() {
+    const newScale = this.flowerScale.toSeed + (0.1 * this.progressStep);
+    this._animScale(newScale);
   }
 
   _onTransitionUpdating() {
