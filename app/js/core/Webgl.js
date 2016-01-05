@@ -60,9 +60,11 @@ class Webgl {
 
     if (props.onMobile) {
       this.camera.position.y = 1;
+      this.camera.position.z = 5;
       this.renderer.setClearColor(0xfff4e7, 0);
     } else {
       this.camera.position.y = 0;
+      this.camera.position.z = props.zoom;
       this.renderer.setClearColor(0xfff4e7);
     }
 
