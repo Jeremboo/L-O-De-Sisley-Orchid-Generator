@@ -56,7 +56,7 @@ class PetalPattern {
     this.ctx.globalCompositeOperation = 'source-over';
 
     // - Add points
-    this.ctx.globalAlpha = props.mood / 10;
+    this.ctx.globalAlpha = utils.getXBetweenTwoNumbers(0.2, 1, props.mood);
     // -- First Texture points
     // --- Random position
     this.ctx.drawImage(props.imgs.petalPoints, utils.getRandomFloat(-100, 100), utils.getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
