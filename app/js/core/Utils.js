@@ -45,6 +45,12 @@ class Utils {
     return v4;
   }
 
+  getRGBcanvasColor(color) {
+    return 'rgb(' + Math.round(color[0]) +
+     ', ' + Math.round(color[1]) +
+      ', ' + Math.round(color[2]) + ')';
+  }
+
   getXBetweenTwoNumbers(min, max, x) {
     return min + (x * ((max - min) / 10));
   }

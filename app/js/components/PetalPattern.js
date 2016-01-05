@@ -6,7 +6,8 @@ const TEXTURE_HEIGHT = 256;
 
 
 class PetalPattern {
-  constructor(id, mesh, backgroundColor) {
+  constructor() {
+    this.color = utils.getRGBcanvasColor(props.patternColor);
     // ##
     // GENERATE PATTERN TEXTURE
     // - create canvas
@@ -24,9 +25,10 @@ class PetalPattern {
   }
 
   // ##########
-	// UPDATING PARAMETERS
-	// ##########
+  // UPDATING PARAMETERS
+  // ##########
   updateTexture() {
+    this.color = utils.getRGBcanvasColor(props.patternColor);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this._drawTexture();
   }
@@ -47,6 +49,11 @@ class PetalPattern {
     // - Add base
     // -- update base height
     this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * utils.getRandomFloat(0.6, 1));
+    this.ctx.globalCompositeOperation = 'source-in';
+    this.ctx.fillStyle = this.color;
+    this.ctx.rect(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+    this.ctx.fill();
+    this.ctx.globalCompositeOperation = 'source-over';
 
     // - Add points
     this.ctx.globalAlpha = props.mood / 10;

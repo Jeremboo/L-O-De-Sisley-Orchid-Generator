@@ -6,7 +6,7 @@ import pistilFrag from 'shaders/pistil-frag';
 
 
 class Pistil extends THREE.Object3D {
-  constructor(orientation, color) {
+  constructor(orientation) {
     super();
 
     // ##
@@ -17,8 +17,7 @@ class Pistil extends THREE.Object3D {
     this.segments = 32;
     this.radiusSegment = 32;
     this.size = 0.1;
-    this.color = color;
-    this.newColor = color;
+    this.color = utils.getVec4Color(props.petalColor);
     this.scalePistilOpened = 0.035;
 
     this.length = utils.getRandomFloat(5, 12);
@@ -34,7 +33,7 @@ class Pistil extends THREE.Object3D {
         rotationForceMatrix: { type: 'm4', value: new THREE.Matrix4() },
         windForceMatrix: { type: 'm4', value: new THREE.Matrix4() },
         color: { type: 'v4', value: this.color },
-        newColor: { type: 'v4', value: this.newColor },
+        newColor: { type: 'v4', value: this.color },
         transitionValue: { type: 'f', value: 0 },
       },
       vertexShader: pistilVert,
@@ -110,12 +109,12 @@ class Pistil extends THREE.Object3D {
   // ##########
   // UPDATING PARAMETERS
   // ##########
-  updateMaterial(newColor) {
-    this.newColor = newColor;
-    this.pistilStemMesh.material.uniforms.newColor.value = newColor;
+  updateMaterial() {
+    this.color = utils.getVec4Color(props.patternColor);
+    this.pistilStemMesh.material.uniforms.newColor.value = this.color;
   }
   updateMaterialEnd() {
-    this.pistilStemMesh.material.uniforms.color.value = this.newColor;
+    this.pistilStemMesh.material.uniforms.color.value = this.color;
   }
 
   // ##########

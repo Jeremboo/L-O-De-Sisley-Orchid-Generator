@@ -19,7 +19,6 @@ class Flower extends THREE.Object3D {
     // INIT
     this.numberOfPistil = 3;
     this.baseRotation = new THREE.Vector3(-2, 0, 0);
-    this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
     this.transitionTimer = 0;
     this.time = 0;
     this.windFrequency = 0;
@@ -59,7 +58,7 @@ class Flower extends THREE.Object3D {
       // CREATE PETALS CLASS
       petals.traverse(child => {
         if (child instanceof THREE.Mesh) {
-          const petal = new Petal(this.petals.length, child, this.petalBackgroundColor);
+          const petal = new Petal(this.petals.length, child);
           this.petals.push(petal);
         }
       });
@@ -251,12 +250,11 @@ class Flower extends THREE.Object3D {
   // - mood
   updateTexture() {
     this.transitionTimer = 1;
-    this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
     utils.traverseArr(this.petals, petal => {
-      petal.updateMaterial(this.petalBackgroundColor);
+      petal.updateMaterial();
     });
     utils.traverseArr(this.pistils, pistil => {
-      pistil.updateMaterial(this.petalBackgroundColor);
+      pistil.updateMaterial();
     });
   }
 
@@ -265,7 +263,7 @@ class Flower extends THREE.Object3D {
   // ##########
   _createPistil(or) {
     // - pistil
-    const p = new Pistil(or, this.petalBackgroundColor);
+    const p = new Pistil(or);
     // - add to flower object
     this.add(p);
     this.pistils.push(p);

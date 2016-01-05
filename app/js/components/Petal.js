@@ -11,20 +11,21 @@ const TEXTURE_HEIGHT = 256;
 
 
 class Petal {
-  constructor(id, mesh, backgroundColor) {
+  constructor(id, mesh) {
     this.id = id;
     this.mMesh = mesh;
     // ##
     // INIT
+    // - color
+    this.color = utils.getVec4Color(props.petalColor);
     // - generate Texture
     this.pattern = new PetalPatern();
+    this.newPattern = new PetalPatern();
     // - get position to petal closed
     this.closedPetalRotation = props.closedPetalPosition[this.id];
     // - init petal to seed.
     this.mMesh.rotation.setFromVector3(this.closedPetalRotation);
     // - other values
-    this.newPattern = new PetalPatern();
-    this.newBackgroundColor = backgroundColor;
 
 
     // ##################
@@ -37,8 +38,8 @@ class Petal {
     // - create material
     this.petalShaderMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        backgroundColor: { type: 'v4', value: backgroundColor },
-        newBackgroundColor: { type: 'v4', value: this.newBackgroundColor },
+        backgroundColor: { type: 'v4', value: this.color },
+        newBackgroundColor: { type: 'v4', value: this.color },
         rotationForceMatrix: { type: 'm4', value: new THREE.Matrix4() },
         windForceMatrix: { type: 'm4', value: new THREE.Matrix4() },
         transitionValue: { type: 'f', value: 0 },
@@ -116,16 +117,17 @@ class Petal {
   // ##########
   // UPDATING PARAMETERS
   // ##########
-  updateMaterial(color) {
+  updateMaterial() {
+    // set new values
+    this.color = utils.getVec4Color(props.petalColor);
     // create new pattern to transition.
-    this.newBackgroundColor = color;
     this.newPattern.updateTexture();
     // update material
-    this.mMesh.material.uniforms.newBackgroundColor.value = this.newBackgroundColor;
+    this.mMesh.material.uniforms.newBackgroundColor.value = this.color;
     this.mMesh.material.uniforms.newPetalPatternMap.value = this.newPattern.texture;
   }
   updateMaterialEnd() {
-    this.mMesh.material.uniforms.backgroundColor.value = this.newBackgroundColor;
+    this.mMesh.material.uniforms.backgroundColor.value = this.color;
     this.pattern.clone(this.newPattern);
   }
 }

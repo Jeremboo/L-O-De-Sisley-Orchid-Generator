@@ -1,6 +1,7 @@
 import webgl from 'js/core/Webgl';
 import loop from 'js/core/Loop';
 import props from 'js/core/props';
+import utils from 'js/core/Utils';
 import rotationControl from 'js/core/RotationControl';
 import swiftEvent from 'js/core/SwiftEventDispatcher';
 
@@ -27,7 +28,8 @@ const guiHackFolder = gui.addFolder('hack');
 const guiCanvasShowed = guiHackFolder.add(props, 'showCanvasPetalPattern').listen();
 const guiMouseCapture = guiHackFolder.add(props, 'mouseCapture').listen();
 const guiZoom = guiHackFolder.add(props, 'zoom', 1.4, 10).listen();
-const guiTextureBackgroundColor = guiHackFolder.addColor(props, 'textureBackgroundColor');
+const guiPetalColor = guiHackFolder.addColor(props, 'petalColor');
+const guiPatternColor = guiHackFolder.addColor(props, 'patternColor');
 
 guiStress.onChange(value => {
   flower.updateWindFrequency();
@@ -36,7 +38,7 @@ guiTiredness.onChange(value => {
   flower.updateAppearence();
 });
 guiMood.onChange(value => {
-  props.textureBackgroundColor = props.colors[Math.round(props.mood)];
+  props.petalColor = props.colors[Math.round(props.mood)];
   flower.updateTexture();
 });
 guiCanvasShowed.onChange(value => {
@@ -50,7 +52,10 @@ guiMouseCapture.onChange(value => {
 guiZoom.onChange(value => {
   webgl.updateZoom(value);
 });
-guiTextureBackgroundColor.onChange(() => {
+guiPetalColor.onChange(() => {
+  flower.updateTexture();
+});
+guiPatternColor.onChange(() => {
   flower.updateTexture();
 });
 // gui.close();
@@ -72,19 +77,12 @@ swiftEvent.subscribe('flowerLoad', () => {
 swiftEvent.subscribe('flowerGrow', (flowerData) => {
   // - stress
   props.stress = flowerData.stress;
-  // let fct = function() {
-  // 	let force = ( flowerData.stress - props.stress ) * 0.03;
-  // 	props.stress += force;
-  // 	if(Math.abs(force) < 0.001){
-  // 		loop.remove(fct);
-  // 	}
-  // }
-  // loop.add(fct)
   // - tiredness
   props.tiredness = flowerData.tiredness;
   // - mood
   props.mood = flowerData.mood;
-  props.textureBackgroundColor = props.colors[Math.round(props.mood)];
+  props.petalColor = props.colors[Math.round(props.mood)];
+  props.patternColor = props.patternColors[Math.round(props.mood)];
   // UPDATE FLOWER
   flower.grow();
 });
