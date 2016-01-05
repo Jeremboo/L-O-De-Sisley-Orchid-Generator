@@ -18,6 +18,7 @@ class Pistil extends THREE.Object3D {
     this.radiusSegment = 32;
     this.size = 0.1;
     this.color = utils.getVec4Color(props.petalColor);
+    this.blueColor = utils.getVec4Color([39, 53, 92]);
     this.scalePistilOpened = 0.035;
 
     this.length = utils.getRandomFloat(5, 12);
@@ -34,6 +35,7 @@ class Pistil extends THREE.Object3D {
         windForceMatrix: { type: 'm4', value: new THREE.Matrix4() },
         color: { type: 'v4', value: this.color },
         newColor: { type: 'v4', value: this.color },
+        blueColor: { type: 'v4', value: this.blueColor },
         transitionValue: { type: 'f', value: 0 },
       },
       vertexShader: pistilVert,

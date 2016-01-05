@@ -1,5 +1,6 @@
 uniform float transitionValue;
 
+uniform vec4 blueColor;
 uniform vec4 color;
 uniform vec4 newColor;
 
@@ -16,5 +17,5 @@ void main() {
     mColor = newColor;
   }
 
-  gl_FragColor = vec4(vel, vel, vel, 1.0) * mColor;
+  gl_FragColor = vec4(mix(mColor.rgb, blueColor.rgb, vUv.x), 1.0);
 }
