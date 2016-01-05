@@ -2,80 +2,76 @@ import props from 'js/core/props';
 import OrbitControls from 'js/vendors/OrbitControls';
 
 class Webgl {
-	constructor( ){
-		this.width = window.innerWidth;
-		this.height = window.innerHeight;
+  constructor() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
 
-		this.scene = new THREE.Scene();
+    this.scene = new THREE.Scene();
 
-		this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
-		this.camera.position.z = props.zoom;
+    this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
+    this.camera.position.z = props.zoom;
 
-		//this.controls = new THREE.OrbitControls( this.camera );
-  	//this.controls.addEventListener( 'change', render );
+    // this.controls = new THREE.OrbitControls( this.camera );
+    // this.controls.addEventListener( 'change', render );
 
-		this.renderer = new THREE.WebGLRenderer({
-			antialias : true
-		});
-		this.renderer.setPixelRatio( window.devicePixelRatio );
-		this.renderer.setClearColor(0xfff4e7);
-		this.dom = this.renderer.domElement;
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+    });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setClearColor(0xfff4e7);
+    this.dom = this.renderer.domElement;
 
-		this.usePostprocessing = false;
-		// Create this.composer for have postprocessing
-		this.initPostprocessing();
+    this.usePostprocessing = false;
+    // Create this.composer for have postprocessing
+    this.initPostprocessing();
 
-		this._binds = {};
-		this._binds.onUpdate = this.onUpdate.bind(this);
-	}
+    this._binds = {};
+    this._binds.onUpdate = this.onUpdate.bind(this);
+  }
 
-	init() {
-		window.addEventListener( "orientationchange", this.onResize, false );
-	}
+  init() {
+    window.addEventListener('orientationchange', this.onResize, false);
+  }
 
-	initPostprocessing() {
-		if (!this.usePostprocessing) return;
-		this.vignettePass = new WAGNER.VignettePass();
-		this.fxaaPass = new WAGNER.FXAAPass();
-	}
+  initPostprocessing() {
+    if (!this.usePostprocessing) return;
+    this.vignettePass = new WAGNER.VignettePass();
+    this.fxaaPass = new WAGNER.FXAAPass();
+  }
 
-	add(mesh) {
-		this.scene.add(mesh);
-	}
+  add(mesh) {
+    this.scene.add(mesh);
+  }
 
-	onUpdate() {
-		if (this.usePostprocessing) {
-			//reset this.composer
-		} else {
-			this.renderer.autoClear = false;
-			this.renderer.clear();
-			this.renderer.render(this.scene, this.camera);
-		}
-	}
+  onUpdate() {
+    if (this.usePostprocessing) {
+      // reset this.composer
+    } else {
+      this.renderer.autoClear = false;
+      this.renderer.clear();
+      this.renderer.render(this.scene, this.camera);
+    }
+  }
 
-	onResize() {
-		let width = window.innerWidth;
-		let height = window.innerHeight;
+  onResize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-		if(props.onMobile){
-			this.camera.position.y = 1;
-		} else {
-			this.camera.position.y = 0;
-		}
+    if (props.onMobile) {
+      this.camera.position.y = 1;
+    } else {
+      this.camera.position.y = 0;
+    }
 
-		this.camera.aspect = width / height;
-		this.camera.updateProjectionMatrix();
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
 
-		this.renderer.setSize(width, height);
-	}
+    this.renderer.setSize(width, height);
+  }
 
-	updateZoom(newZoom){
-		this.camera.position.z = newZoom;
-	}
-}
-
-function render() {
-  renderer.render( scene, camera );
+  updateZoom(newZoom) {
+    this.camera.position.z = newZoom;
+  }
 }
 
 module.exports = new Webgl();

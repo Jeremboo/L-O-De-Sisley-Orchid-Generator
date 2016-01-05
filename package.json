@@ -10,7 +10,7 @@
   "scripts": {
     "start": "brunch watch --server",
     "deploy": "rm -rf public/ && npm install && bower install && brunch build --production",
-    "build" : "brunch build --production"
+    "build": "brunch build --production"
   },
   "dependencies": {
     "auto-reload-brunch": ">= 1.0 < 1.9",
@@ -22,6 +22,9 @@
     "uglify-js-brunch": ">= 1.0 < 1.9"
   },
   "devDependencies": {
-    "brunch": "^1.8.5"
+    "babel-eslint": "^4.1.6",
+    "brunch": "^1.8.5",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^2.1.1"
   }
 }

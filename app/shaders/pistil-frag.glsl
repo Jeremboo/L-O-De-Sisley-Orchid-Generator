@@ -10,11 +10,11 @@ void main() {
 
   float vel = 1.0 - vUv.x;
 
-  if(vel <= transitionValue){
+  if (vel <= transitionValue) {
     mColor = color;
-	} else {
+  } else {
     mColor = newColor;
-	}
+  }
 
-	gl_FragColor = vec4(vel, vel, vel, 1.0) * mColor;
+  gl_FragColor = vec4(vel, vel, vel, 1.0) * mColor;
 }

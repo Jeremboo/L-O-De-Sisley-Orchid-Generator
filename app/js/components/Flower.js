@@ -1,6 +1,6 @@
 import props from 'js/core/props';
 import utils from 'js/core/Utils';
-import swiftEvent from "js/core/SwiftEventDispatcher";
+import swiftEvent from 'js/core/SwiftEventDispatcher';
 import LoadingManager from 'js/core/LoadingManager';
 
 import Pistil from 'js/components/Pistil';
@@ -12,270 +12,268 @@ const APPEAR = 3;
 
 
 class Flower extends THREE.Object3D {
-	constructor(){
-		super();
+  constructor() {
+    super();
 
-		// ##
-		// INIT
-		this.numberOfPistil = 3;
-		this.baseRotation = new THREE.Vector3( -2, 0, 0 );
-		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
-		this.transitionTimer = 0;
-		this.time = 0;
-		this.windFrequency = 0;
-		this.windPhase = 0;
-		// - openning
-		this.flowerOpenning = {
-			min : -2,
-			max : 0
-		};
-		// - scale
-		this.flowerScale = {
-			toSeed : 0.2,
-			min : 0.5,
-			max : 1
-		};
-		// -- bool
-		this.alreadyOnScene = false;
-		this.openned = false;
-		this.animation = false;
-		// -- children
-		this.petals = [];
-		this.pistils = [];
+    // ##
+    // INIT
+    this.numberOfPistil = 3;
+    this.baseRotation = new THREE.Vector3(-2, 0, 0);
+    this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
+    this.transitionTimer = 0;
+    this.time = 0;
+    this.windFrequency = 0;
+    this.windPhase = 0;
+    // - openning
+    this.flowerOpenning = {
+      min: -2,
+      max: 0,
+    };
+    // - scale
+    this.flowerScale = {
+      toSeed: 0.2,
+      min: 0.5,
+      max: 1,
+    };
+    // -- bool
+    this.alreadyOnScene = false;
+    this.openned = false;
+    this.animation = false;
+    // -- children
+    this.petals = [];
+    this.pistils = [];
 
-		// ##
-		// SAVE BINDING
-		this._binds = {};
-		this._binds.onUpdate = this._onUpdate.bind(this);
-	}
+    // ##
+    // SAVE BINDING
+    this._binds = {};
+    this._binds.onUpdate = this._onUpdate.bind(this);
+  }
 
-	init(callback) {
-		// ##
-		// LOAD flower
-		LoadingManager.loadObj(props.objURL, (object) => {
-			let petals = object;
-			this.add(petals);
+  init(callback) {
+    // ##
+    // LOAD flower
+    LoadingManager.loadObj(props.objURL, (object) => {
+      const petals = object;
+      this.add(petals);
 
-			// CREATE PETALS CLASS
-			petals.traverse(child => {
-				if ( child instanceof THREE.Mesh ) {
-					let petal = new Petal(this.petals.length, child, this.petalBackgroundColor);
-					this.petals.push(petal);
-				}
-			});
+      // CREATE PETALS CLASS
+      petals.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+          const petal = new Petal(this.petals.length, child, this.petalBackgroundColor);
+          this.petals.push(petal);
+        }
+      });
 
-			// CREATE PISTIL CLASS
-			this._createPistil(this.numberOfPistil);
+      // CREATE PISTIL CLASS
+      this._createPistil(this.numberOfPistil - 1);
 
-			// SHOW FLOWER
-			this.scale.set(0.0001, 0.0001, 0.0001);
-			this.animation = APPEAR;
+      // SHOW FLOWER
+      this.scale.set(0.0001, 0.0001, 0.0001);
+      this.animation = APPEAR;
 
-			callback();
-		});
-	}
+      callback();
+    });
+  }
 
-	grow(){
-		if (this.alreadyOnScene) {
-			this.openned = true;
-			// - wind (stress)
-			this.updateWindFrequency();
-			// - appearence (tiredness)
-			this.updateAppearence();
-			// - texture (mood)
-			this.updateTexture();
-		} else {
-			console.error("Flower is not initialized yet.");
-		}
-	}
+  grow() {
+    if (this.alreadyOnScene) {
+      this.openned = true;
+      // - wind (stress)
+      this.updateWindFrequency();
+      // - appearence (tiredness)
+      this.updateAppearence();
+      // - texture (mood)
+      this.updateTexture();
+    } else {
+      console.error('Flower is not initialized yet.');
+    }
+  }
 
-	toSeed(){
-		if (this.alreadyOnScene) {
-			this.openned = false;
-			this.animation = TOSEED;
-		} else {
-			console.error("Flower is not initialized yet.");
-		}
-	}
+  toSeed() {
+    if (this.alreadyOnScene) {
+      this.openned = false;
+      this.animation = TOSEED;
+    } else {
+      console.error('Flower is not initialized yet.');
+    }
+  }
 
-	// ##########
-	// ONUPDATE
-	// ##########
-	_onUpdate() {
-		// ##
-		// ANIMATION (TIREDNESS)
-		switch(this.animation){
-			case GROWING :
-				this._onGrow();
-				break;
-			case TOSEED :
-				this._onToSeed();
-				break;
-			case APPEAR :
-				this._onAppear();
-				break;
-			default :
-				break;
-		}
+  // ##########
+  // ONUPDATE
+  // ##########
+  _onUpdate() {
+    // ##
+    // ANIMATION (TIREDNESS)
+    switch (this.animation) {
+      case GROWING :
+        this._onGrow();
+        break;
+      case TOSEED :
+        this._onToSeed();
+        break;
+      case APPEAR :
+        this._onAppear();
+        break;
+      default :
+        break;
+    }
 
-		// ##
-		// ROTATION ( ACCELEROMETER && TIREDNESS )
-		// - dist between new rotation targeted and current rotation
-		let distRotation = props.rotation.clone().sub(this.rotation.toVector3().add(this.baseRotation));
-		let distRotationMatrix = utils.getRotationMatrix(distRotation);
-		// - force to apply at flowerObject
-		let rotationForce = distRotation.multiplyScalar(0.15 - (0.012 * props.tiredness));
-		rotationForce.y *= 1.5; // minimise force in Y.
+    // ##
+    // ROTATION ( ACCELEROMETER && TIREDNESS )
+    // - dist between new rotation targeted and current rotation
+    const distRotation = props.rotation.clone().sub(this.rotation.toVector3().add(this.baseRotation));
+    const distRotationMatrix = utils.getRotationMatrix(distRotation);
+    // - force to apply at flowerObject
+    const rotationForce = distRotation.multiplyScalar(0.15 - (0.012 * props.tiredness));
+    rotationForce.y *= 1.5; // minimise force in Y.
 
-		// - update rotation with rotationForce
-		this.rotation.setFromVector3(this.rotation.toVector3().add(rotationForce));
+    // - update rotation with rotationForce
+    this.rotation.setFromVector3(this.rotation.toVector3().add(rotationForce));
 
-		// ##
-		// WIND (STRESS)
-		this.time = Date.now()/3000;
-		let windAmpl = 0.1 + props.stress / 50;
-		let windStrength = Math.cos(this.time * this.windFrequency + this.windPhase) * windAmpl;
-		let windForce = new THREE.Vector3(
-			Math.sin(this.time * this.windFrequency + this.windPhase) * (props.stress/8),
-			Math.sin(this.time * 1.3) * Math.cos(this.time),
-			0
-		).multiplyScalar(windStrength);
-		let windForceMatrix = utils.getRotationMatrix(windForce);
+    // ##
+    // WIND (STRESS)
+    this.time = Date.now() / 3000;
+    const windAmpl = 0.1 + props.stress / 50;
+    const windStrength = Math.cos(this.time * this.windFrequency + this.windPhase) * windAmpl;
+    const windForce = new THREE.Vector3(
+      Math.sin(this.time * this.windFrequency + this.windPhase) * (props.stress / 8),
+      Math.sin(this.time * 1.3) * Math.cos(this.time),
+      0
+    ).multiplyScalar(windStrength);
+    const windForceMatrix = utils.getRotationMatrix(windForce);
 
-		// ##
-		// TRANSITIONTIMER (MOOD)
-		if(this.transitionTimer >= 0){
+    // ##
+    // TRANSITIONTIMER (MOOD)
+    if (this.transitionTimer >= 0) {
       this._onTransitionUpdating();
     }
 
 
+    // ##
+    // UPDATE CHILDREN
+    // - update petals
+    utils.traverseArr(this.petals, petal => {
+      petal.onUpdate(distRotationMatrix, windForceMatrix);
+    });
+    // - update pistils
+    utils.traverseArr(this.pistils, pistil => {
+      pistil.onUpdate(distRotationMatrix, windForce, windForceMatrix);
+    });
+  }
 
-		// ##
-		// UPDATE CHILDREN
-		// - update petals
-		utils.traverseArr(this.petals, petal => {
-			petal.onUpdate(distRotationMatrix, windForceMatrix);
-		});
-		// - update pistils
-		utils.traverseArr(this.pistils,  pistil => {
-			pistil.onUpdate(distRotationMatrix, windForce, windForceMatrix);
-		});
-	}
+  _onToSeed() {
+    this._animRotationOnX(this.flowerOpenning.min);
+    this._animScale(this.flowerScale.toSeed);
+    mediator.publish('onToSeed');
+  }
 
-	_onToSeed(){
-		this._animRotationOnX(this.flowerOpenning.min);
-		this._animScale(this.flowerScale.toSeed);
-		mediator.publish("onToSeed");
-	}
-
-	_onGrow() {
-		// rotation
-		let rotationTargeted = utils.getXBetweenTwoNumbers(
-			this.flowerOpenning.max,
-			this.flowerOpenning.min,
-			props.tiredness
-		);
-		this._animRotationOnX(rotationTargeted);
-		// scale
-    let scaleTargeted = utils.getXBetweenTwoNumbers(
-      this.flowerScale.max,
-			this.flowerScale.min,
+  _onGrow() {
+    // rotation
+    const rotationTargeted = utils.getXBetweenTwoNumbers(
+      this.flowerOpenning.max,
+      this.flowerOpenning.min,
       props.tiredness
     );
-		this._animScale(scaleTargeted);
-		mediator.publish("onGrow");
-	}
+    this._animRotationOnX(rotationTargeted);
+    // scale
+    const scaleTargeted = utils.getXBetweenTwoNumbers(
+      this.flowerScale.max,
+      this.flowerScale.min,
+      props.tiredness
+    );
+    this._animScale(scaleTargeted);
+    mediator.publish('onGrow');
+  }
 
-	_onAppear() {
-		this._animScale(this.flowerScale.toSeed, () => {
-			this.alreadyOnScene = true;
-			swiftEvent.publish("onFinishLoaded");
-		});
-	}
+  _onAppear() {
+    this._animScale(this.flowerScale.toSeed, () => {
+      this.alreadyOnScene = true;
+      swiftEvent.publish('onFinishLoaded');
+    });
+  }
 
-	_onTransitionUpdating(){
-    //update transition
+  _onTransitionUpdating() {
+    // update transition
     this.transitionTimer -= 0.02;
-		mediator.publish("onTransitionUpdating", this.transitionTimer);
+    mediator.publish('onTransitionUpdating', this.transitionTimer);
 
     // test transition end
-    if(this.transitionTimer <= 0){
-			utils.traverseArr(this.petals, petal  => {
-				petal.updateMaterialEnd();
-			});
-			utils.traverseArr(this.pistils, pistil => {
-				pistil.updateMaterialEnd();
-			});
+    if (this.transitionTimer <= 0) {
+      utils.traverseArr(this.petals, petal => {
+        petal.updateMaterialEnd();
+      });
+      utils.traverseArr(this.pistils, pistil => {
+        pistil.updateMaterialEnd();
+      });
     }
   }
 
 
-	// ##########
-	// ANIMATION
-	// ##########
-	_animRotationOnX(rotation, callback) {
-		utils.easing(rotation, this.baseRotation.x, {
-			update : (f) => {this.baseRotation.x += f;},
-			callback : () => {this._animEnd(callback);}
-		});
-	}
+  // ##########
+  // ANIMATION
+  // ##########
+  _animRotationOnX(rotation, callback) {
+    utils.easing(rotation, this.baseRotation.x, {
+      update: (f) => {this.baseRotation.x += f;},
+      callback: () => {this._animEnd(callback);},
+    });
+  }
 
-	_animScale(scale, callback){
-		utils.easing(scale, this.scale.x, {
-			update : (f) => {this.scale.addScalar(f);},
-			callback : () => {this._animEnd(callback);}
-		});
-	}
+  _animScale(scale, callback) {
+    utils.easing(scale, this.scale.x, {
+      update: (f) => {this.scale.addScalar(f);},
+      callback: () => {this._animEnd(callback);},
+    });
+  }
 
-	_animEnd(clbk){
-		this.animation = false;
-		if(clbk){
-			clbk();
-		}
-	}
+  _animEnd(clbk) {
+    this.animation = false;
+    if (clbk) {
+      clbk();
+    }
+  }
 
 
-	// ##########
-	// UPDATING PARAMETERS
-	// ##########
-	// - tiredness
-	updateAppearence(){
-		this.animation = GROWING;
-	}
-	// - stress
-	updateWindFrequency(){
-		let curr = (this.time * this.windFrequency + this.windPhase) % (2 * Math.PI);
-		let next = (this.time * props.stress) % (2 * Math.PI);
-		this.windPhase = curr - next;
-		this.windFrequency = props.stress;
-	}
-	// - mood
-	updateTexture(){
-		this.transitionTimer = 1;
-		this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
-		utils.traverseArr(this.petals, petal  => {
-			petal.updateMaterial(this.petalBackgroundColor);
-		});
-		utils.traverseArr(this.pistils, pistil => {
-			pistil.updateMaterial(this.petalBackgroundColor);
-		});
-	}
+  // ##########
+  // UPDATING PARAMETERS
+  // ##########
+  // - tiredness
+  updateAppearence() {
+    this.animation = GROWING;
+  }
+  // - stress
+  updateWindFrequency() {
+    const curr = (this.time * this.windFrequency + this.windPhase) % (2 * Math.PI);
+    const next = (this.time * props.stress) % (2 * Math.PI);
+    this.windPhase = curr - next;
+    this.windFrequency = props.stress;
+  }
+  // - mood
+  updateTexture() {
+    this.transitionTimer = 1;
+    this.petalBackgroundColor = utils.getVec4Color(props.textureBackgroundColor);
+    utils.traverseArr(this.petals, petal => {
+      petal.updateMaterial(this.petalBackgroundColor);
+    });
+    utils.traverseArr(this.pistils, pistil => {
+      pistil.updateMaterial(this.petalBackgroundColor);
+    });
+  }
 
-	// ##########
-	// PISTILS
-	// ##########
-	_createPistil(or) {
-		or = or-1;
-		// - pistil
-		let p = new Pistil(or, this.petalBackgroundColor);
-		// - add to flower object
-		this.add(p);
-		this.pistils.push(p);
+  // ##########
+  // PISTILS
+  // ##########
+  _createPistil(or) {
+    // - pistil
+    const p = new Pistil(or, this.petalBackgroundColor);
+    // - add to flower object
+    this.add(p);
+    this.pistils.push(p);
 
-		if(or > 0){
-			this._createPistil(or);
-		}
-	}
+    if (or > 0) {
+      this._createPistil(or - 1);
+    }
+  }
 }
 
 module.exports = Flower;
