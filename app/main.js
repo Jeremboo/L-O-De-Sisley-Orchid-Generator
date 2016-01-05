@@ -39,6 +39,7 @@ guiTiredness.onChange(value => {
 });
 guiMood.onChange(value => {
   props.petalColor = props.colors[Math.round(props.mood)];
+  props.patternColor = props.patternColors[Math.round(props.mood)];
   flower.updateTexture();
 });
 guiCanvasShowed.onChange(value => {
