@@ -16,6 +16,7 @@ class Webgl {
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
+      alpha: true,
     });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setClearColor(0xfff4e7);
@@ -59,8 +60,10 @@ class Webgl {
 
     if (props.onMobile) {
       this.camera.position.y = 1;
+      this.renderer.setClearColor(0xfff4e7, 0);
     } else {
       this.camera.position.y = 0;
+      this.renderer.setClearColor(0xfff4e7);
     }
 
     this.camera.aspect = width / height;
