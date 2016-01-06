@@ -48,7 +48,7 @@ class PetalPattern {
   _drawTexture() {
     // - Add base
     // -- update base height
-    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * utils.getRandomFloat(0.6, 1));
+    this.ctx.drawImage(props.imgs.petalBase, 0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT * utils.getRandomFloat(0.5, 1));
     this.ctx.globalCompositeOperation = 'source-in';
     this.ctx.fillStyle = this.color;
     this.ctx.rect(0, 0, TEXTURE_WIDTH, TEXTURE_HEIGHT);
@@ -56,7 +56,7 @@ class PetalPattern {
     this.ctx.globalCompositeOperation = 'source-over';
 
     // - Add points
-    this.ctx.globalAlpha = utils.getXBetweenTwoNumbers(0.5, 1, props.mood);
+    this.ctx.globalAlpha = utils.getXBetweenTwoNumbers(0.2, 1, props.mood);
     // -- First Texture points
     // --- Random position
     this.ctx.drawImage(props.imgs.petalPoints, utils.getRandomFloat(-100, 100), utils.getRandomFloat(-100, 100), TEXTURE_WIDTH, TEXTURE_HEIGHT);
