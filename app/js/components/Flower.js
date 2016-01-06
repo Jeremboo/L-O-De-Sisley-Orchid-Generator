@@ -252,6 +252,25 @@ class Flower extends THREE.Object3D {
   }
 
   _animEnd(clbk) {
+
+    // Send a swift event
+    switch (this.animation) {
+      case GROWING :
+        window.location = 'flower://index.html?function=transition&type=grow&state=ended';
+        break;
+      case TOSEED :
+        window.location = 'flower://index.html?function=transition&type=toseed&state=ended';
+        break;
+      case APPEAR :
+        window.location = 'flower://index.html?function=transition&type=appear&state=ended';
+        break;
+      case PROGRESS :
+        window.location = 'flower://index.html?function=transition&type=progress&state=ended';
+        break;
+      default :
+        break;
+    }
+
     this.animation = false;
     if (clbk) {
       clbk();
