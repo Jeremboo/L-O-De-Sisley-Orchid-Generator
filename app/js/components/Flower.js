@@ -144,7 +144,9 @@ class Flower extends THREE.Object3D {
     const distRotation = props.rotation.clone().sub(this.rotation.toVector3().add(this.baseRotation));
     const distRotationMatrix = utils.getRotationMatrix(distRotation);
     // - force to apply at flowerObject
-    const rotationForce = distRotation.multiplyScalar(0.15 - (0.012 * props.tiredness));
+    // const vel = 0.15 - (0.012 * props.tiredness);
+    const vel = utils.getXBetweenTwoNumbers(0.07, 0.03, props.tiredness);
+    const rotationForce = distRotation.multiplyScalar(vel);
     rotationForce.y *= 1.5; // minimise force in Y.
 
     // - update rotation with rotationForce
