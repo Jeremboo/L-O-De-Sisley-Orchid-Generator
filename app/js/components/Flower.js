@@ -28,7 +28,8 @@ class Flower extends THREE.Object3D {
     this.windPhase = 0;
     // - openning
     this.flowerOpenning = {
-      min: -2,
+      toSeed: 2,
+      min: -1.6,
       max: 0,
     };
     // - scale
@@ -185,7 +186,7 @@ class Flower extends THREE.Object3D {
   }
 
   _onToSeed() {
-    this._animRotationOnX(this.flowerOpenning.min);
+    this._animRotationOnX(this.flowerOpenning.toSeed);
     this._animScale(this.flowerScale.toSeed);
     eventDispatcher.publish('onToSeed');
   }
