@@ -48,7 +48,7 @@ class Pistil extends THREE.Object3D {
     // -- pistilHead geometry/mesh
     this.pistilHeadGeometry = new THREE.SphereGeometry(this.size * 4, this.radiusSegment, this.segment);
     // -- material
-    this.headMaterial = new THREE.MeshBasicMaterial({ color: 0x28365b });
+    this.headMaterial = new THREE.MeshBasicMaterial({ color: 0x324270 });
     // -- mesh
     this.pistilHeadMesh = new THREE.Mesh(this.pistilHeadGeometry, this.headMaterial);
     this.pistilHeadObject = new THREE.Object3D();
