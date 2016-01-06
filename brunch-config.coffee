@@ -14,3 +14,9 @@ exports.config =
       joinTo: 'app.css'
     templates:
       joinTo: 'app.js'
+
+  plugins:
+    postcss:
+      processors: [
+        require('autoprefixer')(['last 8 versions'])
+      ]

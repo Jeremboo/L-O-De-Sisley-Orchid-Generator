@@ -1,3 +1,4 @@
+/* Generic */
 html, body {
   position: relative;
   margin: 0;
@@ -19,6 +20,27 @@ header {
   z-index : 1;
 }
 
+h1, p {
+  margin: 0;
+}
+h1 {
+  color : #5D5E87;
+  font-family: 'bellotaregular';
+}
+h1 span {
+  font-size: 0.5em;
+}
+
+p {
+  color : #5D5E87;
+  font-family: 'santanaregular';
+}
+
+a {
+  color : #E4CE78;
+}
+
+/* params */
 #params {
   display: none;
   position: absolute;
@@ -34,10 +56,54 @@ header {
   border : 1px solid black;
 }
 
-/* Mobile */
-@media all and (max-device-width: 480px)
-{
-    .dg{
-      display: none;
-    }
+/*Button */
+.Button {
+  cursor: pointer;
+  padding: 9px;
+  margin : 5px;
+  background-color: #E7BE53;
+  border: none;
+  border-radius: 5px;
+  font-family: 'bellotaregular';
+  color : white;
+}
+.Button:active{
+  background-color: #B29235;
+}
+.Button.Button_blue{
+  background-color: #7979A7;
+}
+.Button.Button_blue:active {
+  background-color: #505276;
+}
+
+#randomize {
+  margin-left: 0;
+  margin-top: 18px;
+}
+
+/* Fonts */
+@font-face {
+    font-family: 'bellotaregular';
+    src: url('fonts/bellota-regular-webfont.eot');
+    src: url('fonts/bellota-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/bellota-regular-webfont.woff2') format('woff2'),
+         url('fonts/bellota-regular-webfont.woff') format('woff'),
+         url('fonts/bellota-regular-webfont.ttf') format('truetype'),
+         url('fonts/bellota-regular-webfont.svg#bellotaregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'santanaregular';
+    src: url('fonts/santana-webfont.eot');
+    src: url('fonts/santana-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/santana-webfont.woff2') format('woff2'),
+         url('fonts/santana-webfont.woff') format('woff'),
+         url('fonts/santana-webfont.ttf') format('truetype'),
+         url('fonts/santana-webfont.svg#santanaregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
 }

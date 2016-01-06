@@ -22,9 +22,12 @@
     "uglify-js-brunch": ">= 1.0 < 1.9"
   },
   "devDependencies": {
+    "autoprefixer": "^6.2.3",
     "babel-eslint": "^4.1.6",
     "brunch": "^1.8.5",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^2.1.1"
+    "eslint-config-airbnb": "^2.1.1",
+    "postcss-brunch": "^0.5.0",
+    "sass-brunch": "^1.9.2"
   }
 }
