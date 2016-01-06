@@ -2,8 +2,7 @@ import webgl from 'js/core/Webgl';
 import loop from 'js/core/Loop';
 import props from 'js/core/props';
 import utils from 'js/core/Utils';
-import rotationControl from 'js/core/RotationControl';
-import swiftEvent from 'js/core/SwiftEventDispatcher';
+import eventDispatcher from 'js/core/EventDispatcher';
 
 import Flower from 'js/components/Flower';
 
@@ -65,7 +64,7 @@ guiPatternColor.onChange(() => {
 // ##
 // EVENTS
 // -- on flower Load
-swiftEvent.subscribe('flowerLoad', () => {
+eventDispatcher.subscribe('flowerLoad', () => {
   if (!flower.alreadyOnScene) {
     flower.init(() => {
       webgl.add(flower);
@@ -75,7 +74,7 @@ swiftEvent.subscribe('flowerLoad', () => {
 });
 
 // - on flower Grow
-swiftEvent.subscribe('flowerGrow', (flowerData) => {
+eventDispatcher.subscribe('flowerGrow', (flowerData) => {
   // - stress
   props.stress = flowerData.stress;
   // - tiredness
@@ -89,11 +88,11 @@ swiftEvent.subscribe('flowerGrow', (flowerData) => {
 });
 
 // - on flower to seed
-swiftEvent.subscribe('flowerToSeed', () => {
+eventDispatcher.subscribe('flowerToSeed', () => {
   flower.toSeed();
 });
 // - on flower progress
-swiftEvent.subscribe('flowerProgress', () => {
+eventDispatcher.subscribe('flowerProgress', () => {
   flower.progress();
 });
 // - on resize
@@ -104,7 +103,7 @@ window.addEventListener('resize', onResize, false);
 // START
 onResize();
 loop.start();
-swiftEvent.publish('flowerLoad');
+eventDispatcher.publish('flowerLoad');
 
 
 // ##
@@ -131,7 +130,7 @@ function checkMobile() {
 document.addEventListener('keydown', (e) => {
   // ArrowUp || Space
   if (e.keyCode === 38 || e.keyCode === 32) {
-    swiftEvent.publish('flowerGrow', {
+    eventDispatcher.publish('flowerGrow', {
       stress: Math.random() * 10,
       tiredness: Math.random() * 10,
       mood: Math.random() * 10,
@@ -139,23 +138,23 @@ document.addEventListener('keydown', (e) => {
   }
   // ArrowDonw
   if (e.keyCode === 40) {
-    swiftEvent.publish('flowerToSeed');
+    eventDispatcher.publish('flowerToSeed');
   }
   // - Shift
   if (e.keyCode === 16) {
-    swiftEvent.publish('flowerProgress');
+    eventDispatcher.publish('flowerProgress');
   }
 });
 document.addEventListener('touchstart', (e) => {
-  swiftEvent.publish('flowerGrow', {
+  eventDispatcher.publish('flowerGrow', {
     stress: Math.random() * 10,
     tiredness: Math.random() * 10,
     mood: Math.random() * 10,
   });
 });
 // -- openFlowerAutomaticalally
-swiftEvent.subscribe('onFinishLoaded', () => {
-  swiftEvent.publish('flowerGrow', {
+eventDispatcher.subscribe('onFinishLoaded', () => {
+  eventDispatcher.publish('flowerGrow', {
     stress: Math.random() * 10,
     tiredness: Math.random() * 10,
     mood: Math.random() * 10,

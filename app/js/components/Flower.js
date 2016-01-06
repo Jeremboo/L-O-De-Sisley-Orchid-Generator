@@ -1,6 +1,7 @@
 import props from 'js/core/props';
 import utils from 'js/core/Utils';
-import swiftEvent from 'js/core/SwiftEventDispatcher';
+import eventDispatcher from 'js/core/EventDispatcher';
+import rotationControl from 'js/core/RotationControl';
 import LoadingManager from 'js/core/LoadingManager';
 
 import Pistil from 'js/components/Pistil';
@@ -186,7 +187,7 @@ class Flower extends THREE.Object3D {
   _onToSeed() {
     this._animRotationOnX(this.flowerOpenning.min);
     this._animScale(this.flowerScale.toSeed);
-    mediator.publish('onToSeed');
+    eventDispatcher.publish('onToSeed');
   }
 
   _onGrow() {
@@ -204,13 +205,13 @@ class Flower extends THREE.Object3D {
       props.tiredness
     );
     this._animScale(scaleTargeted);
-    mediator.publish('onGrow');
+    eventDispatcher.publish('onGrow');
   }
 
   _onAppear() {
     this._animScale(this.flowerScale.toSeed, () => {
       this.alreadyOnScene = true;
-      swiftEvent.publish('onFinishLoaded');
+      eventDispatcher.publish('onFinishLoaded');
     });
   }
 
@@ -222,7 +223,7 @@ class Flower extends THREE.Object3D {
   _onTransitionUpdating() {
     // update transition
     this.transitionTimer -= 0.02;
-    mediator.publish('onTransitionUpdating', this.transitionTimer);
+    eventDispatcher.publish('onTransitionUpdating', this.transitionTimer);
 
     // test transition end
     if (this.transitionTimer <= 0) {
@@ -258,21 +259,21 @@ class Flower extends THREE.Object3D {
     // Send a swift event
     switch (this.animation) {
       case GROWING :
-        window.location = 'flower://index.html?function=transition&type=grow&state=ended';
+        eventDispatcher.emitToIOS('grow');
         break;
       case TOSEED :
-        window.location = 'flower://index.html?function=transition&type=toseed&state=ended';
+        eventDispatcher.emitToIOS('toseed');
         break;
       case APPEAR :
-        window.location = 'flower://index.html?function=transition&type=appear&state=ended';
+        eventDispatcher.emitToIOS('appear');
         break;
       case PROGRESS :
-        window.location = 'flower://index.html?function=transition&type=progress&state=ended';
+        eventDispatcher.emitToIOS('progress');
         break;
       default :
         break;
     }
-
+    // anim end
     this.animation = false;
     if (clbk) {
       clbk();

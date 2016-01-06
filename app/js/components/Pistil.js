@@ -1,5 +1,6 @@
 import props from 'js/core/props';
 import utils from 'js/core/Utils';
+import eventDispatcher from 'js/core/EventDispatcher';
 
 import pistilVert from 'shaders/pistil-vert';
 import pistilFrag from 'shaders/pistil-frag';
@@ -67,10 +68,10 @@ class Pistil extends THREE.Object3D {
     this.rotation.copy(this.ROTATION);
 
     // ##
-    // MEDIATOR LISTENER
-    mediator.subscribe('onGrow', this._onGrow.bind(this));
-    mediator.subscribe('onToSeed', this._onToSeed.bind(this));
-    mediator.subscribe('onTransitionUpdating', (timer) => {
+    // EVENT LISTENER
+    eventDispatcher.subscribe('onGrow', this._onGrow.bind(this));
+    eventDispatcher.subscribe('onToSeed', this._onToSeed.bind(this));
+    eventDispatcher.subscribe('onTransitionUpdating', (timer) => {
       this._onTransitionUpdating(timer);
     });
   }

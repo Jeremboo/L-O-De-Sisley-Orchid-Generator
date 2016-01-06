@@ -1,5 +1,6 @@
 import props from 'js/core/props';
 import utils from 'js/core/Utils';
+import eventDispatcher from 'js/core/EventDispatcher';
 
 import PetalPatern from 'js/components/PetalPattern';
 
@@ -57,12 +58,12 @@ class Petal {
     this.mMesh.material = this.petalShaderMaterial;
 
     // ##
-    // MEDIATOR LISTENER
-    mediator.subscribe('onGrow', this._onGrow.bind(this));
-    mediator.subscribe('onToSeed', () => {
+    // EVENT LISTENER
+    eventDispatcher.subscribe('onGrow', this._onGrow.bind(this));
+    eventDispatcher.subscribe('onToSeed', () => {
       this._onToSeed();
     });
-    mediator.subscribe('onTransitionUpdating', (timer) => {
+    eventDispatcher.subscribe('onTransitionUpdating', (timer) => {
       this._onTransitionUpdating(timer);
     });
   }
