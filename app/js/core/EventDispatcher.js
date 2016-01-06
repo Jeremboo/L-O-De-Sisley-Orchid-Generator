@@ -11,4 +11,6 @@ class EventDispatcher extends Mediator {
   }
 }
 
-module.exports = new EventDispatcher();
+window.mediator = new EventDispatcher();
+
+module.exports = window.mediator;
