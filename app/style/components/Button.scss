@@ -1,24 +1,21 @@
 @import "../base/variables.scss";
 
 .Button {
-  cursor: pointer;
-  padding: 9px;
-  margin : 5px;
+
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
   background-color: $blue;
-  border: none;
-  border-radius: 5px;
-  font-family: 'bellotaregular';
   color : $white;
+  font-family: 'bellotaregular';
+  box-shadow: 0px 3px 4px 0px #D6D3D3;
+  transition: $transitionDelay;
+  background-image: url(imgs/icons.svg);
+  background-size: 50px;
+  background-position: 0px 300px;
 
-  &:active{
+  &:active, &:hover{
     background-color: $blueDark;
-  }
-
-  &.Button_blue{
-    background-color: $blue;
-
-    &:active {
-      background-color: $blueDark;
-    }
+    box-shadow: 0px 3px 4px 0px #CFCFCF;
   }
 }

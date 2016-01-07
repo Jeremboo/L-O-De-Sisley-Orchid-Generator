@@ -17,6 +17,11 @@ a {
   color : $or;
 }
 
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
 
 // Canvas three.js
 body > canvas {
