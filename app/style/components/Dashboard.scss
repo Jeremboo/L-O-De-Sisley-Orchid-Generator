@@ -1,0 +1,18 @@
+@import "../base/variables.scss";
+
+.Dashboard {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform:translateY(-50%);
+
+  &-commands, &-popUp {
+    display: inline-block;
+    margin-left : 50%;
+    transform:translateX(-50%);
+  }
+
+  &-popUp {
+    margin-left: 75%;
+  }
+}

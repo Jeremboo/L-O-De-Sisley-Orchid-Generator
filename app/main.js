@@ -6,6 +6,8 @@ import eventDispatcher from 'js/core/EventDispatcher';
 
 import Flower from 'js/components/Flower';
 
+import Slider from 'js/componentsUX/Slider';
+
 // ##
 // INIT
 webgl.init();
@@ -13,75 +15,59 @@ document.body.appendChild(webgl.dom);
 // - Add object update to loop
 loop.add(webgl._binds.onUpdate);
 
-const sliderStress = document.getElementById('slider-stress');
-const sliderTiredness = document.getElementById('slider-tiredness');
-const sliderMood = document.getElementById('slider-mood');
 
-noUiSlider.create(sliderStress, {
-  start: [5],
-  range: {
-    'min': 0,
-    'max': 10,
-  },
-});
-noUiSlider.create(sliderTiredness, {
-  start: [5],
-  range: {
-    'min': 0,
-    'max': 10,
-  },
-});
-noUiSlider.create(sliderMood, {
-  start: [5],
-  range: {
-    'min': 0,
-    'max': 10,
-  },
-});
+// slider.noUiSlider.on('slide', function(){
+//   addClassFor(lSlide, 'tShow', 450);
+// });
+
+// trueSlider.noUiSlider.set(60);
+// falseSlider.noUiSlider.set(60);
 
 // ##
 // FLOWER
 const flower = new Flower();
 
 // ##
-// GUI
-const gui = new dat.GUI();
-const guiStress = gui.add(props, 'stress', 0, 10).listen();
-const guiTiredness = gui.add(props, 'tiredness', 0, 10).listen();
-const guiMood = gui.add(props, 'mood', 0, 10).listen();
-const guiHackFolder = gui.addFolder('hack');
-const guiMouseCapture = guiHackFolder.add(props, 'mouseCapture').listen();
-const guiZoom = guiHackFolder.add(props, 'zoom', 1.4, 10).listen();
-const guiPetalColor = guiHackFolder.addColor(props, 'petalColor');
-const guiPatternColor = guiHackFolder.addColor(props, 'patternColor');
+// EXPERIMENT DASHBOARD
+// - sliders
+const sliderStress = new Slider('slider-stress');
+const sliderTiredness = new Slider('slider-tiredness');
+const sliderMood = new Slider('slider-mood');
 
-guiStress.onChange(value => {
+sliderStress.onSliding((value) => {
+  props.stress = value;
   flower.updateWindFrequency();
 });
-guiTiredness.onChange(value => {
+
+sliderTiredness.onSliding((value) => {
+  props.tiredness = value;
   flower.updateAppearence();
 });
-guiMood.onChange(value => {
+
+sliderMood.onSliding((value) => {
+  props.mood = value;
   props.petalColor = props.colors[Math.round(props.mood)];
   props.patternColor = props.patternColors[Math.round(props.mood)];
   flower.updateTexture();
 });
+// - buttons
+const flowerRandomizeBtn = document.getElementById('flower-randomize');
 
-guiMouseCapture.onChange(value => {
-  if (!value) {
-    props.rotation.set(0, 0, 0);
-  }
+flowerRandomizeBtn.addEventListener('click', () => {
+  const mStress = Math.random() * 10;
+  const mTiredness = Math.random() * 10;
+  const mMood = Math.random() * 10;
+
+  sliderStress.set(mStress);
+  sliderTiredness.set(mTiredness);
+  sliderMood.set(mMood);
+
+  eventDispatcher.publish('flowerGrow', {
+    stress: mStress,
+    tiredness: mTiredness,
+    mood: mMood,
+  });
 });
-guiZoom.onChange(value => {
-  webgl.updateZoom(value);
-});
-guiPetalColor.onChange(() => {
-  flower.updateTexture();
-});
-guiPatternColor.onChange(() => {
-  flower.updateTexture();
-});
-// gui.close();
 
 
 // ##

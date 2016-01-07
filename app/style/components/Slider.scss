@@ -1,1 +1,79 @@
 @import "../base/variables.scss";
+
+.Slider {
+  margin-bottom: $slideHeight * 15;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &-name {
+    color : $blueDark;
+    font-size: 0.9em;
+    font-weight: bold;
+  }
+
+
+  // ##
+  // SLIDER BAR SHOWER
+  &-slider:after, .noUi-origin:after{
+    content: '';
+    position: absolute;
+    top: $slideHeight * 6;
+    left: 0;
+    width: 100%;
+    height: $slideHeight;
+    background-color: $grey;
+  }
+  // SLIDER WITH LARGE HEIGHT BUT TRANSPARENT
+  &-slider {
+    margin: $slideHeight * 10 0;
+    border : 0;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+    height: $slideHeight * 12;
+
+    &:after{
+      background-color: $or;
+    }
+  }
+  .noUi-origin {
+    background-color: transparent;
+    border-radius: 0;
+  }
+
+
+  // - HANDLE POINT
+  .noUi-handle {
+    cursor: pointer;
+    border : $slideHeight solid $or;
+    width: $slideHeight * 12;
+    height: $slideHeight * 12;
+    top : 0;
+    border-radius : $slideHeight * 12;
+
+    &:before {
+      display: none;
+    }
+
+    // POINT
+    &:after {
+      top : 50%;
+      left: 50%;
+      transform: translate( -50%, -50% );
+      width: $slideHeight * 2;
+      height: $slideHeight * 2;
+      border-radius: $slideHeight * 2;
+      background-color: $or;
+      transition: $transitionDelay;
+    }
+    &:hover, &:active {
+      &:after {
+        width: $slideHeight * 12;
+        height: $slideHeight * 12;
+        border-radius: $slideHeight * 12;
+      }
+    }
+  }
+}

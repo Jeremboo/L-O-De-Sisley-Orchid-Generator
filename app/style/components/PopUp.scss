@@ -1,11 +1,13 @@
 @import "../base/variables.scss";
 
 .PopUp {
-  position: absolute;
-  width: 300px;
+  width: 25%;
+  max-width: 240px;
+  min-width: 230px;
   background-color: $white;
   border-top-left-radius: $margin / 2;
   border-top-right-radius: $margin / 2;
+  box-shadow: -2px 3px 10px 0px #D6D6D6;
 
   &-header {
     padding: $margin / 2;
@@ -16,8 +18,37 @@
     text-align: center;
   }
 
-  &-sliderName {
-    color: $blue;
-    font-size: 0.8em;
+  &-headerTitle {
+    margin-bottom: 4px;
   }
+
+  &-params {
+    padding : $margin * 2 $margin * 3;
+  }
+
+  // ARROW
+  &:before {
+    content:'';
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 52%;
+    left: -$margin;
+    box-sizing: border-box;
+    border: $margin solid black;
+    border-color: transparent transparent $white $white;
+    transform: rotate(45deg);
+    box-shadow: 3px 2px 5px 0px #D6D6D6;
+  }
+  // ARROW BOX SHADOW MASK
+  &:after {
+    content:'';
+    position: absolute;
+    width: $margin * 2;
+    height: $margin * 4;
+    background-color: $white;
+    top: 48%;
+    left: 0;
+  }
+
 }
