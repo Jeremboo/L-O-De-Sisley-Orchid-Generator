@@ -12,9 +12,6 @@ class PetalPattern {
     // GENERATE PATTERN TEXTURE
     // - create canvas
     this.canvas = document.createElement('canvas');
-    // TEMPS
-    this.canvas.className = 'texture';
-    // TEMPS
     this.canvas.width = TEXTURE_WIDTH;
     this.canvas.height = TEXTURE_HEIGHT;
     this.ctx = this.canvas.getContext('2d');

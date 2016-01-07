@@ -1,5 +1,4 @@
 import props from 'js/core/props';
-import OrbitControls from 'js/vendors/OrbitControls';
 
 class Webgl {
   constructor() {
@@ -9,22 +8,21 @@ class Webgl {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
-    this.camera.position.z = props.zoom;
-
-    // this.controls = new THREE.OrbitControls( this.camera );
-    // this.controls.addEventListener( 'change', render );
+    this.camera.position.y = 1;
+    this.camera.position.z = 5;
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
     });
     this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setClearColor(0xfff4e7);
+    this.renderer.setClearColor(0xfff4e7, 0);
     this.dom = this.renderer.domElement;
 
     this.usePostprocessing = false;
     // Create this.composer for have postprocessing
     this.initPostprocessing();
+    this._resize();
 
     this._binds = {};
     this._binds.onUpdate = this.onUpdate.bind(this);
@@ -54,28 +52,14 @@ class Webgl {
     }
   }
 
-  onResize() {
+  _resize() {
     const width = window.innerWidth;
     const height = window.innerHeight;
-
-    if (props.onMobile) {
-      this.camera.position.y = 1;
-      this.camera.position.z = 5;
-      this.renderer.setClearColor(0xfff4e7, 0);
-    } else {
-      this.camera.position.y = 0;
-      this.camera.position.z = props.zoom;
-      this.renderer.setClearColor(0xfff4e7);
-    }
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(width, height);
-  }
-
-  updateZoom(newZoom) {
-    this.camera.position.z = newZoom;
   }
 }
 

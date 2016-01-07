@@ -11,33 +11,3 @@ body > canvas {
   position: absolute;
   z-index: -1;
 }
-
-header {
-  position : fixed;
-  top : 10px;
-  left : 10px;
-  z-index : 1;
-}
-
-#params {
-  display: none;
-  position: absolute;
-  width: 100%;
-  overflow-x: scroll;
-  bottom: 0;
-}
-#wrapper-canvas {
-  width: 300%;
-}
-
-.texture {
-  border : 1px solid black;
-}
-
-/* Mobile */
-@media all and (max-device-width: 480px)
-{
-    .dg{
-      display: none;
-    }
-}

@@ -1,19 +1,10 @@
 import LoadingManager from 'js/core/LoadingManager';
 
 const props = {
-  // BOOL
-  onMobile: false,
-  // GUI
-  // - global
+  // PARAMS
   stress: 0,
   tiredness: 0,
   mood: 0,
-  // - hack
-  zoom: 4,
-  mouseCapture: true,
-  showCanvasPetalPattern: false,
-  petalColor: [152, 146, 180],
-  patternColor: [126, 98, 233],
   // GLOBAL DATA
   objURL: '3d_model/flower.obj',
   openned: false,
@@ -27,6 +18,8 @@ const props = {
     petalSpringiness: THREE.ImageUtils.loadTexture('tex/petal_springiness.png'),
     petalTransition: THREE.ImageUtils.loadTexture('tex/petal_transition.png'),
   },
+  petalColor: [152, 146, 180],
+  patternColor: [126, 98, 233],
   colors: [
     [249, 183, 112],  // 0
     [246, 150, 122],  // 1

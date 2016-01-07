@@ -18,50 +18,6 @@ loop.add(webgl._binds.onUpdate);
 const flower = new Flower();
 
 // ##
-// GUI
-const gui = new dat.GUI();
-const guiStress = gui.add(props, 'stress', 0, 10).listen();
-const guiTiredness = gui.add(props, 'tiredness', 0, 10).listen();
-const guiMood = gui.add(props, 'mood', 0, 10).listen();
-const guiHackFolder = gui.addFolder('hack');
-const guiCanvasShowed = guiHackFolder.add(props, 'showCanvasPetalPattern').listen();
-const guiMouseCapture = guiHackFolder.add(props, 'mouseCapture').listen();
-const guiZoom = guiHackFolder.add(props, 'zoom', 1.4, 10).listen();
-const guiPetalColor = guiHackFolder.addColor(props, 'petalColor');
-const guiPatternColor = guiHackFolder.addColor(props, 'patternColor');
-
-guiStress.onChange(value => {
-  flower.updateWindFrequency();
-});
-guiTiredness.onChange(value => {
-  flower.updateAppearence();
-});
-guiMood.onChange(value => {
-  props.petalColor = props.colors[Math.round(props.mood)];
-  props.patternColor = props.patternColors[Math.round(props.mood)];
-  flower.updateTexture();
-});
-guiCanvasShowed.onChange(value => {
-  toggleCanvas();
-});
-guiMouseCapture.onChange(value => {
-  if (!value) {
-    props.rotation.set(0, 0, 0);
-  }
-});
-guiZoom.onChange(value => {
-  webgl.updateZoom(value);
-});
-guiPetalColor.onChange(() => {
-  flower.updateTexture();
-});
-guiPatternColor.onChange(() => {
-  flower.updateTexture();
-});
-// gui.close();
-
-
-// ##
 // EVENTS
 // -- on flower Load
 eventDispatcher.subscribe('flowerLoad', () => {
@@ -91,45 +47,24 @@ eventDispatcher.subscribe('flowerGrow', (flowerData) => {
 eventDispatcher.subscribe('flowerToSeed', () => {
   flower.toSeed();
 });
+
 // - on flower progress
 eventDispatcher.subscribe('flowerProgress', () => {
   flower.progress();
 });
-// - on resize
-window.addEventListener('resize', onResize, false);
-
 
 // ##
 // START
-onResize();
 loop.start();
 eventDispatcher.publish('flowerLoad');
 
 
-// ##
-// FCT
-function onResize() {
-  checkMobile();
-  webgl.onResize();
-}
-
-function checkMobile() {
-  const w = window.screen.availWidth || window.innerWidth;
-  const h = window.screen.availWidth || window.innerHeight;
-
-  if (w <= 800 && h <= 600) {
-    props.onMobile = true;
-  } else {
-    props.onMobile = false;
-  }
-}
-
 // ########################################################
-// TEMPS
+// BACK DOOR FOR DEVELOPENT
 // - loadFlower
 document.addEventListener('keydown', (e) => {
-  // ArrowUp || Space
-  if (e.keyCode === 38 || e.keyCode === 32) {
+  // Space
+  if (e.keyCode === 32) {
     eventDispatcher.publish('flowerGrow', {
       stress: Math.random() * 10,
       tiredness: Math.random() * 10,
@@ -145,28 +80,4 @@ document.addEventListener('keydown', (e) => {
     eventDispatcher.publish('flowerProgress');
   }
 });
-document.addEventListener('touchstart', (e) => {
-  eventDispatcher.publish('flowerGrow', {
-    stress: Math.random() * 10,
-    tiredness: Math.random() * 10,
-    mood: Math.random() * 10,
-  });
-});
-// -- openFlowerAutomaticalally
-eventDispatcher.subscribe('onFinishLoaded', () => {
-  eventDispatcher.publish('flowerGrow', {
-    stress: Math.random() * 10,
-    tiredness: Math.random() * 10,
-    mood: Math.random() * 10,
-  });
-});
-
-function toggleCanvas() {
-  let status = 'none';
-  if (props.showCanvasPetalPattern) {
-    status = 'block';
-  }
-  document.getElementById('params').style.display = status;
-}
-// TEMPS
 // ########################################################
