@@ -31,7 +31,7 @@ class RotationControl {
   }
 
   rotateElement(x, y, z) {
-    if (props.mouseCapture) {
+    if (props.mouseCapture && props.openned) {
       props.rotation.set(x, y, z);
     }
   }
