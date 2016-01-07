@@ -40,7 +40,6 @@ class Flower extends THREE.Object3D {
     };
     // -- bool
     this.alreadyOnScene = false;
-    this.openned = false;
     this.animation = false;
     // -- children
     this.petals = [];
@@ -72,6 +71,7 @@ class Flower extends THREE.Object3D {
 
       // SHOW FLOWER
       this.scale.set(0.0001, 0.0001, 0.0001);
+      this.baseRotation.x = this.flowerOpenning.toSeed;
       this.animation = APPEAR;
 
       callback();
@@ -80,7 +80,7 @@ class Flower extends THREE.Object3D {
 
   grow() {
     if (this.alreadyOnScene) {
-      this.openned = true;
+      props.openned = true;
       this.progressStep = 0;
       // - wind (stress)
       this.updateWindFrequency();
@@ -95,7 +95,7 @@ class Flower extends THREE.Object3D {
 
   toSeed() {
     if (this.alreadyOnScene) {
-      this.openned = false;
+      props.openned = false;
       this.animation = TOSEED;
     } else {
       console.error('Flower is not initialized yet.');
@@ -104,7 +104,7 @@ class Flower extends THREE.Object3D {
 
   progress() {
     if (this.alreadyOnScene) {
-      if (!this.openned) {
+      if (!props.openned) {
         this.animation = PROGRESS;
         if (this.progressStep < 3) {
           this.progressStep++;

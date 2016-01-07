@@ -15,6 +15,7 @@ const props = {
   patternColor: [126, 98, 233],
   // GLOBAL DATA
   objURL: '3d_model/flower.obj',
+  openned: false,
   rotation: new THREE.Vector3(),
   imgs: {
     petalBase: LoadingManager.loadImage('tex/petal_base.png'),
