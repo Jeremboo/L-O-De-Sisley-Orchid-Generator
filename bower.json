@@ -4,7 +4,8 @@
   "main": "public/app.js",
   "dependencies": {
     "dat-gui": "~0.5.1",
-    "three.js": "~0.72.0"
+    "three.js": "~0.72.0",
+    "nouislider": "~8.2.1"
   },
   "overrides": {}
 }

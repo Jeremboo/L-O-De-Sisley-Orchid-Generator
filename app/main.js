@@ -13,6 +13,32 @@ document.body.appendChild(webgl.dom);
 // - Add object update to loop
 loop.add(webgl._binds.onUpdate);
 
+const sliderStress = document.getElementById('slider-stress');
+const sliderTiredness = document.getElementById('slider-tiredness');
+const sliderMood = document.getElementById('slider-mood');
+
+noUiSlider.create(sliderStress, {
+  start: [5],
+  range: {
+    'min': 0,
+    'max': 10,
+  },
+});
+noUiSlider.create(sliderTiredness, {
+  start: [5],
+  range: {
+    'min': 0,
+    'max': 10,
+  },
+});
+noUiSlider.create(sliderMood, {
+  start: [5],
+  range: {
+    'min': 0,
+    'max': 10,
+  },
+});
+
 // ##
 // FLOWER
 const flower = new Flower();

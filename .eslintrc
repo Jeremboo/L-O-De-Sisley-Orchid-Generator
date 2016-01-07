@@ -13,6 +13,7 @@
     "mediator" : true,
     "THREE": true,
     "WAGNER": true,
+    "noUiSlider": true,
     "dat" : true,
     "module": true,
     "require": true,
