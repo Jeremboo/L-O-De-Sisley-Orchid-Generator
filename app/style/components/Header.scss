@@ -1,0 +1,28 @@
+@import "../base/variables.scss";
+
+header {
+  position : fixed;
+  top : 10px;
+  left : 10px;
+  z-index : 1;
+}
+
+h1 {
+  color : $blue;
+  font-family: 'bellotaregular';
+}
+h1 span {
+  font-size: 0.5em;
+}
+
+p {
+  color : $blue;
+  font-family: 'santanaregular';
+}
+
+
+
+#randomize {
+  margin-left: 0;
+  margin-top: 18px;
+}

@@ -24,7 +24,6 @@ const guiStress = gui.add(props, 'stress', 0, 10).listen();
 const guiTiredness = gui.add(props, 'tiredness', 0, 10).listen();
 const guiMood = gui.add(props, 'mood', 0, 10).listen();
 const guiHackFolder = gui.addFolder('hack');
-const guiCanvasShowed = guiHackFolder.add(props, 'showCanvasPetalPattern').listen();
 const guiMouseCapture = guiHackFolder.add(props, 'mouseCapture').listen();
 const guiZoom = guiHackFolder.add(props, 'zoom', 1.4, 10).listen();
 const guiPetalColor = guiHackFolder.addColor(props, 'petalColor');
@@ -41,9 +40,7 @@ guiMood.onChange(value => {
   props.patternColor = props.patternColors[Math.round(props.mood)];
   flower.updateTexture();
 });
-guiCanvasShowed.onChange(value => {
-  toggleCanvas();
-});
+
 guiMouseCapture.onChange(value => {
   if (!value) {
     props.rotation.set(0, 0, 0);
@@ -161,12 +158,5 @@ eventDispatcher.subscribe('onFinishLoaded', () => {
   });
 });
 
-function toggleCanvas() {
-  let status = 'none';
-  if (props.showCanvasPetalPattern) {
-    status = 'block';
-  }
-  document.getElementById('params').style.display = status;
-}
 // TEMPS
 // ########################################################

@@ -1,0 +1,25 @@
+$fontPath: 'fonts/';
+
+@font-face {
+    font-family: 'bellotaregular';
+    src: url($fontPath + 'bellota-regular-webfont.eot');
+    src: url($fontPath + 'bellota-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url($fontPath + 'bellota-regular-webfont.woff2') format('woff2'),
+         url($fontPath + 'bellota-regular-webfont.woff') format('woff'),
+         url($fontPath + 'bellota-regular-webfont.ttf') format('truetype'),
+         url($fontPath + 'bellota-regular-webfont.svg#bellotaregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'santanaregular';
+    src: url($fontPath + 'santana-webfont.eot');
+    src: url($fontPath + 'santana-webfont.eot?#iefix') format('embedded-opentype'),
+         url($fontPath + 'santana-webfont.woff2') format('woff2'),
+         url($fontPath + 'santana-webfont.woff') format('woff'),
+         url($fontPath + 'santana-webfont.ttf') format('truetype'),
+         url($fontPath + 'santana-webfont.svg#santanaregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

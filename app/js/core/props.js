@@ -11,7 +11,6 @@ const props = {
   // - hack
   zoom: 4,
   mouseCapture: true,
-  showCanvasPetalPattern: false,
   petalColor: [152, 146, 180],
   patternColor: [126, 98, 233],
   // GLOBAL DATA

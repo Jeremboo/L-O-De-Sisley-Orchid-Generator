@@ -1,0 +1,24 @@
+@import "../base/variables.scss";
+
+.Button {
+  cursor: pointer;
+  padding: 9px;
+  margin : 5px;
+  background-color: $blue;
+  border: none;
+  border-radius: 5px;
+  font-family: 'bellotaregular';
+  color : $white;
+
+  &:active{
+    background-color: $blueDark;
+  }
+
+  &.Button_blue{
+    background-color: $blue;
+
+    &:active {
+      background-color: $blueDark;
+    }
+  }
+}

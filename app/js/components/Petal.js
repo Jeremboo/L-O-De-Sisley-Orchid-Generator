@@ -28,12 +28,6 @@ class Petal {
     this.mMesh.rotation.setFromVector3(this.closedPetalRotation);
     // - other values
 
-
-    // ##################
-    // TEMPS
-    document.getElementById('wrapper-canvas').appendChild(this.pattern.canvas);
-    // ##################
-
     // ##
     // PETAL MATERIAL
     // - create material
