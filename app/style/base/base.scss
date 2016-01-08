@@ -9,8 +9,11 @@ html, body {
   color: $beige;
   font-family: 'bellotaregular';
 }
+body {
+  overflow-y: scroll;
+}
 
-h1, p, ul {
+h1, h2, h3, h4, h5, h6, p, ul {
   margin: 0;
   padding: 0;
 }
@@ -21,12 +24,15 @@ a {
 
 button {
   cursor: pointer;
+  padding: 0;
   border: none;
   outline: none;
 }
 
-// Canvas three.js
-body > canvas {
-  position: absolute;
-  z-index: -1;
+.hidden {
+  display: none !important;
+}
+
+.animated {
+  opacity: 0;
 }

@@ -1,6 +1,7 @@
 @import "../base/variables.scss";
 
 .PopUp {
+  position: relative;
   width: 25%;
   max-width: 240px;
   min-width: 230px;
@@ -32,7 +33,7 @@
     position: absolute;
     width: 0;
     height: 0;
-    top: 52%;
+    top: 51%;
     left: -$margin;
     box-sizing: border-box;
     border: $margin solid black;
@@ -47,7 +48,7 @@
     width: $margin * 2;
     height: $margin * 4;
     background-color: $white;
-    top: 48%;
+    top: 46%;
     left: 0;
   }
 

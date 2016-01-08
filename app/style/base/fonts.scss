@@ -23,3 +23,15 @@ $fontPath: 'fonts/';
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'santanabold';
+    src: url($fontPath + 'santana-bold.eot');
+    src: url($fontPath + 'santana-bold.eot?#iefix') format('embedded-opentype'),
+         url($fontPath + 'santana-bold.woff2') format('woff2'),
+         url($fontPath + 'santana-bold.woff') format('woff'),
+         url($fontPath + 'santana-bold.ttf') format('truetype'),
+         url($fontPath + 'santana-bold.svg#santanabold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

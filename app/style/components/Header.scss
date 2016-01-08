@@ -1,18 +1,81 @@
 @import "../base/variables.scss";
 
 .Header {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 
+  // Canvas three.js
+  & > canvas {
+    position: absolute;
+    top : 0;
+    left : 0;
+    z-index: -1;
+  }
+
+
+  // HEADER
+  &-header {
+    padding-top : $margin * 5;
+    text-align: center;
+  }
+  &-logo {
+    width: 50px;
+  }
+  &-title {
+    color : $blueDark;
+    font-family: 'santanabold';
+    letter-spacing: 1px;
+    font-size: 2.5em;
+  }
+  &-subtitle {
+    margin-top: - 5px;
+    color: $or;
+    font-weight: lighter;
+    letter-spacing: 2px;
+  }
+
+  // BTN START
+  &-btnStart {
+    position: absolute;
+    top : 50%;
+    left: 50%;
+    transform: translate( -50%, -50%);
+  }
+
+
+
+
+  // FOOTER
   &-footer {
     position: absolute;
     width: 100%;
-    bottom: 20px;
+    height: 200px;
+    bottom: 0;
   }
 }
 
 .HeaderFooter {
   text-align: center;
-  color : $or;
+  color: $or;
+  background-image: url(imgs/footer.svg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+
+  &-shares {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 60px;
+  }
+
+  &-sentence {
+    opacity: 0;
+    position: absolute;
+    bottom: 7px;
+    font-size: 0.8em;
+    width: 100%;
+  }
 }

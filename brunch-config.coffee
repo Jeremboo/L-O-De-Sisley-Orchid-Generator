@@ -11,7 +11,7 @@ exports.config =
           'app/js/vendors/OrbitControls.js'
         ]
     stylesheets:
-      joinTo: 'app.css'
+      joinTo: 'app.css': /^app|^bower_components/
     templates:
       joinTo: 'app.js'
 

@@ -2,17 +2,18 @@
 
 .Dashboard {
   position: absolute;
-  width: 100%;
   top: 50%;
-  transform:translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-  &-commands, &-popUp {
-    display: inline-block;
-    margin-left : 50%;
-    transform:translateX(-50%);
+  &-commands {
+    position: absolute;
+    margin-top: $margin * 4;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   &-popUp {
-    margin-left: 75%;
+    margin-left: 200%;
   }
 }

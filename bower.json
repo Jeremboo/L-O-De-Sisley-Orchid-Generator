@@ -4,7 +4,8 @@
   "main": "public/app.js",
   "dependencies": {
     "three.js": "~0.72.0",
-    "nouislider": "~8.2.1"
+    "nouislider": "~8.2.1",
+    "animate.css": "~3.5.1"
   },
   "overrides": {}
 }

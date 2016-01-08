@@ -12,6 +12,7 @@
 
   &:before, &:after {
     content: '';
+    cursor: pointer;
     position: absolute;
     border-radius: $buttonSize / 2;
   }
@@ -22,6 +23,7 @@
     top: 50%;
     width: 0;
     height: 0;
+    transform: translate(-50%, -50%);
     background-color: $blueDark;
     transition: $transitionDelay;
   }
@@ -32,7 +34,7 @@
     top: 0;
     width: $buttonSize;
     height: $buttonSize;
-    background-image: url(imgs/icons.svg);
+    background-image: url(imgs/icons.png);
     background-size: $buttonSize;
     background-repeat: no-repeat;
   }
@@ -40,8 +42,6 @@
   &:active, &:hover{
     &:before {
       content: '';
-      left: 0;
-      top: 0;
       width: 100%;
       height: 100%;
     }
@@ -52,12 +52,17 @@
     background-color: transparent;
 
     &:before {
-      background-color: $or;
+      background-color: $white;
+      transition: $transitionDelay * 2;
     }
   }
 
   &.Button_next:after {
     background-position-y: -50px;
+  }
+
+  &.Button_random:after {
+    background-position-y: -250px;
   }
 
   &.Button_printerest:after {
@@ -71,4 +76,49 @@
   &.Button_facebook:after {
     background-position-y: -200px;
   }
+
+  //BUTTON TEXT
+  // TODO faire un meilleur button
+  &.Button_text {
+    z-index: 1;
+    width: auto;
+    height: auto;
+    padding: $margin / 1.2 $margin * 3;
+    border-radius: $margin * 3;
+    font-size: 1.3em;
+    background-color: transparent;
+    box-shadow: none;
+    border: 2px solid $blueDark;
+    color : $blueDark;
+    font-family: 'bellotaregular';
+    overflow: hidden;
+
+    &:hover {
+      padding-top: ($margin / 1.2) * 0.4;
+      padding-bottom: ($margin / 1.2) * 1.6;
+
+      &:before {
+        // width: $margin * 25;
+        // height: $margin * 25;
+        // border-radius: $margin * 25;
+        width: 0;
+        height: 0;
+      }
+    }
+    &:after {
+      background: none;
+    }
+    &.active {
+      transition: $transitionDelay * 2;
+      opacity: 0;
+      margin-top: $margin;
+      &:before {
+        transition: $transitionDelay * 4;
+        width: $margin * 25;
+        height: $margin * 25;
+        border-radius: $margin * 25;
+      }
+    }
+  }
+  // TODOEND
 }

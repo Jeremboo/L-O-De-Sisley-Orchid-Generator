@@ -69,13 +69,21 @@ class Flower extends THREE.Object3D {
       // CREATE PISTIL CLASS
       this._createPistil(this.numberOfPistil - 1);
 
-      // SHOW FLOWER
+      // POSITION FLOWER
+      this.alreadyOnScene = true;
       this.scale.set(0.0001, 0.0001, 0.0001);
       this.baseRotation.x = this.flowerOpenning.toSeed;
-      this.animation = APPEAR;
 
       callback();
     });
+  }
+
+  appear() {
+    if (this.alreadyOnScene) {
+      this.animation = APPEAR;
+    } else {
+      console.error('Flower is not initialized yet.');
+    }
   }
 
   grow() {
@@ -211,8 +219,7 @@ class Flower extends THREE.Object3D {
 
   _onAppear() {
     this._animScale(this.flowerScale.toSeed, () => {
-      this.alreadyOnScene = true;
-      eventDispatcher.publish('onFinishLoaded');
+      eventDispatcher.publish('flowerAppeared');
     });
   }
 
@@ -260,16 +267,16 @@ class Flower extends THREE.Object3D {
     // Send a swift event
     switch (this.animation) {
       case GROWING :
-        eventDispatcher.emitToIOS('grow');
+        eventDispatcher.emit('grow');
         break;
       case TOSEED :
-        eventDispatcher.emitToIOS('toseed');
+        eventDispatcher.emit('toseed');
         break;
       case APPEAR :
-        eventDispatcher.emitToIOS('appear');
+        eventDispatcher.emit('appear');
         break;
       case PROGRESS :
-        eventDispatcher.emitToIOS('progress');
+        eventDispatcher.emit('progress');
         break;
       default :
         break;

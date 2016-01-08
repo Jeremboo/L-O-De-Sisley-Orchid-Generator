@@ -10,6 +10,7 @@ class Webgl {
 
     this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
     this.camera.position.z = props.zoom;
+    this.camera.position.y = 0.2;
 
     // this.controls = new THREE.OrbitControls( this.camera );
     // this.controls.addEventListener( 'change', render );
@@ -63,7 +64,6 @@ class Webgl {
       this.camera.position.z = 5;
       this.renderer.setClearColor(0xfff4e7, 0);
     } else {
-      this.camera.position.y = 0;
       this.camera.position.z = props.zoom;
       this.renderer.setClearColor(0xfff4e7);
     }

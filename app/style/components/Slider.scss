@@ -27,7 +27,7 @@
   }
   // SLIDER WITH LARGE HEIGHT BUT TRANSPARENT
   &-slider {
-    margin: $slideHeight * 10 0;
+    margin: $slideHeight * 5 0;
     border : 0;
     border-radius: 0;
     box-shadow: none;
@@ -68,7 +68,14 @@
       background-color: $or;
       transition: $transitionDelay;
     }
-    &:hover, &:active {
+    &:hover {
+      &:after {
+        width: $slideHeight * 4;
+        height: $slideHeight * 4;
+        border-radius: $slideHeight * 4;
+      }
+    }
+    &:active {
       &:after {
         width: $slideHeight * 12;
         height: $slideHeight * 12;
