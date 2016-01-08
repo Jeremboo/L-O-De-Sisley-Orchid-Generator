@@ -67,6 +67,9 @@ a {
   font-family: 'bellotaregular';
   color : white;
 }
+.Button:focus {
+  outline: none;
+}
 .Button:active{
   background-color: #B29235;
 }

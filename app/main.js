@@ -126,6 +126,16 @@ function checkMobile() {
 
 // ########################################################
 // TEMPS
+document.getElementById('to-grow').addEventListener('click', () => {
+  eventDispatcher.publish('flowerGrow', {
+    stress: Math.random() * 10,
+    tiredness: Math.random() * 10,
+    mood: Math.random() * 10,
+  });
+});
+document.getElementById('to-seed').addEventListener('click', () => {
+  eventDispatcher.publish('flowerToSeed');
+});
 // - loadFlower
 document.addEventListener('keydown', (e) => {
   // ArrowUp || Space
