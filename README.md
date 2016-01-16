@@ -36,4 +36,8 @@ See also the repository of our application : [SoufianeLasri/L-O-De-Sisley-App](h
 
 <img alt="flower_change" src="https://github.com/Jeremboo/orchidgenerator/blob/master/1_GIFs/5_flower_change.gif?raw=true" width="300">
 
+*Transition between two flowers*
+
+<img alt="flower_change" src="https://github.com/Jeremboo/orchidgenerator/blob/master/1_GIFs/6_flower_transition.gif?raw=true" width="300">
+
 ### - [0.4 version online](http://jeremieboulay.fr/o-de-sisley/0.4/)
