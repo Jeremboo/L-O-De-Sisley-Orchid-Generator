@@ -1,4 +1,5 @@
 @import "../base/variables.scss";
+@import "../base/mixins.scss";
 
 .Slider {
   margin-bottom: $slideHeight * 15;
@@ -59,9 +60,7 @@
 
     // POINT
     &:after {
-      top : 50%;
-      left: 50%;
-      transform: translate( -50%, -50% );
+      @include center();
       width: $slideHeight * 2;
       height: $slideHeight * 2;
       border-radius: $slideHeight * 2;

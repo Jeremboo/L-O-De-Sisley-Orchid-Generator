@@ -1,16 +1,12 @@
 @import "../base/variables.scss";
+@import "../base/mixins.scss";
 
 .Dashboard {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  @include center();
 
   &-commands {
-    position: absolute;
+    @include centerX();
     margin-top: $margin * 4;
-    left: 50%;
-    transform: translateX(-50%);
   }
 
   &-popUp {

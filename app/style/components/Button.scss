@@ -1,4 +1,5 @@
 @import "../base/variables.scss";
+@import "../base/mixins.scss";
 
 // Button
 .Button {
@@ -19,11 +20,9 @@
 
   // Animation other
   &:before {
-    left: 50%;
-    top: 50%;
+    @include center();
     width: 0;
     height: 0;
-    transform: translate(-50%, -50%);
     background-color: $blueDark;
     transition: $transitionDelay;
   }
