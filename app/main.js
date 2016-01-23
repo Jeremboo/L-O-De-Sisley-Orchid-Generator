@@ -1,5 +1,6 @@
 import webgl from 'js/core/Webgl';
 import loop from 'js/core/Loop';
+import sizeControl from 'js/core/SizeControl';
 import props from 'js/core/props';
 import utils from 'js/core/Utils';
 import eventDispatcher from 'js/core/EventDispatcher';
@@ -15,20 +16,23 @@ const header = document.getElementById('header');
 const content = document.getElementById('content');
 const startExperimentBtn = document.getElementById('start-experiment');
 // - WEBGL
-webgl.init();
 header.appendChild(webgl.dom);
 // - Add object update to loop
 loop.add(webgl._binds.onUpdate);
+// - Add actions on Resizing
+sizeControl.onResize((width, height) => {
+  webgl._binds.onResize(width, height);
+});
 // - FLOWER
 const flower = new Flower();
 
 // ##
 // DASHBOARD LISTENER
 startExperimentBtn.addEventListener('click', () => {
+
   // ##
   // HIDE START BUTTON AND CONTENT
   startExperimentBtn.classList.add('active');
-  content.classList.add('hidden');
 
   setTimeout(() => {
     // ##
@@ -59,7 +63,6 @@ startExperimentBtn.addEventListener('click', () => {
 });
 
 
-
 // ##
 // EVENTS
 // -- on we want to load the flower
@@ -67,7 +70,7 @@ eventDispatcher.subscribe('loadFlower', () => {
   flower.init(() => {
     webgl.add(flower);
     loop.add(flower._binds.onUpdate);
-    console.log("loaded");
+    console.log('loaded');
     eventDispatcher.emit('flowerLoaded');
   });
 });
@@ -99,31 +102,34 @@ eventDispatcher.subscribe('progressFlower', () => {
 });
 // ########################################################
 
-// - on resize
-window.addEventListener('resize', onResize, false);
-
 
 // ##
 // START
-onResize();
 loop.start();
 eventDispatcher.publish('loadFlower');
 
 
 // ##
-// FCT
-function onResize() {
-  checkMobile();
-  webgl.onResize();
-}
+// RESIZING
+class Resizing {
+  constructor() {
+    window.addEventListener('resize', this.onResize.bind(this), false);
+    this.onResize();
+  }
 
-function checkMobile() {
-  const w = window.screen.availWidth || window.innerWidth;
-  const h = window.screen.availWidth || window.innerHeight;
+  onResize() {
+    this.checkMobile();
+    webgl.onResize();
+  }
 
-  if (w <= 800 && h <= 600) {
-    props.onMobile = true;
-  } else {
-    props.onMobile = false;
+  checkMobile() {
+    const w = window.screen.availWidth || window.innerWidth;
+    const h = window.screen.availWidth || window.innerHeight;
+
+    if (w <= 800 && h <= 600) {
+      props.onMobile = true;
+    } else {
+      props.onMobile = false;
+    }
   }
 }

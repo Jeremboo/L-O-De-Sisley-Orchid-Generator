@@ -9,11 +9,6 @@ class Webgl {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
-    this.camera.position.z = props.zoom;
-    this.camera.position.y = 0.2;
-
-    // this.controls = new THREE.OrbitControls( this.camera );
-    // this.controls.addEventListener( 'change', render );
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -29,10 +24,7 @@ class Webgl {
 
     this._binds = {};
     this._binds.onUpdate = this.onUpdate.bind(this);
-  }
-
-  init() {
-    window.addEventListener('orientationchange', this.onResize, false);
+    this._binds.onResize = this.onResize.bind(this);
   }
 
   initPostprocessing() {
@@ -55,17 +47,13 @@ class Webgl {
     }
   }
 
-  onResize() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
+  onResize(width, height) {
     if (props.onMobile) {
       this.camera.position.y = 1;
       this.camera.position.z = 5;
-      this.renderer.setClearColor(0xfff4e7, 0);
     } else {
+      this.camera.position.y = 0.2;
       this.camera.position.z = props.zoom;
-      this.renderer.setClearColor(0xfff4e7);
     }
 
     this.camera.aspect = width / height;
