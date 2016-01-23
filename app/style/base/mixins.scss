@@ -17,3 +17,11 @@
   right: 50%;
   transform: translateY(-50%);
 }
+
+// CONTAINER
+@mixin container() {
+  width: 90%;
+  max-width: 800px;
+  margin: auto;
+  background-color: red;
+}

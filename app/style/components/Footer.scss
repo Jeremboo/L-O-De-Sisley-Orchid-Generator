@@ -1,0 +1,17 @@
+@import "../base/variables.scss";
+@import "../base/mixins.scss";
+
+.Footer {
+  height: 50px;
+  background-color: $beigeDark;
+
+  &-container {
+    @include container;
+  }
+
+  &-logo {
+    float: right;
+    height :40px;
+    margin : 5px;
+  }
+}
