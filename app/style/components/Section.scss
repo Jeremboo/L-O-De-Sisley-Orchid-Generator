@@ -1,0 +1,86 @@
+@import "../base/variables.scss";
+@import "../base/mixins.scss";
+
+
+// ####
+// SECTION
+.Section {
+  margin : 50px 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &_beige {
+    background-color: $beige;
+  }
+
+  &_bandeau {
+    width: 100%;
+  }
+
+  // ####
+  // CONTAINERS
+  &-container {
+    @include container;
+  }
+
+  &-img, &-text {
+    width: 49%;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  &-text_left {
+    text-align: right;
+
+    .Section-line {
+      margin-left: 80%;
+    }
+  }
+
+  &-text_full {
+    width: 100%;
+    text-align: center;
+
+    .Section-line {
+      margin: 20px auto;
+    }
+
+    .Section-paragraphe {
+      width: 40%;
+      margin: auto;
+    }
+  }
+
+ // ####
+ // LINE - PARAGRAPHE
+  &-line {
+    margin: 20px 0;
+    width: 20%;
+    height: 1px;
+    background-color: $blue;
+  }
+
+  &-paragraphe {
+    font-size: 0.9em;
+    color: $blue;
+
+    strong {
+      font-family: 'santanabold';
+    }
+  }
+
+  // ####
+  // PROFILS
+  &-profils {
+    margin: auto;
+  }
+  &-profil {
+    display: inline-block;
+    width: 20%;
+    margin: 2%;
+  }
+
+
+}

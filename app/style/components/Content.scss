@@ -2,14 +2,6 @@
 
 .Content {
   width: 100%;
-  margin : auto;
   margin-top: -2px;
   background-color: $white;
-
-  &-temp {
-    display: block;
-    width: 100%;
-    margin: auto;
-    // max-width: 1300px;
-  }
 }

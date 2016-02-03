@@ -13,7 +13,6 @@ import Flower from 'js/components/Flower';
 // INIT
 // - DOM ELEMENTS
 const header = document.getElementById('header');
-const content = document.getElementById('content');
 const startExperimentBtn = document.getElementById('start-experiment');
 // - WEBGL
 header.appendChild(webgl.dom);

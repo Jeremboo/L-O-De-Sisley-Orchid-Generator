@@ -13,9 +13,28 @@ body {
   overflow-y: scroll;
 }
 
+// Title
 h1, h2, h3, h4, h5, h6, p, ul {
   margin: 0;
   padding: 0;
+}
+h1, h3, h5 {
+  color : $blueDark;
+  font-family: 'santanabold';
+  letter-spacing: 1px;
+}
+h3 {
+  font-size: 1.85em;
+}
+h5 {
+  font-size: 1em;
+}
+
+h2, h4 {
+  color: $or;
+  font-family: 'santanaregular';
+  font-weight: lighter;
+  letter-spacing: 2px;
 }
 
 a {

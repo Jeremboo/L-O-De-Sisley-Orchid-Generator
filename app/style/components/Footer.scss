@@ -2,16 +2,12 @@
 @import "../base/mixins.scss";
 
 .Footer {
-  height: 50px;
+  height: 85px;
   background-color: $beigeDark;
-
-  &-container {
-    @include container;
-  }
 
   &-logo {
     float: right;
-    height :40px;
-    margin : 5px;
+    height :55px;
+    margin : 15px;
   }
 }
