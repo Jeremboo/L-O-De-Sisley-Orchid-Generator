@@ -106,29 +106,3 @@ eventDispatcher.subscribe('progressFlower', () => {
 // START
 loop.start();
 eventDispatcher.publish('loadFlower');
-
-
-// ##
-// RESIZING
-class Resizing {
-  constructor() {
-    window.addEventListener('resize', this.onResize.bind(this), false);
-    this.onResize();
-  }
-
-  onResize() {
-    this.checkMobile();
-    webgl.onResize();
-  }
-
-  checkMobile() {
-    const w = window.screen.availWidth || window.innerWidth;
-    const h = window.screen.availWidth || window.innerHeight;
-
-    if (w <= 800 && h <= 600) {
-      props.onMobile = true;
-    } else {
-      props.onMobile = false;
-    }
-  }
-}

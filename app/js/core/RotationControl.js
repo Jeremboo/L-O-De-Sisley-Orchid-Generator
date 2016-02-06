@@ -10,16 +10,14 @@ class RotationControl {
   }
 
   _onOrientationMove(event) {
-    if (props.onMobile) {
-      let beta = event.beta;
-      if (beta > 90) { beta = 90; }
-      if (beta < -90) { beta = -90; }
+    let beta = event.beta;
+    if (beta > 90) { beta = 90; }
+    if (beta < -90) { beta = -90; }
 
-      const x = (beta - 55) * Math.PI / 180;
-      const y = (event.gamma) * Math.PI / 180;
-      const z = (event.omega) * Math.PI / 180;
-      this.rotateElement(x, y, z);
-    }
+    const x = (beta - 55) * Math.PI / 180;
+    const y = (event.gamma) * Math.PI / 180;
+    const z = (event.omega) * Math.PI / 180;
+    this.rotateElement(x, y, z);
   }
 
   _onMouseMove(event) {
