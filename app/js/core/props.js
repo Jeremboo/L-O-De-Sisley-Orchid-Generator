@@ -9,7 +9,6 @@ const props = {
   tiredness: 0,
   mood: 0,
   // - hack
-  zoom: 4,
   mouseCapture: true,
   petalColor: [152, 146, 180],
   patternColor: [126, 98, 233],

@@ -5,7 +5,7 @@
 // ####
 // SECTION
 .Section {
-  margin : 50px 0;
+  margin: $margin * 4 0;
 
   &:first-child {
     margin-top: 0;
@@ -29,6 +29,7 @@
     width: 49%;
     display: inline-block;
     vertical-align: middle;
+    margin: $margin * 2 0;
   }
 
   &-text_left {
@@ -83,5 +84,28 @@
     margin: 2% 0;
   }
 
+  // ##
+  // RESPONCIVE
+  @include mobile {
 
+    // CONTAINERS
+    &-container_imgtext {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    &-img, &-text {
+      width: 100%;
+      text-align: center;
+    }
+
+    &-line {
+      margin: 20px auto;
+    }
+
+    // PROFILS
+    &-profil {
+      width: 49%;
+    }
+  }
 }

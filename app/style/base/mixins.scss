@@ -1,3 +1,4 @@
+@import "variables.scss";
 
 
 // CENTER
@@ -23,4 +24,17 @@
   width: 90%;
   max-width: 800px;
   margin: auto;
+}
+
+// MEDIA QUERIES
+@mixin mobile {
+  @media screen and (max-device-width: $mobileMaxWidth) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media screen and (min-width: 1024px){
+    @content;
+  }
 }

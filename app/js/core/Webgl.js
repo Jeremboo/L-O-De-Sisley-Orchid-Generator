@@ -9,6 +9,8 @@ class Webgl {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(50, 0, 1, 1000);
+    this.camera.position.y = 0.2;
+    this.camera.position.z = 5;
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -48,22 +50,11 @@ class Webgl {
   }
 
   onResize(width, height) {
-    if (props.onMobile) {
-      this.camera.position.y = 1;
-      this.camera.position.z = 5;
-    } else {
-      this.camera.position.y = 0.2;
-      this.camera.position.z = props.zoom;
-    }
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(width, height);
-  }
-
-  updateZoom(newZoom) {
-    this.camera.position.z = newZoom;
   }
 }
 

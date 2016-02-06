@@ -3,17 +3,36 @@
 
 .Dashboard {
   @include center();
-  width: 40%;
+  z-index:1;
+  width: 30%;
   height: 50%;
 
   &-commands {
     @include centerX();
-    bottom: -10%;
+    bottom: -15%;
   }
 
   &-popUp {
-    @include centerY();
-    width: 25%;
-    right: -22%;
+    display: none;
+  }
+
+  // ##
+  // RESPONCIVE
+  @include mobile {
+    &-popUp {
+      // width: 100%;
+      // right: 0;
+      // top: auto;
+      // bottom: 0;
+      // transform: none;
+    }
+  }
+
+  @include desktop {
+    &-popUp {
+      display: block;
+      @include centerY();
+      right: -50%;
+    }
   }
 }
