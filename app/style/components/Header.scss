@@ -7,14 +7,13 @@
   height: 100%;
   overflow: hidden;
 
-  // Canvas three.js
-  & > canvas {
+  &-wrapper {
     position: absolute;
-    top : 0;
-    left : 0;
-    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
   }
-
 
   // HEADER
   &-header {
@@ -38,7 +37,7 @@
     position: absolute;
     width: 100%;
     height: 200px;
-    bottom: 0;
+    bottom: -2px;
   }
 }
 

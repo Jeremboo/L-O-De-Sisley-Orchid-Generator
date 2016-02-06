@@ -1,11 +1,11 @@
 {
-  "name": "brunch-threejs-es6",
+  "name": "brunch-threees6",
   "version": "0.1.0",
   "main": "public/app.js",
   "dependencies": {
     "three.js": "~0.72.0",
     "nouislider": "~8.2.1",
-    "animate.css": "~3.5.1"
+    "gsap": "~1.18.2"
   },
   "overrides": {}
 }

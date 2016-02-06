@@ -1,7 +1,6 @@
 import props from 'js/core/props';
 import eventDispatcher from 'js/core/EventDispatcher';
 
-
 import Slider from 'js/componentsUX/Slider';
 
 class Dashboard {
@@ -9,41 +8,28 @@ class Dashboard {
 
     // ##
     // GET DOM ELEMENTS
-    this.dashboard = document.getElementById('dashboard');
     // POPUP
     this.popUp = document.getElementById('popup');
+    // COMMAND
+    this.commands = document.getElementById('commands');
     // BUTTONS
     this.randomizeBtn = document.getElementById('flower-randomize');
-    this.validateBtn = document.getElementById('flower-validate');
     // SLIDERS
     this.stressSlider = new Slider('slider-stress');
     this.tirednessSlider = new Slider('slider-tiredness');
     this.moodSlider = new Slider('slider-mood');
-
-
   }
 
   show() {
-    this.dashboard.classList.remove('hidden');
-    // TODO anim les arrivées
-    this.randomizeBtn.classList.add('fadeInDown');
-    setTimeout(() => {
-      // this.validateBtn.classList.remove('hidden');
-      // this.validateBtn.classList.add('fadeInDown');
-      setTimeout(() => {
-        this.popUp.classList.remove('hidden');
-        this.popUp.classList.add('fadeInLeft');
-      }, 200);
-    }, 200);
+    let showDashBoardTimeline = new TimelineLite();
+    showDashBoardTimeline.to(this.commands, 0.5, { bottom: '-15%', opacity: 1 })
+      .to(this.popUp, 1, { right: '-50%', opacity: 1 }, '-=0.25');
 
     // ##
     // ADD LISTENERS FOR BUTTON
     this.randomizeBtn.addEventListener('click',
       this.setRandomValuesToFlower.bind(this)
     );
-    // this.validateBtn.addEventListener('click',
-    //   this._showShareView.bind(this)
-    // );
   }
 
   // PARAMS LISTENERS

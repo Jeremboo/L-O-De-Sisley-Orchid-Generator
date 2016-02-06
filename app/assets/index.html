@@ -9,57 +9,58 @@
 <body>
 
   <header id="header" class="Header">
-    <header class="Header-header">
-      <img class="Header-logo" src="imgs/logo.svg" alt="Logo l'O de Sisley">
-      <h1 class="Header-title">L'O de Sisley</h1>
-      <h2 class="Header-subtitle ">Votre nouvelle expérience bien-être</h2>
-    </header>
-    <button id="start-experiment" class="Header-btnStart Button Button_text">Tentez l'expérience</button>
-    <section id="dashboard" class="Dashboard">
-      <div class="Dashboard-popUp">
-        <div id="popup" class="PopUp animated">
-          <header class="PopUp-header">
-            <p class="PopUp-headerTitle">Je personnalise ma fleur</p>
-          </header>
-          <section class="PopUp-params">
-            <ul class="PopUp-sliders">
-              <li class="PopUp-slider Slider">
-                <p class="Slider-name">Mon état de stress</p>
-                <div id="slider-stress" class="Slider-slider"></div>
-              </li>
-              <li class="PopUp-slider Slider">
-                <p class="Slider-name">Mon niveau de fatigue</p>
-                <div id="slider-tiredness" class="Slider-slider"></div>
-              </li>
-              <li class="PopUp-slider Slider">
-                <p class="Slider-name">Mon humeur</p>
-                <div id="slider-mood" class="Slider-slider"</div>
+    <section class="Header-wrapper">
+      <header id="js-header" class="Header-header">
+        <img class="Header-logo" src="imgs/logo.svg" alt="Logo l'O de Sisley">
+        <h1 class="Header-title">L'O de Sisley</h1>
+        <h2 class="Header-subtitle ">Votre nouvelle expérience bien-être</h2>
+      </header>
+      <button id="start-experiment" class="Header-btnStart Button Button_text">Tentez l'expérience</button>
+      <section class="Dashboard">
+        <div id="popup" class="Dashboard-popUp">
+          <div class="PopUp">
+            <header class="PopUp-header">
+              <p class="PopUp-headerTitle">Je personnalise ma fleur</p>
+            </header>
+            <section class="PopUp-params">
+              <ul class="PopUp-sliders">
+                <li class="PopUp-slider Slider">
+                  <p class="Slider-name">Mon état de stress</p>
+                  <div id="slider-stress" class="Slider-slider"></div>
                 </li>
-              </ul>
-            </section>
-          </div>
-      </div>
-      <div class="Dashboard-commands">
-        <button id="flower-randomize" class="Button Button_transparent Button_random animated"></button>
-        <!-- <button id="flower-validate" class="Button Button_next animated"></button> -->
-      </div>
+                <li class="PopUp-slider Slider">
+                  <p class="Slider-name">Mon niveau de fatigue</p>
+                  <div id="slider-tiredness" class="Slider-slider"></div>
+                </li>
+                <li class="PopUp-slider Slider">
+                  <p class="Slider-name">Mon humeur</p>
+                  <div id="slider-mood" class="Slider-slider"</div>
+                  </li>
+                </ul>
+              </section>
+            </div>
+        </div>
+        <div id="commands" class="Dashboard-commands">
+          <button id="flower-randomize" class="Button Button_transparent Button_random"></button>
+          <!-- <button id="flower-validate" class="Button Button_next"></button> -->
+        </div>
+      </section>
+      <footer class="Header-footer HeaderFooter">
+        <div class="HeaderFooter-shares">
+          <button id="share-printerest" class="Button Button_transparent Button_printerest"></button>
+          <button id="share-twitter" class="Button Button_transparent Button_twitter"></button>
+          <button id="share-facebook" class="Button Button_transparent Button_facebook"></button>
+        </div>
+        <p class="HeaderFooter-sentence">
+          <strong>Graphistes : </strong>
+          <a href="https://www.behance.net/AlexandreLartique">Alexandre Lartique</a> &
+          <a href="https://dribbble.com/Dyeos">Sarah Lepreux</a>,
+          <strong>Développeurs : </strong>
+          <a href="https://twitter.com/jeremboo">Jérémie Boulay</a> &
+          <a href="https://twitter.com/soufiane_lasri">Soufiane Lasri</a>
+        </p>
+      </footer>
     </section>
-
-    <footer class="Header-footer HeaderFooter">
-      <div class="HeaderFooter-shares">
-        <button id="share-printerest" class="Button Button_transparent Button_printerest"></button>
-        <button id="share-twitter" class="Button Button_transparent Button_twitter"></button>
-        <button id="share-facebook" class="Button Button_transparent Button_facebook"></button>
-      </div>
-      <p class="HeaderFooter-sentence">
-        <strong>Graphistes : </strong>
-        <a href="https://www.behance.net/AlexandreLartique">Alexandre Lartique</a> &
-        <a href="https://dribbble.com/Dyeos">Sarah Lepreux</a>,
-        <strong>Développeurs : </strong>
-        <a href="https://twitter.com/jeremboo">Jérémie Boulay</a> &
-        <a href="https://twitter.com/soufiane_lasri">Soufiane Lasri</a>
-      </p>
-    </footer>
   </header>
 
   <section class="Content">
@@ -151,7 +152,7 @@
               </a>
             </li>
             <li class="Section-profil">
-              <a href="https://fr.pinterest.com/sirpapialex/" class="Profil">
+              <a href="https://www.behance.net/AlexandreLartique" class="Profil">
                 <img src="imgs/alexandre-lartique.png" alt="Alexandre Lartique photo" class="Profil-image">
                 <h5 class="Profil-name">Alexandre Lartique</h5>
                 <p class="Profil-status">Designer Graphiste</p>
