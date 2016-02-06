@@ -79,7 +79,7 @@
   //BUTTON TEXT
   // TODO faire un meilleur button
   &.Button_text {
-    z-index: 1;
+    z-index: 99;
     width: auto;
     height: auto;
     padding: $margin / 1.2 $margin * 3;
@@ -108,6 +108,7 @@
       background: none;
     }
     &.active {
+      z-index: 0;
       transition: $transitionDelay * 2;
       opacity: 0;
       margin-top: $margin;
