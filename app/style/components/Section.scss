@@ -48,7 +48,7 @@
     }
 
     .Section-paragraphe {
-      width: 40%;
+      width: 50%;
       margin: auto;
     }
   }
@@ -78,8 +78,9 @@
   }
   &-profil {
     display: inline-block;
-    width: 20%;
-    margin: 2%;
+    vertical-align: top;
+    width: 24%;
+    margin: 2% 0;
   }
 
 

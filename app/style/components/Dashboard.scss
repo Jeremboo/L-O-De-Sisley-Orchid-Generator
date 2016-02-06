@@ -3,13 +3,17 @@
 
 .Dashboard {
   @include center();
+  width: 40%;
+  height: 50%;
 
   &-commands {
     @include centerX();
-    margin-top: $margin * 4;
+    bottom: -10%;
   }
 
   &-popUp {
-    margin-left: 200%;
+    @include centerY();
+    width: 25%;
+    right: -22%;
   }
 }
