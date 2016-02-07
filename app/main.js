@@ -13,7 +13,10 @@ import Flower from 'js/components/Flower';
 // INIT
 // - DOM ELEMENTS
 const header = document.getElementById('header');
+const titleWrapper = document.getElementById('title-wrapper');
+const shareButtons = document.querySelectorAll('.HeaderFooter-shares .Button');
 const startExperimentBtn = document.getElementById('start-experiment');
+
 // - WEBGL
 header.appendChild(webgl.dom);
 // - Add object update to loop
@@ -22,45 +25,32 @@ loop.add(webgl._binds.onUpdate);
 sizeControl.onResize((width, height) => {
   webgl._binds.onResize(width, height);
 });
+
 // - FLOWER
 const flower = new Flower();
 
-// ##
-// DASHBOARD LISTENER
-startExperimentBtn.addEventListener('click', () => {
-
-  // ##
-  // HIDE START BUTTON AND CONTENT
-  startExperimentBtn.classList.add('active');
-
-  setTimeout(() => {
-    // ##
-    // SHOW FLOWER
-    if (flower.alreadyOnScene) {
+function showFlower() {
+  // SHOW FLOWER
+  if (flower.alreadyOnScene) {
+    dashboard.setRandomValuesToFlower();
+  } else {
+    eventDispatcher.subscribe('flowerLoaded', () => {
       dashboard.setRandomValuesToFlower();
-    } else {
-      eventDispatcher.subscribe('flowerLoaded', () => {
-        dashboard.setRandomValuesToFlower();
-      });
-    }
-
-    // ##
-    // SHOW DASHBOARD
-    dashboard.show();
-    // - add listeners
-    dashboard.onStressChange(() => {
-      flower.updateWindFrequency();
     });
-    dashboard.onTirednessChange(() => {
-      flower.updateAppearence();
-    });
-    dashboard.onMoodChange(() => {
-      flower.updateTexture();
-    });
-
-  }, 1000);
-});
-
+  }
+  // SHOW DASHBOARD
+  dashboard.show();
+  // - add listeners
+  dashboard.onStressChange(() => {
+    flower.updateWindFrequency();
+  });
+  dashboard.onTirednessChange(() => {
+    flower.updateAppearence();
+  });
+  dashboard.onMoodChange(() => {
+    flower.updateTexture();
+  });
+}
 
 // ##
 // EVENTS
@@ -73,7 +63,6 @@ eventDispatcher.subscribe('loadFlower', () => {
     eventDispatcher.emit('flowerLoaded');
   });
 });
-
 
 // - on we want to grows the flower
 eventDispatcher.subscribe('growsFlower', (flowerData) => {
@@ -89,6 +78,39 @@ eventDispatcher.subscribe('growsFlower', (flowerData) => {
   flower.grow();
 });
 
+// ##
+// STARTER
+document.addEventListener('DOMContentLoaded', (event) => {
+  // ##
+  // ANIMATIONS
+  const showHeaderTimeline = new TimelineLite();
+  const titleChildrenLenght = titleWrapper.children.length;
+  const sharedButtonLength = shareButtons.length;
+  let i, j;
+  // Title Animation
+  for (i = 0; i < titleChildrenLenght; i++) {
+    showHeaderTimeline.to(titleWrapper.children[i], 0.5, { 'line-height': '100%', opacity: 1 }, '-=0.2');
+  }
+  // Btn Start Animation
+  showHeaderTimeline.to(startExperimentBtn, 0.8, { margin: 0, opacity: 1 });
+  // Shares button animation
+  for (j = 0; j < sharedButtonLength; j++) {
+    showHeaderTimeline.to(shareButtons[j], 0.4, { top: 0, opacity: 1 }, '-=0.25');
+  }
+
+  // ##
+  // DASHBOARD LISTENER
+  startExperimentBtn.addEventListener('click', () => {
+    // HIDE START BUTTON AND CONTENT
+    TweenLite.to(startExperimentBtn, 0.5, {'margin-top': '30px', opacity: 0, onComplete: showFlower });
+  });
+
+  // ##
+  // START
+  loop.start();
+  eventDispatcher.publish('loadFlower');
+});
+
 // ########################################################
 // USELESS
 // - on flower to seed
@@ -100,9 +122,3 @@ eventDispatcher.subscribe('progressFlower', () => {
   flower.progress();
 });
 // ########################################################
-
-
-// ##
-// START
-loop.start();
-eventDispatcher.publish('loadFlower');

@@ -10,12 +10,14 @@
 
   <header id="header" class="Header">
     <section class="Header-wrapper">
-      <header id="js-header" class="Header-header">
+      <header id="title-wrapper" class="Header-header">
         <img class="Header-logo" src="imgs/logo.svg" alt="Logo l'O de Sisley">
         <h1 class="Header-title">L'O de Sisley</h1>
-        <h2 class="Header-subtitle ">Votre nouvelle expérience bien-être</h2>
+        <h2 class="Header-subtitle">Votre nouvelle expérience bien-être</h2>
       </header>
-      <button id="start-experiment" class="Header-btnStart Button Button_text">Tentez l'expérience</button>
+      <button id="start-experiment" class="Header-btnStart Button Button_text">
+        Tentez l'expérience
+      </button>
       <section class="Dashboard">
         <div id="popup" class="Dashboard-popUp">
           <div class="PopUp">
@@ -42,23 +44,20 @@
         </div>
         <div id="commands" class="Dashboard-commands">
           <button id="flower-randomize" class="Button Button_transparent Button_random"></button>
-          <!-- <button id="flower-validate" class="Button Button_next"></button> -->
         </div>
       </section>
       <footer class="Header-footer HeaderFooter">
-        <div class="HeaderFooter-shares">
-          <button id="share-printerest" class="Button Button_transparent Button_printerest"></button>
-          <button id="share-twitter" class="Button Button_transparent Button_twitter"></button>
-          <button id="share-facebook" class="Button Button_transparent Button_facebook"></button>
-        </div>
-        <p class="HeaderFooter-sentence">
-          <strong>Graphistes : </strong>
-          <a href="https://www.behance.net/AlexandreLartique">Alexandre Lartique</a> &
-          <a href="https://dribbble.com/Dyeos">Sarah Lepreux</a>,
-          <strong>Développeurs : </strong>
-          <a href="https://twitter.com/jeremboo">Jérémie Boulay</a> &
-          <a href="https://twitter.com/soufiane_lasri">Soufiane Lasri</a>
-        </p>
+        <ul id="share-button" class="HeaderFooter-shares">
+          <li class="HeaderFooter-button">
+            <button id="share-printerest" class="Button Button_transparent Button_printerest"></button>
+          </li>
+          <li class="HeaderFooter-button">
+            <button id="share-twitter" class="Button Button_transparent Button_twitter"></button>
+          </li>
+          <li class="HeaderFooter-button">
+            <button id="share-facebook" class="Button Button_transparent Button_facebook"></button>
+          </li>
+        </ul>
       </footer>
     </section>
   </header>

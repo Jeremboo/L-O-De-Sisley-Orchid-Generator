@@ -107,18 +107,18 @@
     &:after {
       background: none;
     }
-    &.active {
-      z-index: 0;
-      transition: $transitionDelay * 2;
-      opacity: 0;
-      margin-top: $margin;
-      &:before {
-        transition: $transitionDelay * 4;
-        width: $margin * 25;
-        height: $margin * 25;
-        border-radius: $margin * 25;
-      }
-    }
+    // &.active {
+    //   z-index: 0;
+    //   transition: $transitionDelay * 2;
+    //   opacity: 0;
+    //   margin-top: $margin;
+    //   &:before {
+    //     transition: $transitionDelay * 4;
+    //     width: $margin * 25;
+    //     height: $margin * 25;
+    //     border-radius: $margin * 25;
+    //   }
+    // }
   }
   // TODOEND
 }

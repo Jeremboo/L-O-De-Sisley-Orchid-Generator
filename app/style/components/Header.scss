@@ -21,14 +21,19 @@
     text-align: center;
   }
   &-logo {
-    width: 50px;
+    width: $buttonSize;
   }
-  &-title {}
-  &-subtitle {}
+
+  &-logo, &-title, &-subtitle {
+    opacity: 0;
+    line-height: 0;
+  }
 
   // BTN START
   &-btnStart {
     @include center();
+    margin-top: $margin * 2;
+    opacity: 0;
   }
 
 
@@ -50,17 +55,23 @@
   background-position: bottom;
 
   &-shares {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    @include centerX();
+    display: flex;
+    flex-direction: row;
     bottom: 60px;
+    height: $buttonSize;
   }
 
-  &-sentence {
-    opacity: 0;
+  &-button {
+    position: relative;
+    width: $buttonSize;
+    height: $buttonSize;
+  }
+
+  & .Button {
     position: absolute;
-    bottom: 7px;
-    font-size: 0.8em;
-    width: 100%;
+    top: $buttonSize/2;
+    left: 0;
+    opacity: 0;
   }
 }
