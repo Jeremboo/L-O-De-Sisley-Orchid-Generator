@@ -89,14 +89,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
   let i, j;
   // Title Animation
   for (i = 0; i < titleChildrenLenght; i++) {
-    showHeaderTimeline.to(titleWrapper.children[i], 0.5, { 'line-height': '100%', opacity: 1 }, '-=0.2');
+    showHeaderTimeline.to(titleWrapper.children[i], 0.5, { 'line-height': '1em', opacity: 1 }, '-=0.2');
   }
-  // Btn Start Animation
-  showHeaderTimeline.to(startExperimentBtn, 0.8, { margin: 0, opacity: 1 });
   // Shares button animation
   for (j = 0; j < sharedButtonLength; j++) {
     showHeaderTimeline.to(shareButtons[j], 0.4, { top: 0, opacity: 1 }, '-=0.25');
   }
+  // Btn Start Animation
+  showHeaderTimeline.to(startExperimentBtn, 0.8, { margin: 0, opacity: 1 });
 
   // ##
   // DASHBOARD LISTENER
