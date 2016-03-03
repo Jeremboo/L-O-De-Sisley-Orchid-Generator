@@ -85,14 +85,14 @@
     text-align: center;
     font-family: 'bellotaregular';
 
-    svg {
+    .svg {
       position: absolute;
       top: 0;
       left: 0;
       transition: $transitionDelay * 2;
     }
 
-    svg path {
+    .svg .path {
       position: absolute;
       stroke : $blue;
       stroke-width: 2px;
@@ -120,9 +120,10 @@
       justify-content: center;
     }
 
-    &.anim_end:hover svg {
+    &.anim_end:hover .svg {
       top: -10px;
-      path {
+
+      .path {
         stroke: $blueDark;
       }
     }
