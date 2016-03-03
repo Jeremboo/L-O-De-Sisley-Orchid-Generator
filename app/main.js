@@ -6,6 +6,7 @@ import utils from 'js/core/Utils';
 import eventDispatcher from 'js/core/EventDispatcher';
 
 import dashboard from 'js/componentsUX/Dashboard';
+import TextAnimation from 'js/componentsUX/TextAnimation';
 
 import Flower from 'js/components/Flower';
 
@@ -16,6 +17,7 @@ const header = document.getElementById('header');
 const titleWrapper = document.getElementById('title-wrapper');
 const shareButtons = document.querySelectorAll('.HeaderFooter-shares .Button');
 const startExperimentBtn = document.getElementById('start-experiment');
+const startExperimentBtnText = document.getElementById('start-experiment-text');
 
 // - WEBGL
 header.appendChild(webgl.dom);
@@ -86,23 +88,45 @@ document.addEventListener('DOMContentLoaded', (event) => {
   const showHeaderTimeline = new TimelineLite();
   const titleChildrenLenght = titleWrapper.children.length;
   const sharedButtonLength = shareButtons.length;
-  let i, j;
+  const startExperimentBtnTextAnimation = new TextAnimation(
+    startExperimentBtnText,
+    { 'line-height': '100px',
+      opacity: 0,
+      transform: 'rotateX(-90deg)',
+    }
+  );
+
+  let i;
+  let j;
   // Title Animation
   for (i = 0; i < titleChildrenLenght; i++) {
     showHeaderTimeline.to(titleWrapper.children[i], 0.5, { 'line-height': '1em', opacity: 1 }, '-=0.2');
   }
   // Shares button animation
   for (j = 0; j < sharedButtonLength; j++) {
-    showHeaderTimeline.to(shareButtons[j], 0.4, { top: 0, opacity: 1 }, '-=0.25');
+    showHeaderTimeline.to(shareButtons[j], 0.4, { ease: Power2.easeOut, top: 0, opacity: 1 }, '-=0.25');
   }
   // Btn Start Animation
-  showHeaderTimeline.to(startExperimentBtn, 0.8, { margin: 0, opacity: 1 });
+  showHeaderTimeline.to(startExperimentBtn, 1.5, { ease: Power2.easeOut, margin: 0, opacity: 1, onStart: () => {
+    startExperimentBtn.classList.add('active');
+    startExperimentBtnTextAnimation.showTextStartingFromMiddle(0.5, { 'line-height': '50px', opacity: 1, transform: 'rotateX(0deg)' });
+    startExperimentBtn.addEventListener('mouseover', () => {
+      startExperimentBtnTextAnimation.showTextStartingFromMiddle(0.3, { 'line-height': '30px', color: '#5B5F89' });
+    });
+    startExperimentBtn.addEventListener('mouseout', () => {
+      startExperimentBtnTextAnimation.showTextStartingFromMiddle(0.3, { 'line-height': '50px', color: '#808AAD' });
+    });
+  }, onComplete: () => {
+    startExperimentBtn.classList.add('anim_end');
+  } });
 
   // ##
   // DASHBOARD LISTENER
   startExperimentBtn.addEventListener('click', () => {
     // HIDE START BUTTON AND CONTENT
-    TweenLite.to(startExperimentBtn, 0.5, {'margin-top': '30px', opacity: 0, onComplete: showFlower });
+    startExperimentBtn.classList.remove('active');
+    startExperimentBtnTextAnimation.showTextStartingFromMiddle(0.8, { 'line-height': '60px', opacity: 0, transform: 'rotateX(-90deg)' });
+    TweenLite.to(startExperimentBtn, 0.8, { 'margin-top': '30px', opacity: 0, onComplete: showFlower });
   });
 
   // ##

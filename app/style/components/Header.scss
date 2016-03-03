@@ -32,7 +32,8 @@
   // BTN START
   &-btnStart {
     @include center();
-    margin-top: $margin * 2;
+    z-index: 9;
+    margin-top: $margin * 5;
     opacity: 0;
   }
 

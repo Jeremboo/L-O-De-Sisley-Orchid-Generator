@@ -76,49 +76,55 @@
     background-position: 0 -200px;
   }
 
-  //BUTTON TEXT
-  // TODO faire un meilleur button
-  &.Button_text {
-    z-index: 99;
-    width: auto;
-    height: auto;
-    padding: $margin / 1.2 $margin * 3;
-    border-radius: $margin * 3;
-    font-size: 1.3em;
-    background-color: transparent;
-    box-shadow: none;
-    border: 2px solid $blueDark;
-    color : $blueDark;
+  //BUTTON START
+  &_start {
+    width: 230px;
+    height : 50px;
+    color: $blue;
+    font-size: 1.15em;
+    text-align: center;
     font-family: 'bellotaregular';
-    overflow: hidden;
 
-    &:hover {
-      padding-top: ($margin / 1.2) * 0.4;
-      padding-bottom: ($margin / 1.2) * 1.6;
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: $transitionDelay * 2;
+    }
 
-      &:before {
-        // width: $margin * 25;
-        // height: $margin * 25;
-        // border-radius: $margin * 25;
-        width: 0;
-        height: 0;
+    svg path {
+      position: absolute;
+      stroke : $blue;
+      stroke-width: 2px;
+      transition: $transitionDelay * 9;
+      fill:none;
+      stroke-width:2;
+      stroke-dasharray: 0, 260, 260;
+    }
+
+    &.active {
+      cursor: pointer;
+
+      #stroke-left {
+        stroke-dasharray: 0, 0, 260;
+      }
+      #stroke-right {
+        stroke-dasharray: 260, 260, 260;
       }
     }
-    &:after {
-      background: none;
+
+    //span
+    #start-experiment-text {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
     }
-    // &.active {
-    //   z-index: 0;
-    //   transition: $transitionDelay * 2;
-    //   opacity: 0;
-    //   margin-top: $margin;
-    //   &:before {
-    //     transition: $transitionDelay * 4;
-    //     width: $margin * 25;
-    //     height: $margin * 25;
-    //     border-radius: $margin * 25;
-    //   }
-    // }
+
+    &.anim_end:hover svg {
+      top: -10px;
+      path {
+        stroke: $blueDark;
+      }
+    }
   }
-  // TODOEND
 }

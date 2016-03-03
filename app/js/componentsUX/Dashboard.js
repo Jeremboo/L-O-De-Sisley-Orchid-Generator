@@ -21,9 +21,9 @@ class Dashboard {
   }
 
   show() {
-    let showDashBoardTimeline = new TimelineLite();
-    showDashBoardTimeline.to(this.commands, 0.5, { bottom: '-15%', opacity: 1 })
-      .to(this.popUp, 1, { right: '-50%', opacity: 1 }, '-=0.25');
+    const showDashBoardTimeline = new TimelineLite();
+    showDashBoardTimeline.to(this.popUp, 1, { right: '-50%', opacity: 1 }, '-=0.25');
+    showDashBoardTimeline.to(this.commands, 0.5, { bottom: '-15%', opacity: 1 });
 
     // ##
     // ADD LISTENERS FOR BUTTON
