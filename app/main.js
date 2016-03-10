@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   let j;
   // Title Animation
   for (i = 0; i < titleChildrenLenght; i++) {
-    showHeaderTimeline.to(titleWrapper.children[i], 0.5, { 'line-height': '1em', opacity: 1 }, '-=0.2');
+    showHeaderTimeline.to(titleWrapper.children[i], 0.5, { 'line-height': '1.4em', opacity: 1 }, '-=0.2');
   }
   // Shares button animation
   for (j = 0; j < sharedButtonLength; j++) {

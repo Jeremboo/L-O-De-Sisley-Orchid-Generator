@@ -29,6 +29,10 @@
     line-height: 2em;
   }
 
+  &-title {
+    font-size: 2.5em;
+  }
+
   // BTN START
   &-btnStart {
     @include center();
@@ -67,6 +71,7 @@
     position: relative;
     width: $buttonSize;
     height: $buttonSize;
+    margin: 0 $buttonSize / 10;
   }
 
   & .Button {
