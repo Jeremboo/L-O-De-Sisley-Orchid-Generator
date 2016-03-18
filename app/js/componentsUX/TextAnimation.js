@@ -1,8 +1,9 @@
 class TextAnimation {
   constructor(element, style) {
     this.element = element;
-    this.text = this.element.innerText;
+    this.text = this.element.innerText || this.element.textContent;
     this.element.innerText = '';
+    this.element.textContent = '';
     this.letters = [];
 
     let i;
